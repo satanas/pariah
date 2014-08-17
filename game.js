@@ -20,8 +20,8 @@ $.init = function() {
   $.cam = new $.Camera(300, 300);
 
   $.hero = new $.Hero();
-  $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
-  //$.walls = [new $.Wall(100, 100)];
+  //$.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
+  $.walls = [new $.Wall(100, 100)];
 
   $.loop();
 };
@@ -37,11 +37,36 @@ $.loop = function() {
 
   /* Update */
   $.hero.update();
+  //$.cam.setTarget($.hero);
+  $.cam.ofx = $.ofx;
+  $.cam.ofy = $.ofy;
+
+  /* Check for collisions */
+  $.walls.forEach(function(w) {
+    console.log($.hero.bounds, w.bounds);
+    if (!(($.hero.bounds.b < w.bounds.t) ||
+        ($.hero.bounds.t > w.bounds.b) ||
+        ($.hero.bounds.l > w.bounds.r) ||
+        ($.hero.bounds.r < w.bounds.l))) {
+      console.log('collision');
+    }
+  });
+  //$.walls.forEach(function(w) {
+  //  var dx = Math.abs((w.x/2) - ($.hero.get().x/2));
+  //  var dy = Math.abs((w.y/2) - ($.hero.get().y/2));
+  //  var d = Math.sqrt((dx * dx) + (dy * dy));
+  //  var r2 = w.r + $.hero.r;
+  //  console.log(r2, d);
+  //  if (r2 > d) {
+  //    console.log('collision');
+  //  }
+  //});
 
   /* Render */
-  $.walls.forEach(function(w) {
-    w.render();
-  });
+  //$.walls.forEach(function(w) {
+  //  w.render();
+  //});
+  $.cam.render($.walls);
   $.hero.render();
 
   requestAnimationFrame($.loop);

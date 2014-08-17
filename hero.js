@@ -5,6 +5,16 @@ $.Hero = function() {
   var h = 32;
 
   return {
+    get: function() {
+      return {x: x, y: y};
+    },
+    bounds: {
+        b: y + h,
+        t: y,
+        l: x,
+        r: x + w
+    },
+    r: Math.sqrt(Math.pow(w/2, 2) + Math.pow(h/2, 2)),
     update: function() {
       if ($.input.isPressed(37)) {
         x -= 2;
