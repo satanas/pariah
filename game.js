@@ -9,17 +9,18 @@ $.init = function() {
   $.ctxfg = $.cfg.getContext('2d');
   //$.vw = $.cfg.width = $.cbg.width = 720;
   //$.vh = $.cfg.height = $.cbg.height = 540;
-  $.vw = $.cfg.width = 300;
-  $.vh = $.cfg.height = 300;
+  $.vw = $.cfg.width = 400;
+  $.vh = $.cfg.height = 400;
   $.ww = 800;
   $.wh = 800;
   $.ofx = 0;
   $.ofy = 0;
   //$.wrap.style.width = '300px';
   //$.wrap.style.height = '300px';
-  $.cam = new $.Camera(300, 300);
+  $.cam = new $.Camera(400, 400);
+  $.collide = new $.Collide();
 
-  $.hero = new $.Hero();
+  $.hero = new $.Hero(0, 0);
   //$.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
   $.walls = [new $.Wall(100, 100)];
 
@@ -41,16 +42,6 @@ $.loop = function() {
   $.cam.ofx = $.ofx;
   $.cam.ofy = $.ofy;
 
-  /* Check for collisions */
-  $.walls.forEach(function(w) {
-    console.log($.hero.bounds, w.bounds);
-    if (!(($.hero.bounds.b < w.bounds.t) ||
-        ($.hero.bounds.t > w.bounds.b) ||
-        ($.hero.bounds.l > w.bounds.r) ||
-        ($.hero.bounds.r < w.bounds.l))) {
-      console.log('collision');
-    }
-  });
   //$.walls.forEach(function(w) {
   //  var dx = Math.abs((w.x/2) - ($.hero.get().x/2));
   //  var dy = Math.abs((w.y/2) - ($.hero.get().y/2));
