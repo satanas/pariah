@@ -19,6 +19,9 @@ $.Input = (function() {
     isPressed: function(c) {
       return !!pressed[c];
     },
+    isReleased: function(c) {
+      return !pressed[c];
+    },
     bind: function(keys) {
       keys.forEach(function(k){
         pressed[k] = 0;
