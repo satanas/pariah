@@ -5,25 +5,43 @@ $.Hero = function(_x, _y) {
   this.h = 32;
   this.bounds = {};
   this.d = '';
+  this.max_speed = 2.00;
+  this.speed = 0.10;
+  this.dx = this.dy = 0;
 
   this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
 
   this.update = function() {
     if ($.input.isPressed(37)) {
-      this.x -= 2;
-      this.d = 'l';
+      this.dx -= this.speed;
+      if (this.dx < -this.max_speed)
+        this.dx = -this.max_speed;
     } else if ($.input.isPressed(39)) {
-      this.x += 2;
-      this.d = 'r';
+      this.dx += this.speed;
+      if (this.dx > this.max_speed)
+        this.dx = this.max_speed;
     }
 
     if ($.input.isPressed(38)) {
-      this.y -= 2;
-      this.d = 'u';
+      this.dy -= this.speed;
+      if (this.dy < -this.max_speed)
+        this.dy = -this.max_speed;
     } else if ($.input.isPressed(40)) {
-      this.y += 2;
-      this.d = 'd';
+      this.dy += this.speed;
+      if (this.dy > this.max_speed)
+        this.dy = this.max_speed;
     }
+
+    if ($.input.isReleased(37) && $.input.isReleased(39)) {
+      this.dx = 0;
+    }
+    if ($.input.isReleased(38) && $.input.isReleased(40)) {
+      this.dy = 0;
+    }
+
+    this.x += this.dx;
+    this.y += this.dy;
+
     if ((this.x + this.w) > $.ww)
       this.x = $.ww - this.w;
     if ((this.y + this.h) > $.wh)
