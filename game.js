@@ -21,8 +21,8 @@ $.init = function() {
   $.collide = new $.Collide();
 
   $.hero = new $.Hero(0, 0);
-  //$.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
-  $.walls = [new $.Wall(100, 100)];
+  $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
+  //$.walls = [new $.Wall(100, 100)];
 
   $.loop();
 };
@@ -42,21 +42,7 @@ $.loop = function() {
   $.cam.ofx = $.ofx;
   $.cam.ofy = $.ofy;
 
-  //$.walls.forEach(function(w) {
-  //  var dx = Math.abs((w.x/2) - ($.hero.get().x/2));
-  //  var dy = Math.abs((w.y/2) - ($.hero.get().y/2));
-  //  var d = Math.sqrt((dx * dx) + (dy * dy));
-  //  var r2 = w.r + $.hero.r;
-  //  console.log(r2, d);
-  //  if (r2 > d) {
-  //    console.log('collision');
-  //  }
-  //});
-
   /* Render */
-  //$.walls.forEach(function(w) {
-  //  w.render();
-  //});
   $.cam.render($.walls);
   $.hero.render();
 
