@@ -22,6 +22,7 @@ $.init = function() {
 
   $.hero = new $.Hero(0, 0);
   $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
+  $.powerGrp = [];
   //$.walls = [new $.Wall(100, 100)];
 
   $.loop();
@@ -38,6 +39,9 @@ $.loop = function() {
 
   /* Update */
   $.hero.update();
+  $.powerGrp.forEach(function(p, i) {
+    p.update(i);
+  });
   //$.cam.setTarget($.hero);
   $.cam.ofx = $.ofx;
   $.cam.ofy = $.ofy;
@@ -45,6 +49,7 @@ $.loop = function() {
   /* Render */
   $.cam.render($.walls);
   $.hero.render();
+  $.cam.render($.powerGrp);
 
   requestAnimationFrame($.loop);
 };

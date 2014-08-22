@@ -5,38 +5,57 @@ $.Hero = function(_x, _y) {
   this.h = 32;
   this.bounds = {};
   this.d = '';
-  this.max_speed = 2.00;
-  this.speed = 0.10;
+  this.speed = 0.13;
   this.dx = this.dy = 0;
+  this.o = 'd'; /* Orientation*/
+  this.casting = false;
+  this.cooldown = 0;
+  this.ctime = 0; /* Current time */
 
   this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
 
   this.update = function() {
     if ($.input.isPressed(37)) {
+      this.o = 'l';
       this.dx -= this.speed;
-      if (this.dx < -this.max_speed)
-        this.dx = -this.max_speed;
     } else if ($.input.isPressed(39)) {
+      this.o = 'r';
       this.dx += this.speed;
-      if (this.dx > this.max_speed)
-        this.dx = this.max_speed;
     }
 
     if ($.input.isPressed(38)) {
+      this.o = 'u';
       this.dy -= this.speed;
-      if (this.dy < -this.max_speed)
-        this.dy = -this.max_speed;
     } else if ($.input.isPressed(40)) {
+      this.o = 'd';
       this.dy += this.speed;
-      if (this.dy > this.max_speed)
-        this.dy = this.max_speed;
     }
+
+    this.dx = $.util.checkRange(this.dx, -$.MAX_CHAR_SPEED, $.MAX_CHAR_SPEED);
+    this.dy = $.util.checkRange(this.dy, -$.MAX_CHAR_SPEED, $.MAX_CHAR_SPEED);
 
     if ($.input.isReleased(37) && $.input.isReleased(39)) {
       this.dx = 0;
     }
     if ($.input.isReleased(38) && $.input.isReleased(40)) {
       this.dy = 0;
+    }
+
+    if (this.cooldown > 0) {
+      var elapsed = Date.now() - this.ctime;
+      this.cooldown -= elapsed;
+      this.ctime = Date.now();
+      if (this.cooldown <= 0) {
+        this.cooldown = 0;
+        this.ctime = 0;
+      }
+    }
+
+    if ($.input.isPressed(32) && this.cooldown === 0) {
+      this.ctime = Date.now();
+      this.cooldown = $.POWER_COOLDOWN;
+      //$.powerGrp.push(new $.Fire(this.x, this.y, this.o));
+      $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
     }
 
     this.x += this.dx;
