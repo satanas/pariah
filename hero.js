@@ -72,12 +72,14 @@ $.Hero = function(_x, _y) {
     }
 
     /* Regeneration */
-    this.mana += elapsed * $.MANA_REGEN / 1000;
-    this.mana = $.util.checkRange(this.mana, 0, this.maxMana);
     if (this.shield) {
       this.health += elapsed * $.HEALTH_REGEN / 1000;
       this.health = $.util.checkRange(this.health, 0, this.maxHealth);
+      this.mana -= elapsed * $.MANA_REGEN / 1000;
+    } else {
+      this.mana += elapsed * $.MANA_REGEN / 1000;
     }
+    this.mana = $.util.checkRange(this.mana, 0, this.maxMana);
 
     /* Summon elements */
     if ($.input.isPressed(32) && this.cooldown === 0) {
