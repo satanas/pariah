@@ -10,12 +10,24 @@ $.Hero = function(_x, _y) {
   this.o = 'd'; /* Orientation*/
   this.casting = false;
   this.cooldown = 0;
-  this.ctime = 0; /* Current time */
+  this.ctime = Date.now(); /* Current time */
   this.cpower = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
+  this.health = 70;
+  this.mana = 98;
+  this.shield = false;
+
+  /* Max values */
+  this.maxSpeed = 2.00;
+  this.maxHealth = 100;
+  this.maxMana = 100;
 
   this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
 
   this.update = function() {
+    var now = Date.now();
+    var elapsed = now - this.ctime;
+    this.ctime = now;
+
     if ($.input.isPressed(37)) {
       this.o = 'l';
       this.dx -= this.speed;
@@ -42,8 +54,8 @@ $.Hero = function(_x, _y) {
       this.cpower = 4;
     }
 
-    this.dx = $.util.checkRange(this.dx, -$.MAX_CHAR_SPEED, $.MAX_CHAR_SPEED);
-    this.dy = $.util.checkRange(this.dy, -$.MAX_CHAR_SPEED, $.MAX_CHAR_SPEED);
+    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
 
     if ($.input.isReleased(37) && $.input.isReleased(39)) {
       this.dx = 0;
@@ -53,26 +65,37 @@ $.Hero = function(_x, _y) {
     }
 
     if (this.cooldown > 0) {
-      var elapsed = Date.now() - this.ctime;
       this.cooldown -= elapsed;
-      this.ctime = Date.now();
       if (this.cooldown <= 0) {
         this.cooldown = 0;
-        this.ctime = 0;
       }
     }
 
+    /* Regeneration */
+    this.mana += elapsed * $.MANA_REGEN / 1000;
+    this.mana = $.util.checkRange(this.mana, 0, this.maxMana);
+    if (this.shield) {
+      this.health += elapsed * $.HEALTH_REGEN / 1000;
+      this.health = $.util.checkRange(this.health, 0, this.maxHealth);
+    }
+
+    /* Summon elements */
     if ($.input.isPressed(32) && this.cooldown === 0) {
-      this.ctime = Date.now();
-      this.cooldown = $.POWER_COOLDOWN;
-      if (this.cpower === 1) {
-        $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-      } else if (this.cpower === 2) {
-        $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-      } else if (this.cpower === 3) {
-        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 0));
-        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 120));
-        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 240));
+      if (this.mana >= $.MANA_USAGE[this.cpower]) {
+        if (this.cpower === 1) {
+          $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
+        } else if (this.cpower === 2) {
+          $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+        } else if (this.cpower === 3) {
+          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 0));
+          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 120));
+          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 240));
+          this.shield = true;
+        } else if (this.cpower === 4) {
+          $.powerGrp.push(new $.Air(this.x, this.y, this.o));
+        }
+        this.mana -= $.MANA_USAGE[this.cpower];
+        this.cooldown = $.POWER_COOLDOWN;
       }
     }
 

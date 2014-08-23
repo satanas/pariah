@@ -197,6 +197,74 @@ $.Water = function(x ,y, w, h, a) {
 
   this.die = function(i) {
     $.powerGrp.splice(i, 1);
+    $.hero.shield = false;
   };
 };
 
+$.Air = function(x, y, o) {
+  this.x = x;
+  this.y = y;
+  this.w = 24;
+  this.h = 24;
+  this.a = 0.55; /* Acceleration */
+  this.mx_s = 6.00; /* Max speed */
+  this.dx = this.dy = 0;
+  this.bounds = {};
+
+  /* Determine direction */
+  if (o === 'l') {
+    this.dirX = -1;
+    this.dirY = 0;
+  } else if (o === 'r') {
+    this.dirX = 1;
+    this.dirY = 0;
+  } else if (o === 'd') {
+    this.dirX = 0;
+    this.dirY = 1;
+  } else if (o === 'u') {
+    this.dirX = 0;
+    this.dirY = -1;
+  }
+
+  this.update = function(i) {
+    this.dx += this.a * this.dirX;
+    this.dy += this.a * this.dirY;
+    this.dx = $.util.checkRange(this.dx, -this.mx_s, this.mx_s);
+    this.dy = $.util.checkRange(this.dy, -this.mx_s, this.mx_s);
+
+    this.x += this.dx;
+    this.y += this.dy;
+
+    this.bounds = {
+      b: this.y + this.h,
+      t: this.y,
+      l: this.x,
+      r: this.x + this.w
+    };
+
+    /* Check world boundaries */
+    if ((this.x + this.w) > $.ww || this.x < 0)
+      this.die(i);
+    if ((this.y + this.h) > $.wh || this.y < 0)
+      this.die(i);
+
+    var self = this;
+    /* Check for collisions */
+    $.walls.forEach(function(w) {
+      if ($.collide.rect(self, w)) {
+        self.die(i);
+      }
+    });
+  };
+
+  this.render = function(tx, ty) {
+    $.ctxfg.save();
+    $.ctxfg.fillStyle = 'hsla(207, 100%, 83%, 1)';
+    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.restore();
+  };
+
+  this.die = function(i) {
+    $.powerGrp.splice(i, 1);
+  };
+};

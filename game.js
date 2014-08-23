@@ -19,6 +19,7 @@ $.init = function() {
   //$.wrap.style.height = '300px';
   $.cam = new $.Camera(400, 400);
   $.collide = new $.Collide();
+  $.hud = new $.Hud();
 
   $.hero = new $.Hero(0, 0);
   $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
@@ -50,6 +51,7 @@ $.loop = function() {
   $.cam.render($.walls);
   $.hero.render();
   $.cam.render($.powerGrp);
+  $.hud.render();
 
   requestAnimationFrame($.loop);
 };
