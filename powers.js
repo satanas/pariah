@@ -1,9 +1,9 @@
 $.Fire = function(x, y, o) {
   this.x = x;
   this.y = y;
-  this.w = 16;
-  this.h = 16;
-  this.a = 0.5; /* Acceleration */
+  this.w = 24;
+  this.h = 24;
+  this.a = 0.55; /* Acceleration */
   this.mx_s = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = {};
@@ -77,6 +77,7 @@ $.Earth = function(x, y, w, h, o) {
   this.dirX = 0;
   this.dirY = 1;
   this.x1 = this.x2 = 0; /* Action range for the block */
+  this.ctime = Date.now();
 
   /* Determine direction */
   if (o === 'l') {
@@ -109,7 +110,10 @@ $.Earth = function(x, y, w, h, o) {
   this.cpy2 = this.sy2 + 8;
 
   this.update = function(i) {
-    this.dy += this.a * this.dirY;
+    var elapsed = Date.now() - this.ctime;
+    this.ctime = Date.now();
+    //this.dy += this.a * this.dirY;
+    this.dy += (this.a * (elapsed * elapsed)) / 2;
     this.dy = $.util.checkRange(this.dy, -this.mx_s, this.mx_s);
 
     this.y += this.dy;
@@ -153,3 +157,46 @@ $.Earth = function(x, y, w, h, o) {
     $.powerGrp.splice(i, 1);
   };
 };
+
+
+$.Water = function(x ,y, w, h, a) {
+  this.w = 20;
+  this.h = 20;
+  this.vw = 2 * Math.PI;
+  this.a = a * Math.PI / 180;
+  this.d = 32;
+  this.r = 10; /* Radius */
+  this.x = x;
+  this.y = y;
+  this.lifetime = 4000; /* Milliseconds */
+  this.ctime = Date.now();
+
+  this.update = function(i) {
+    var elapsed = Date.now() - this.ctime;
+    this.ctime = Date.now();
+    this.lifetime -= elapsed;
+
+    if (this.lifetime <= 0)
+      this.die(i);
+
+    this.cx = $.hero.x + ($.hero.w / 2);
+    this.cy = $.hero.y + ($.hero.h / 2);
+    this.a += this.vw * elapsed / 1000;
+    this.x = this.cx + (this.d * Math.cos(this.a));
+    this.y = this.cy + (this.d * Math.sin(this.a));
+  };
+
+  this.render = function(tx, ty) {
+    $.ctxfg.save();
+    $.ctxfg.fillStyle = 'rgba(0, 115, 255, 1)';
+    $.ctxfg.beginPath();
+    $.ctxfg.arc(tx, ty, this.r, 0, (2 * Math.PI), false);
+    $.ctxfg.fill();
+    $.ctxfg.restore();
+  };
+
+  this.die = function(i) {
+    $.powerGrp.splice(i, 1);
+  };
+};
+

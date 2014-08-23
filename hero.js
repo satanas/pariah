@@ -11,6 +11,7 @@ $.Hero = function(_x, _y) {
   this.casting = false;
   this.cooldown = 0;
   this.ctime = 0; /* Current time */
+  this.cpower = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
 
   this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
 
@@ -29,6 +30,16 @@ $.Hero = function(_x, _y) {
     } else if ($.input.isPressed(40)) {
       this.o = 'd';
       this.dy += this.speed;
+    }
+
+    if ($.input.isPressed(49)) {
+      this.cpower = 1;
+    } else if ($.input.isPressed(50)) {
+      this.cpower = 2;
+    } else if ($.input.isPressed(51)) {
+      this.cpower = 3;
+    } else if ($.input.isPressed(52)) {
+      this.cpower = 4;
     }
 
     this.dx = $.util.checkRange(this.dx, -$.MAX_CHAR_SPEED, $.MAX_CHAR_SPEED);
@@ -54,8 +65,15 @@ $.Hero = function(_x, _y) {
     if ($.input.isPressed(32) && this.cooldown === 0) {
       this.ctime = Date.now();
       this.cooldown = $.POWER_COOLDOWN;
-      //$.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-      $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+      if (this.cpower === 1) {
+        $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
+      } else if (this.cpower === 2) {
+        $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+      } else if (this.cpower === 3) {
+        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 0));
+        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 120));
+        $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 240));
+      }
     }
 
     this.x += this.dx;

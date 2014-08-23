@@ -1,6 +1,6 @@
 $.init = function() {
   $.input = $.Input;
-  $.input.bind([32, 65, 37, 38, 39, 40]);
+  $.input.bind([32, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
 
   //$.cbg = document.getElementById('bg');
   $.cfg = document.getElementById('fg');
