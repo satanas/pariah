@@ -22,6 +22,7 @@ $.init = function() {
   $.hud = new $.Hud();
 
   $.hero = new $.Hero(0, 0);
+  $.enemy = new $.Enemy(150, 150);
   $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
   $.powerGrp = [];
   //$.walls = [new $.Wall(100, 100)];
@@ -40,6 +41,7 @@ $.loop = function() {
 
   /* Update */
   $.hero.update();
+  $.enemy.update();
   $.powerGrp.forEach(function(p, i) {
     p.update(i);
   });
@@ -50,6 +52,7 @@ $.loop = function() {
   /* Render */
   $.cam.render($.walls);
   $.hero.render();
+  $.enemy.render();
   $.cam.render($.powerGrp);
   $.hud.render();
 
