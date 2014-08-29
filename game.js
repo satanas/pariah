@@ -22,9 +22,12 @@ $.init = function() {
   $.hud = new $.Hud();
 
   $.hero = new $.Hero(0, 0);
-  $.walls = [new $.Wall(100, 100), new $.Wall(300, 300), new $.Wall(100, 400)];
+  $.walls = [new $.Wall(96, 96), new $.Wall(384, 384), new $.Wall(160, 416)];
+  for (var i = 0; i < 5; i++) {
+    $.walls.push(new $.Wall(96 + (32 * i), 96));
+    $.walls.push(new $.Wall(256, 96 + (32 * i)));
+  }
   $.powerGrp = [];
-  //$.walls = [new $.Wall(100, 100)];
 
   $.loop();
 };

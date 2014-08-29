@@ -4,11 +4,9 @@ $.Hero = function(_x, _y) {
   this.w = 16;
   this.h = 32;
   this.bounds = {};
-  this.d = '';
   this.speed = 0.13;
   this.dx = this.dy = 0;
   this.o = 'd'; /* Orientation*/
-  this.casting = false;
   this.cooldown = 0;
   this.ctime = Date.now(); /* Current time */
   this.cpower = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
@@ -20,8 +18,7 @@ $.Hero = function(_x, _y) {
   this.maxSpeed = 2.00;
   this.maxHealth = 100;
   this.maxMana = 100;
-
-  this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
+  this.t = document.getElementById('tileset');
 
   this.update = function() {
     var now = Date.now();
@@ -162,8 +159,17 @@ $.Hero = function(_x, _y) {
     $.ofy = this.y - ty;
 
     $.ctxfg.save();
-    $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty, 16, 32);
+    //$.ctxfg.fillStyle = 'rgb(255,0,0)';
+    //$.ctxfg.fillRect(tx, ty, 16, 32);
+    $.ctxfg.scale(2.0, 2.0);
+    if (this.o == 'd')
+      $.ctxfg.drawImage(this.t, 69, 1, 8, 15, tx/2, ty/2, 8, 16);
+    else if (this.o === 'u')
+      $.ctxfg.drawImage(this.t, 69, 17, 8, 15, tx/2, ty/2, 8, 16);
+    else if (this.o === 'l')
+      $.ctxfg.drawImage(this.t, 69, 48, 8, 15, tx/2, ty/2, 8, 16);
+    else if (this.o === 'r')
+      $.ctxfg.drawImage(this.t, 69, 33, 8, 15, tx/2, ty/2, 8, 16);
     $.ctxfg.restore();
   };
 };
