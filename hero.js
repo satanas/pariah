@@ -20,6 +20,26 @@ $.Hero = function(_x, _y) {
   this.maxMana = 100;
   this.t = document.getElementById('tileset');
 
+  /* Animations */
+  this.count = 0;
+  this.frameDuration = 5;
+  this.currFrame = 0;
+  this.totalFrames = 3;
+  this.anim = {
+    'run': {
+      'd': [{x:37, y:0},  {x:53, y:0},  {x:69, y:0}],
+      'u': [{x:37, y:16}, {x:53, y:16}, {x:69, y:16}],
+      'r': [{x:37, y:32}, {x:53, y:32}, {x:69, y:32}],
+      'l': [{x:37, y:48}, {x:53, y:48}, {x:69, y:48}],
+    },
+    'idle': {
+      'd': {x:37, y:0},
+      'u': {x:37, y:16},
+      'r': {x:37, y:32},
+      'l': {x:37, y:48}
+    }
+  };
+
   this.update = function() {
     var now = Date.now();
     var elapsed = now - this.ctime;
@@ -134,6 +154,12 @@ $.Hero = function(_x, _y) {
         }
       }
     });
+
+    /* Calculate animation frame */
+    this.count = (this.count + 1) % this.frameDuration;
+    if (this.count === (this.frameDuration - 1)) {
+      this.currFrame = (this.currFrame + 1) % this.totalFrames;
+    }
   };
 
   this.render = function() {
@@ -158,18 +184,13 @@ $.Hero = function(_x, _y) {
     $.ofx = this.x - tx;
     $.ofy = this.y - ty;
 
+    var anim = (this.dx === 0 && this.dy === 0) ? this.anim.idle[this.o] : this.anim.run[this.o][this.currFrame];
+
     $.ctxfg.save();
     //$.ctxfg.fillStyle = 'rgb(255,0,0)';
     //$.ctxfg.fillRect(tx, ty, 16, 32);
     $.ctxfg.scale(2.0, 2.0);
-    if (this.o == 'd')
-      $.ctxfg.drawImage(this.t, 69, 1, 8, 15, tx/2, ty/2, 8, 16);
-    else if (this.o === 'u')
-      $.ctxfg.drawImage(this.t, 69, 17, 8, 15, tx/2, ty/2, 8, 16);
-    else if (this.o === 'l')
-      $.ctxfg.drawImage(this.t, 69, 48, 8, 15, tx/2, ty/2, 8, 16);
-    else if (this.o === 'r')
-      $.ctxfg.drawImage(this.t, 69, 33, 8, 15, tx/2, ty/2, 8, 16);
+    $.ctxfg.drawImage(this.t, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
     $.ctxfg.restore();
   };
 };
