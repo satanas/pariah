@@ -18,7 +18,6 @@ $.Camera = function(_w, _h) {
 
   this.inView = function(o) {
     var t = this.transCoord(o);
-    //return ((t.x >= -o.w && t.x < this.w) && (t.y >= -o.y && t.y < this.h));
     return ((t.r >= 0 && t.r <= this.w) || (t.x >= 0 && t.x <= this.w)) &&
            ((t.b >= 0 && t.b <= this.h) || (t.y >= 0 && t.y <= this.h));
   };

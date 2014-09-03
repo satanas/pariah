@@ -74,10 +74,10 @@ $.Hero = function(_x, _y) {
     this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
     this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
 
-    if ($.input.isReleased(37) && $.input.isReleased(39)) {
+    if (!$.input.isPressed(37) && !$.input.isPressed(39)) {
       this.dx = 0;
     }
-    if ($.input.isReleased(38) && $.input.isReleased(40)) {
+    if (!$.input.isPressed(38) && !$.input.isPressed(40)) {
       this.dy = 0;
     }
 
