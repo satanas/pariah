@@ -10,13 +10,17 @@ $.Camera = function(_w, _h) {
   this.transCoord = function(o) {
     return {
       x: o.x - this.ofx,
-      y: o.y - this.ofy
+      y: o.y - this.ofy,
+      r: o.bounds.r - this.ofx,
+      b: o.bounds.b - this.ofy
     };
   };
 
   this.inView = function(o) {
     var t = this.transCoord(o);
-    return ((t.x >= -o.w && t.x < this.w) && (t.y >= -o.y && t.y < this.h));
+    //return ((t.x >= -o.w && t.x < this.w) && (t.y >= -o.y && t.y < this.h));
+    return ((t.r >= 0 && t.r <= this.w) || (t.x >= 0 && t.x <= this.w)) &&
+           ((t.b >= 0 && t.b <= this.h) || (t.y >= 0 && t.y <= this.h));
   };
 
   this.render = function(objs) {
