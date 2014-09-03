@@ -131,10 +131,10 @@ $.Earth = function(x, y, w, h, o) {
   };
 
   this.render = function(tx, ty) {
-    var s1 = $.cam.transCoord({x: this.sx1, y: this.sy1});
-    var s2 = $.cam.transCoord({x: this.sx2, y: this.sy2});
-    var cp1 = $.cam.transCoord({x: this.cpx1, y: this.cpy1});
-    var cp2 = $.cam.transCoord({x: this.cpx2, y: this.cpy2});
+    var s1 = $.cam.transCoord(this);
+    var s2 = $.cam.transCoord(this);
+    var cp1 = $.cam.transCoord(this);
+    var cp2 = $.cam.transCoord(this);
 
     /* Render shadow */
     $.ctxfg.save();
@@ -170,6 +170,7 @@ $.Water = function(x ,y, w, h, a) {
   this.y = y;
   this.lifetime = 4000; /* Milliseconds */
   this.ctime = Date.now();
+  this.bounds = {};
 
   this.update = function(i) {
     var elapsed = Date.now() - this.ctime;
