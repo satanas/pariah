@@ -99,6 +99,7 @@ $.startGame = function() {
   $.wh = 800;
   $.ofx = 0;
   $.ofy = 0;
+  $.fow = new $.FoW(2);
   $.cam = new $.Camera(640, 480);
   $.collide = new $.Collide();
   $.hud = new $.Hud();
@@ -162,6 +163,7 @@ $.loop = function() {
   $.powerGrp.forEach(function(p, i) {
     p.update(i);
   });
+  var fow = $.fow.update();
   //$.cam.setTarget($.hero);
   $.cam.ofx = $.ofx;
   $.cam.ofy = $.ofy;
@@ -170,243 +172,13 @@ $.loop = function() {
   $.cam.render($.walls);
   $.hero.render();
   $.cam.render($.powerGrp);
-  //var x = $.hero.x - $.ofx;
-  //var y = $.hero.y - $.ofy;
-  //var xx = Math.floor(x / 32) + ($.hero.w / 2);
-  //var yy = Math.floor(y / 32) + ($.hero.h / 2);
-  //$.ctxfg.save();
-  //for (var i=0; i < ($.vw / 32); i++) {
-  //  for (var j=0; j < ($.vh / 32); j++) {
-  //    if ((i == xx && j == yy - 1) ||
-  //        (i == xx + 1 && j == yy) ||
-  //        (i == xx && j == yy + 1) ||
-  //        (i == xx -1 && j == yy) ||
-  //        (i == xx && j == yy)){
-  //      $.ctxfg.fillStyle = 'rgba(0,0,0, 0)';
-  //      $.ctxfg.fillRect(i * 32, j * 32, 32, 32);
-  //    } else {
-  //      $.ctxfg.fillStyle = 'rgb(0,0,0)';
-  //      $.ctxfg.fillRect(i * 32, j * 32, 32, 32);
-  //    }
-  //  }
-  //}
-  //$.ctxfg.restore();
 
-  // Second implementation of FoW
-  /*
-  var x = $.hero.x - $.ofx - 8;
-  var y = $.hero.y - $.ofy;
-  var canvas1 = document.createElement("canvas");
-  canvas1.width = $.vw;
-  canvas1.height = $.vh;
-  var ctx1 = canvas1.getContext('2d');
-  ctx1.fillStyle = "rgba(0,0,0,0.75)";
-  ctx1.fillRect(0, 0, $.vw, $.vh);
-
-  var canvas2 = document.createElement("canvas");
-  canvas2.width = $.vw;
-  canvas2.height = $.vh;
-  var ctx2 = canvas2.getContext('2d');
-  ctx2.fillStyle = "rgba(255,255,255, 0.65)";
-  ctx2.fillRect(x - 64, y, 160, 32);
-  ctx2.fillRect(x, y - 64, 32, 160);
-
-  ctx2.fillStyle = "rgb(255,255,255)";
-  ctx2.fillRect(x - 32, y - 32, 96, 96);
-  //ctx2.fillRect(x, y, 32, 32);
-  //ctx2.fillStyle = "rgba(255,255,255, 0.95)";
-  //ctx2.fillRect(x - 32, y, 32, 32);
-  //ctx2.fillRect(x + 32, y, 32, 32);
-  //ctx2.fillRect(x, y - 32, 32, 32);
-  //ctx2.fillRect(x, y + 32, 32, 32);
-  ctx2.fillStyle = "rgba(255,255,255, 0.85)";
-  ctx2.fillRect(x - 32, y - 32, 32, 32);
-  ctx2.fillRect(x + 32, y - 32, 32, 32);
-  ctx2.fillRect(x - 32, y + 32, 32, 32);
-  ctx2.fillRect(x + 32, y + 32, 32, 32);
-
-  ctx1.save();
-  ctx1.globalCompositeOperation = 'destination-out';
-  ctx1.drawImage(canvas2, 0, 0, $.vw, $.vh);
-  ctx1.restore();
-  $.ctxfg.drawImage(canvas1,0, 0, $.vw, $.vh);
-  */
-
-  // Third implementation of FoW (star)
-  //var x = $.hero.x;
-  //var y = $.hero.y;
-  //var xx = (x % 32 <= 16) ? Math.floor(x / 32) : Math.floor(x / 32) + 1;
-  //var yy = (y % 32 <= 16) ? Math.floor(y / 32) : Math.floor(y / 32) + 1;
-  //var radius = 3;
-  //var fow = [];
-  //fow[0] = [xx, yy, 1];
-  //// Up
-  //for (var i=1; i <= radius; i++)
-  //  if ($.tiles[xx][yy - i] === 1) {
-  //    fow.push([xx, yy - i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx, yy - i, i]);
-  //  }
-
-  //// Down
-  //for (i=1; i <= radius; i++)
-  //  if ($.tiles[xx][yy + i] === 1) {
-  //    fow.push([xx, yy + i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx, yy + i, i]);
-  //  }
-
-  //// Left
-  //for (i=1; i <= radius; i++)
-  //  if ($.tiles[xx - i][yy] === 1) {
-  //    fow.push([xx - i, yy, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx - i, yy, i]);
-  //  }
-
-  //// Right
-  //for (i=1; i <= radius; i++)
-  //  if ($.tiles[xx + i][yy] === 1) {
-  //    fow.push([xx + i, yy, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx + i, yy, i]);
-  //  }
-
-  //// Top Right
-  //for (i=1; i < radius; i++)
-  //  if ($.tiles[xx + i][yy - i] === 1) {
-  //    fow.push([xx + i, yy - i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx + i, yy - i, i]);
-  //  }
-
-  //// Top Left
-  //for (i=1; i < radius; i++)
-  //  if ($.tiles[xx - i][yy - i] === 1) {
-  //    fow.push([xx - i, yy - i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx - i, yy - i, i]);
-  //  }
-
-  //// Bottom Left
-  //for (i=1; i < radius; i++)
-  //  if ($.tiles[xx - i][yy + i] === 1) {
-  //    fow.push([xx - i, yy + i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx - i, yy + i, i]);
-  //  }
-
-  //// Bottom Right
-  //for (i=1; i < radius; i++)
-  //  if ($.tiles[xx + i][yy + i] === 1) {
-  //    fow.push([xx + i, yy + i, i]);
-  //    break;
-  //  } else {
-  //    fow.push([xx + i, yy + i, i]);
-  //  }
-
-  //$.ctx1.fillStyle = "rgba(0,0,0,0.75)";
-  //$.ctx1.fillRect(0, 0, $.vw, $.vh);
-
-  //$.ctx2.clearRect(0, 0, $.vw, $.vh);
-  //for (i=fow.length; i--;) {
-  //  $.ctx2.fillStyle = (fow[i][2] === 1) ? "rgb(255,255,255)" : "rgba(255,255,255,0.85)";
-  //  $.ctx2.fillRect((fow[i][0] * 32) - $.ofx, (fow[i][1] * 32) - $.ofy, 32, 32);
-  //}
-
-  //$.ctx1.save();
-  //$.ctx1.globalCompositeOperation = 'destination-out';
-  //$.ctx1.drawImage($.cv2, 0, 0, $.vw, $.vh);
-  //$.ctx1.restore();
-  //$.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
-
-  // Fourth implementation of FoW (sweep)
-  var x = $.hero.x;
-  var y = $.hero.y;
-  var xx = (x % 32 <= 16) ? Math.floor(x / 32) : Math.floor(x / 32) + 1;
-  var yy = (y % 32 <= 16) ? Math.floor(y / 32) : Math.floor(y / 32) + 1;
-  var radius = 2;
-  var fow = [];
-  fow[0] = [xx, yy, 1];
-
-  // Sweep up
-  var blocked = [];
-  for (i= $.ww / 32; i--;)
-    blocked[i] = false;
-  var start = (xx - 1 < 0) ? 0 : xx - 1;
-  var end = (xx + 1 > $.ww / 32) ? $.ww / 32 : xx + 1;
-  for (j=yy-1; j >= yy-radius; j--) {
-    for (i=start; i <= end; i++) {
-      if (!blocked[i]) {
-        if ($.tiles[i][j] === 1) {
-          blocked[i] = true;
-        }
-        fow.push([i, j, 1]);
-      }
-    }
-  }
-
-  // Sweep right
-  for (i = $.wh / 32; i--;)
-    blocked[i] = false;
-  start = (yy - 1 < 0) ? 0 : yy - 1;
-  end = (yy + 1 > $.wh / 32) ? $.wh / 32 : yy + 1;
-  for (j=start; j <= end; j++) {
-    for (i=xx + 1; i <= xx + radius; i++) {
-      if (!blocked[j]) {
-        if ($.tiles[i][j] === 1) {
-          blocked[j] = true;
-        }
-        fow.push([i, j, 1]);
-      }
-    }
-  }
-
-  // Sweep down
-  for (i= $.ww / 32; i--;)
-    blocked[i] = false;
-  start = (xx - 1 < 0) ? 0 : xx - 1;
-  end = (xx + 1 > $.ww / 32) ? $.ww / 32 : xx + 1;
-  for (j=yy + 1; j <= yy + radius; j++) {
-    for (i=start; i <= end; i++) {
-      if (!blocked[i]) {
-        if ($.tiles[i][j] === 1) {
-          blocked[i] = true;
-        }
-        fow.push([i, j, 1]);
-      }
-    }
-  }
-
-  // Sweep left
-  for (i = $.wh / 32; i--;)
-    blocked[i] = false;
-  start = (yy - 1 < 0) ? 0 : yy - 1;
-  end = (yy + 1 > $.wh / 32) ? $.wh / 32 : yy + 1;
-  for (j=start; j <= end; j++) {
-    for (i=xx - 1; i >= xx - radius; i--) {
-      if (!blocked[j]) {
-        if ($.tiles[i][j] === 1) {
-          blocked[j] = true;
-        }
-        fow.push([i, j, 1]);
-      }
-    }
-  }
-
-  $.ctx1.fillStyle = "rgba(0,0,0,0.75)";
+  /* Fog of War */
+  $.ctx1.fillStyle = "rgba(0,0,0,1)";
   $.ctx1.fillRect(0, 0, $.vw, $.vh);
-
   $.ctx2.clearRect(0, 0, $.vw, $.vh);
   for (i=fow.length; i--;) {
-    $.ctx2.fillStyle = (fow[i][2] === 1) ? "rgb(255,255,255)" : "rgba(255,255,255,0.85)";
+    $.ctx2.fillStyle = (fow[i][2] === 0) ? "rgb(255,255,255)" : "rgba(255,255,255,0.85)";
     $.ctx2.fillRect((fow[i][0] * 32) - $.ofx, (fow[i][1] * 32) - $.ofy, 33, 33);
   }
 
