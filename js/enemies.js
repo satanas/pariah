@@ -14,6 +14,7 @@ $.Zombie = function(x, y) {
   this.iTime = 1000; // Invincibility time
   this.blink = false;
   this.bCount = 0;
+  this.attack = $.util.randInt(12, 16);
 
   this.damage = function(p) {
     if (this.hurt) return;
@@ -21,14 +22,14 @@ $.Zombie = function(x, y) {
       $.textPops.push(new $.TextPop('miss', this.x, this.y - 5, 'white'));
       return;
     }
-    var damage = p.damage;
+    var attack = p.attack;
     if (p.type == 'f')
-      damage = Math.floor(p.damage + (p.damage * this.vulnerability));
-    this.he -= damage;
+      attack = Math.floor(p.attack + (p.attack * this.vulnerability));
+    this.he -= attack;
     this.hurt = true;
     this.ctime = Date.now();
     this.elapsed = 0;
-    $.textPops.push(new $.TextPop(damage, this.x + 6, this.y - 5, 'yellow'));
+    $.textPops.push(new $.TextPop(attack, this.x + 6, this.y - 5, 'yellow'));
   };
 
   this.update = function(i) {

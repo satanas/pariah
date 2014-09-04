@@ -12,9 +12,9 @@ $.Fire = function(x, y, o) {
   this.angle = 0;
   this.mana = 5;
 
-  // Type and damage
+  // Type and attack
   this.type = 'f';
-  this.damage = $.util.randInt(8, 12);
+  this.attack = $.util.randInt(8, 12);
 
   /* Determine direction */
   if (o === 'l') {
@@ -32,6 +32,7 @@ $.Fire = function(x, y, o) {
   }
 
   this.update = function(i) {
+    var self = this;
     this.angle = (this.angle + 15) % 360;
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
@@ -49,7 +50,6 @@ $.Fire = function(x, y, o) {
     };
 
     // Check collision with enemies
-    var self = this;
     $.enemies.forEach(function(e) {
       if ($.collide.rect(self, e)) {
         e.damage(self);
@@ -98,7 +98,7 @@ $.Earth = function(x, y, w, h, o) {
   this.x1 = this.x2 = 0; /* Action range for the block */
   this.ctime = Date.now();
   this.type = 'e';
-  this.damage = $.util.randInt(26, 36);
+  this.attack = $.util.randInt(26, 36);
   this.mana = 40;
 
   /* Determine direction */
@@ -203,9 +203,9 @@ $.Water = function(x ,y, w, h, a) {
   this.bounds = {};
   this.mana = 20;
 
-  // Type and damage
+  // Type and attack
   this.type = 'w';
-  this.damage = $.util.randInt(3, 6);
+  this.attack = $.util.randInt(3, 6);
 
   this.update = function(i) {
     var elapsed = Date.now() - this.ctime;
@@ -264,7 +264,7 @@ $.Air = function(x, y, o) {
   this.mana = 5;
 
   this.type = 'a';
-  this.damage = $.util.randInt(7, 10);
+  this.attack = $.util.randInt(7, 10);
 
   /* Determine direction */
   if (o === 'l') {

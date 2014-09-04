@@ -4,18 +4,22 @@ $.Hero = function(_x, _y) {
   this.w = 16;
   this.h = 32;
   this.bounds = {};
-  // Speed
-  this.s = 0.13;
+  this.s = 0.13; // Speed
   this.dx = this.dy = 0;
-  this.o = 'd'; /* Orientation*/
-  this.cd = 0;
-  this.ctime = Date.now(); /* Current time */
-  // Current Power
-  this.cp = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
-  // Health
-  this.he = 100;
-  this.ma = 98;
+  this.o = 'd'; // Orientation
+  this.cp = 1; // Current power 1=Fire 2=Earth 3=Water 4=Air */
+  this.hurt = false;
+  this.he = 100; // Health
+  this.ma = 98; // Mana
   this.shield = false;
+  this.ctime = Date.now(); // Current time (for update)
+  this.htime = Date.now(); // Hurt time
+  this.etimeH = 0; // Elapsed time for hurt
+  this.itime = 1000; // Invincibility time (ms)
+  this.blink = false;
+  this.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
+  this.cd = 0; // Cooldown
+  this.rs = 0.15; // Resistance to attacks
 
   /* Max speed, max health and max mana */
   this.maxS = 2.00;
@@ -30,10 +34,10 @@ $.Hero = function(_x, _y) {
   this.totalFrames = 2;
   this.anim = {
     'run': {
-      'd': [{x:53, y:0},  {x:69, y:0} ],// {x:85, y:0}],
-      'u': [{x:53, y:16}, {x:69, y:16}],// {x:85, y:16}],
-      'r': [{x:53, y:32}, {x:69, y:32}],// {x:85, y:32}],
-      'l': [{x:53, y:48}, {x:69, y:48}],// {x:85, y:48}],
+      'd': [{x:53, y:0},  {x:69, y:0} ],
+      'u': [{x:53, y:16}, {x:69, y:16}],
+      'r': [{x:53, y:32}, {x:69, y:32}],
+      'l': [{x:53, y:48}, {x:69, y:48}],
     },
     'idle': {
       'd': {x:53, y:0},
@@ -43,10 +47,41 @@ $.Hero = function(_x, _y) {
     }
   };
 
+  this.damage = function(e) {
+    if (this.hurt) return;
+    //if ($.util.canMiss(this.missingChance)) {
+    //  $.textPops.push(new $.TextPop('miss', this.x, this.y - 5, 'white'));
+    //  return;
+    //}
+    var attack = Math.floor(e.attack - (e.attack * $.util.randInt(this.rs * 100, 0) / 100));
+    this.he -= attack;
+    this.hurt = true;
+    this.htime = Date.now();
+    this.etimeH = 0;
+    $.textPops.push(new $.TextPop('-' + attack, this.x + 6, this.y - 5, 'red'));
+  };
+
   this.update = function() {
+    var self = this;
     var now = Date.now();
     var elapsed = now - this.ctime;
     this.ctime = now;
+
+    if (this.hurt) {
+      this.etimeH = Date.now() - this.htime;
+
+      var c = Math.floor(this.etimeH / 100);
+      if (c > this.bcount) {
+        this.bcount = c;
+        this.blink = !this.blink;
+      }
+
+      if (this.etimeH >= this.itime) {
+        this.hurt = false;
+        this.bcount = 0;
+        this.blink = false;
+      }
+    }
 
     if ($.input.p(37)) {
       this.o = 'l';
@@ -91,37 +126,6 @@ $.Hero = function(_x, _y) {
       }
     }
 
-    /* Regeneration */
-    if (this.shield) {
-      this.he += elapsed * $.HEALTH_REGEN / 1000;
-      this.he = $.util.range(this.he, 0, this.maxH);
-      this.ma -= elapsed * $.MANA_USAGE[3] / 1000;
-    } else {
-      this.ma += elapsed * $.MANA_REGEN / 1000;
-    }
-    this.ma = $.util.range(this.ma, 0, this.maxM);
-
-    /* Summon elements */
-    if ($.input.p(32) && this.cd === 0) {
-      if (this.ma >= $.MANA_USAGE[this.cp] && !(this.cp === 3 && this.shield)) {
-        if (this.cp === 1) {
-          $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (this.cp === 2) {
-          $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (this.cp === 3) {
-          var self = this;
-          [0, 120, 240].forEach(function(a) {
-            $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
-          });
-          this.shield = true;
-        } else if (this.cp === 4) {
-          $.powerGrp.push(new $.Air(this.x, this.y, this.o));
-        }
-        this.ma -= $.MANA_USAGE[this.cp];
-        this.cd = $.POWER_COOLDOWN;
-      }
-    }
-
     this.x += this.dx;
     this.y += this.dy;
 
@@ -141,8 +145,37 @@ $.Hero = function(_x, _y) {
       r: this.x + this.w
     };
 
-    var self = this;
-    /* Check for collisions */
+    /* Regeneration */
+    if (this.shield) {
+      this.he += elapsed * $.HEALTH_REGEN / 1000;
+      this.he = $.util.range(this.he, 0, this.maxH);
+      this.ma -= elapsed * $.MANA_USAGE[3] / 1000;
+    } else {
+      this.ma += elapsed * $.MANA_REGEN / 1000;
+    }
+    this.ma = $.util.range(this.ma, 0, this.maxM);
+
+    /* Summon elements */
+    if ($.input.p(32) && this.cd === 0) {
+      if (this.ma >= $.MANA_USAGE[this.cp] && !(this.cp === 3 && this.shield)) {
+        if (this.cp === 1) {
+          $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
+        } else if (this.cp === 2) {
+          $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+        } else if (this.cp === 3) {
+          [0, 120, 240].forEach(function(a) {
+            $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
+          });
+          this.shield = true;
+        } else if (this.cp === 4) {
+          $.powerGrp.push(new $.Air(this.x, this.y, this.o));
+        }
+        this.ma -= $.MANA_USAGE[this.cp];
+        this.cd = $.POWER_COOLDOWN;
+      }
+    }
+
+    // Check for collisions
     $.walls.forEach(function(w) {
       if ($.collide.rect(self, w)) {
         if ($.collide.isTop(self, w)){
@@ -156,6 +189,13 @@ $.Hero = function(_x, _y) {
         } else {
           console.log('collision');
         }
+      }
+    });
+
+    // Check collision with enemies
+    $.enemies.forEach(function(e) {
+      if ($.collide.rect(self, e)) {
+        self.damage(e);
       }
     });
 
@@ -194,6 +234,8 @@ $.Hero = function(_x, _y) {
     //$.ctxfg.fillStyle = 'rgb(255,0,0)';
     //$.ctxfg.fillRect(tx, ty, 16, 32);
     $.ctxfg.scale(2.0, 2.0);
+    if (this.blink)
+      $.ctxfg.globalAlpha = 0.3;
     $.ctxfg.drawImage(this.t, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
     $.ctxfg.restore();
   };
