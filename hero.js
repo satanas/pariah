@@ -8,7 +8,7 @@ $.Hero = function(_x, _y) {
   this.s = 0.13;
   this.dx = this.dy = 0;
   this.o = 'd'; /* Orientation*/
-  this.cooldown = 0;
+  this.cd = 0;
   this.ctime = Date.now(); /* Current time */
   // Current Power
   this.cp = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
@@ -84,10 +84,10 @@ $.Hero = function(_x, _y) {
       this.dy = 0;
     }
 
-    if (this.cooldown > 0) {
-      this.cooldown -= elapsed;
-      if (this.cooldown <= 0) {
-        this.cooldown = 0;
+    if (this.cd > 0) {
+      this.cd -= elapsed;
+      if (this.cd <= 0) {
+        this.cd = 0;
       }
     }
 
@@ -102,8 +102,8 @@ $.Hero = function(_x, _y) {
     this.ma = $.util.range(this.ma, 0, this.maxM);
 
     /* Summon elements */
-    if ($.input.p(32) && this.cooldown === 0) {
-      if (this.ma >= $.MANA_USAGE[this.cp]) {
+    if ($.input.p(32) && this.cd === 0) {
+      if (this.ma >= $.MANA_USAGE[this.cp] && !(this.cp === 3 && this.shield)) {
         if (this.cp === 1) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
         } else if (this.cp === 2) {
@@ -118,7 +118,7 @@ $.Hero = function(_x, _y) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
         this.ma -= $.MANA_USAGE[this.cp];
-        this.cooldown = $.POWER_COOLDOWN;
+        this.cd = $.POWER_COOLDOWN;
       }
     }
 

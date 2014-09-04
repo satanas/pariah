@@ -1,126 +1,48 @@
 <!doctype html>
 <html>
-  <head>
-    <title>test</title>
-    <style>
-      * {
-        padding: 0px;
-        margin: 0px;
-        color: #fff;
-        font-family: verdana;
-      }
-      canvas {
-        position: absolute;
-        background-color: #000;
-        z-index: -1;
-        width: 640px;
-        height: 480px;
-      }
-      p {
-        display: block;
-        text-align: center;
-        margin: auto;
-        position: absolute;
-        width: 100%;
-      }
-      #wrapper {
-        width: 640px;
-        height: 480px;
-        margin: 0 auto;
-        position: relative;
-      }
-      #tileset {
-        display: none;
-      }
-      #i, #g, #s {
-        visibility: hidden;
-      }
-      #s {
-        height: 100%;
-        background-color: #2f2129;
-      }
-      #s0 {
-        top: 36%;
-        font-size: 60px;
-      }
-      #s1 {
-        top: 65%;
-      }
-      #i p {
-        font-size: 32px;
-        left: 0;
-        top: 50%;
-        height: 20px;
-        margin-top: -30px;
-        opacity: 0.0;
-      }
-      #i #i0, #i #i1, #i #i6 {
-        top: 45%;
-      }
-      #i #i3 {
-        font-size: 50px;
-        top: 45%;
-      }
-      #g0 {
-        font-size: 56px;
-        top: 35%;
-      }
-      #g1 {
-        font-size: 16px;
-        top: 50%;
-        color: #ccc;
-      }
-      #i .ii, .ii {
-        color: #888;
-        font-size: 11px;
-        top: 95%;
-        opacity: 1.0;
-      }
-    </style>
-  </head>
-  <body>
-    <img id="tileset" alt="tileset" src="t.gif"/>
-    <div id="wrapper">
-      <!-- Game screen -->
-      <canvas id="fg"></canvas>
-      <!-- Intro screen -->
-      <div id="i">
-        <p id="i0">They laughed when you said that the darkness will come for all of us</p>
-        <p id="i1">They said you were crazy and locked you out</p>
-        <p id="i2">They let you there so you rot</p>
-        <p id="i3">They now are DEAD</p>
-        <p id="i4">You are the last man alive</p>
-        <p id="i5">It is on you to find the four elements and restore life</p>
-        <p id="i6">No pressure ;)</p>
-        <p class="ii">Press 'Enter' to skip intro</p>
-      </div>
-      <!-- Game over screen -->
-      <div id="g">
-        <p id="g0">Game Over</p>
-        <p id="g1">Oh, the humanity!</p>
-        <p class="ii">Press 'Enter' to restart</p>
-      </div>
-      <!-- Start screen -->
-      <div id="s">
-        <p id="s0">Pariah</p>
-        <p id="s1">Press Enter to start</p>
-        <p class="ii">By @luduspactum - js13k 2014</p>
-      </div>
+<head>
+  <title>test</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <img id="tileset" src="t.gif"/>
+  <div id="wrapper">
+    <canvas id="fg"></canvas>
+    <div id="i">
+      <p id="i0">They laughed when you said that the darkness will come for all of us</p>
+      <p id="i1">They said you were crazy and locked you out</p>
+      <p id="i2">They let you there so you rot</p>
+      <p id="i3">They now are DEAD</p>
+      <p id="i4">You are the last man alive</p>
+      <p id="i5">It is on you to find the four elements and restore life</p>
+      <p id="i6">No pressure ;)</p>
+      <p class="ii">Press 'Enter' to skip intro</p>
     </div>
-    <script>var $ = {};</script>
-    <script src="constants.js"></script>
-    <script src="util.js"></script>
-    <script src="input.js"></script>
-    <script src="camera.js"></script>
-    <script src="collisions.js"></script>
-    <script src="powers.js"></script>
-    <script src="hero.js"></script>
-    <script src="enemies.js"></script>
-    <script src="wall.js"></script>
-    <script src="fow.js"></script>
-    <script src="hud.js"></script>
-    <script src="scene.js"></script>
-    <script src="textpop.js"></script>
-    <script src="game.js"></script>
-  </body>
+    <div id="g">
+      <p id="g0">Game Over</p>
+      <p id="g1">Oh, the humanity!</p>
+      <p class="ii">Press 'Enter' to restart</p>
+    </div>
+    <div id="s">
+      <p id="s0">Pariah</p>
+      <p id="s1">Press Enter to start</p>
+      <p class="ii">By @luduspactum - js13k 2014</p>
+    </div>
+  </div>
+  <script>var $ = {};</script>
+  <script src="constants.js"></script>
+  <script src="util.js"></script>
+  <script src="input.js"></script>
+  <script src="camera.js"></script>
+  <script src="collisions.js"></script>
+  <script src="powers.js"></script>
+  <script src="hero.js"></script>
+  <script src="enemies.js"></script>
+  <script src="wall.js"></script>
+  <script src="fow.js"></script>
+  <script src="hud.js"></script>
+  <script src="scene.js"></script>
+  <script src="textpop.js"></script>
+  <script src="game.js"></script>
+</body>
 </html>

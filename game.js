@@ -196,7 +196,7 @@ $.loop = function() {
   $.ctx1.globalCompositeOperation = 'destination-out';
   $.ctx1.drawImage($.cv2, 0, 0, $.vw, $.vh);
   $.ctx1.restore();
-  //$.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
+  $.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
 
 
   //console.log(xx, yy);
