@@ -1,0 +1,73 @@
+* {
+padding: 0px;
+margin: 0px;
+color: #fff;
+font-family: verdana;
+}
+canvas {
+position: absolute;
+background-color: #000;
+z-index: -1;
+width: 640px;
+height: 480px;
+}
+p {
+display: block;
+text-align: center;
+margin: auto;
+position: absolute;
+width: 100%;
+}
+#wrapper {
+width: 640px;
+height: 480px;
+margin: 0 auto;
+position: relative;
+}
+#tileset {
+display: none;
+}
+#i, #g, #s {
+visibility: hidden;
+}
+#s {
+height: 100%;
+background-color: #2f2129;
+}
+#s0 {
+top: 36%;
+font-size: 60px;
+}
+#s1 {
+top: 65%;
+}
+#i p {
+font-size: 32px;
+left: 0;
+top: 50%;
+height: 20px;
+margin-top: -30px;
+opacity: 0.0;
+}
+#i #i0, #i #i1, #i #i6 {
+top: 45%;
+}
+#i #i3 {
+font-size: 50px;
+top: 45%;
+}
+#g0 {
+font-size: 56px;
+top: 35%;
+}
+#g1 {
+font-size: 16px;
+top: 50%;
+color: #ccc;
+}
+#i .ii, .ii {
+color: #888;
+font-size: 11px;
+top: 95%;
+opacity: 1.0;
+}
