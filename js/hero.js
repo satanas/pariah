@@ -7,7 +7,7 @@ $.Hero = function(_x, _y) {
   this.s = 0.13; // Speed
   this.dx = this.dy = 0;
   this.o = 'd'; // Orientation
-  this.cp = 1; // Current power 1=Fire 2=Earth 3=Water 4=Air */
+  this.cp = $.PW.F; // Current power 1=Fire 2=Earth 3=Water 4=Air */
   this.hurt = false;
   this.he = 100; // Health
   this.ma = 98; // Mana
@@ -25,7 +25,7 @@ $.Hero = function(_x, _y) {
   this.maxS = 2.00;
   this.maxH = 100;
   this.maxM = 100;
-  this.t = $.util.byId('tileset');
+  this.ts = $.util.byId('tileset');
 
   /* Animations */
   this.count = 0;
@@ -58,7 +58,12 @@ $.Hero = function(_x, _y) {
     this.hurt = true;
     this.htime = Date.now();
     this.etimeH = 0;
-    $.textPops.push(new $.TextPop('-' + attack, this.x + 6, this.y - 5, 'red'));
+    $.textPops.push(new $.TextPop('-' + attack, this.x + 7, this.y - 5, 'red'));
+  };
+
+  this.heal = function(v) {
+    this.he += v;
+    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'white'));
   };
 
   this.update = function() {
@@ -147,27 +152,27 @@ $.Hero = function(_x, _y) {
 
     /* Regeneration */
     if (this.shield) {
-      this.he += elapsed * $.HEALTH_REGEN / 1000;
-      this.he = $.util.range(this.he, 0, this.maxH);
+      //this.he += elapsed * $.HEALTH_REGEN / 1000;
       this.ma -= elapsed * $.MANA_USAGE[3] / 1000;
     } else {
       this.ma += elapsed * $.MANA_REGEN / 1000;
     }
     this.ma = $.util.range(this.ma, 0, this.maxM);
+    this.he = $.util.range(this.he, 0, this.maxH);
 
     /* Summon elements */
     if ($.input.p(32) && this.cd === 0) {
       if (this.ma >= $.MANA_USAGE[this.cp] && !(this.cp === 3 && this.shield)) {
-        if (this.cp === 1) {
+        if (this.cp === $.PW.F) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (this.cp === 2) {
+        } else if (this.cp === $.PW.E) {
           $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (this.cp === 3) {
+        } else if (this.cp === $.PW.W) {
           [0, 120, 240].forEach(function(a) {
             $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
           });
           this.shield = true;
-        } else if (this.cp === 4) {
+        } else if (this.cp === $.PW.A) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
         this.ma -= $.MANA_USAGE[this.cp];
@@ -236,7 +241,7 @@ $.Hero = function(_x, _y) {
     $.ctxfg.scale(2.0, 2.0);
     if (this.blink)
       $.ctxfg.globalAlpha = 0.3;
-    $.ctxfg.drawImage(this.t, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
+    $.ctxfg.drawImage(this.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
     $.ctxfg.restore();
   };
 };

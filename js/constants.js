@@ -7,3 +7,10 @@ $.MANA_USAGE = {
 };
 $.MANA_REGEN = 1.75; /* Per millisecond */
 $.HEALTH_REGEN = 2.15; /* Per millisecond */
+
+$.PW = {
+  F: 1,
+  E: 2,
+  W: 3,
+  A: 4
+};

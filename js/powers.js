@@ -4,16 +4,16 @@ $.Fire = function(x, y, o) {
   this.w = 24;
   this.h = 24;
   this.a = 0.55; /* Acceleration */
-  this.maxSpeed = 6.00; /* Max speed */
+  this.maxS = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = {};
   this.anim = {x:19, y:18};
-  this.t = $.util.byId('tileset');
+  this.ts = $.util.byId('tileset');
   this.angle = 0;
   this.mana = 5;
 
   // Type and attack
-  this.type = 'f';
+  this.t = $.PW.F;
   this.attack = $.util.randInt(8, 12);
 
   /* Determine direction */
@@ -36,8 +36,8 @@ $.Fire = function(x, y, o) {
     this.angle = (this.angle + 15) % 360;
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.range(this.dx, -this.maxSpeed, this.maxSpeed);
-    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
+    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
 
     this.x += this.dx;
     this.y += this.dy;
@@ -76,7 +76,7 @@ $.Fire = function(x, y, o) {
     $.ctxfg.translate(tx + (this.w/2), ty + (this.h/2));
     $.ctxfg.rotate(this.angle / 180 * Math.PI);
     $.ctxfg.scale(2.0, 2.0);
-    $.ctxfg.drawImage(this.t, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, this.w/2, this.h/2);
+    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, this.w/2, this.h/2);
     $.ctxfg.restore();
   };
 
@@ -90,14 +90,14 @@ $.Earth = function(x, y, w, h, o) {
   this.w = 36;
   this.h = 36;
   this.a = 0.7; /* Acceleration */
-  this.maxSpeed = 6.00; /* Max speed */
+  this.maxS = 6.00; /* Max speed */
   this.dy = 0;
   this.bounds = {};
   this.dirX = 0;
   this.dirY = 1;
   this.x1 = this.x2 = 0; /* Action range for the block */
   this.ctime = Date.now();
-  this.type = 'e';
+  this.t = $.PW.E;
   this.attack = $.util.randInt(26, 36);
   this.mana = 40;
 
@@ -136,7 +136,7 @@ $.Earth = function(x, y, w, h, o) {
     this.ctime = Date.now();
     //this.dy += this.a * this.dirY;
     this.dy += (this.a * (elapsed * elapsed)) / 2;
-    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
 
     this.y += this.dy;
 
@@ -204,7 +204,7 @@ $.Water = function(x ,y, w, h, a) {
   this.mana = 20;
 
   // Type and attack
-  this.type = 'w';
+  this.t = $.PW.W;
   this.attack = $.util.randInt(3, 6);
 
   this.update = function(i) {
@@ -232,17 +232,33 @@ $.Water = function(x ,y, w, h, a) {
     var self = this;
     $.enemies.forEach(function(e) {
       if ($.collide.rect(self, e)) {
-        e.damage(self);
+        var a = e.damage(self);
+        if (a !== null && a !== 0) $.hero.heal(a);
       }
     });
   };
 
   this.render = function(tx, ty) {
     $.ctxfg.save();
-    $.ctxfg.fillStyle = 'rgba(0, 115, 255, 1)';
+    $.ctxfg.fillStyle = 'rgba(0, 115, 255, 0.3)';
     $.ctxfg.beginPath();
     $.ctxfg.arc(tx, ty, this.r, 0, (2 * Math.PI), false);
     $.ctxfg.fill();
+    var x_ = tx - 11;
+    var y_ = ty - 11;
+    $.ctxfg.fillStyle = 'hsla(190, 90%, 76%, 0.59)';
+    $.ctxfg.fillRect(x_ + 7, y_ + 7, 8, 8);
+    $.ctxfg.fillStyle = 'hsl(190, 90%, 76%)';
+    $.ctxfg.fillRect(x_ + 4, y_ + 10, 14, 2);
+    $.ctxfg.fillRect(x_ + 10, y_ + 4, 2, 14);
+    $.ctxfg.fillRect(x_ + 10, y_, 2, 2);
+    $.ctxfg.fillRect(x_ + 3, y_ + 3, 2, 2);
+    $.ctxfg.fillRect(x_ + 17, y_ + 3, 2, 2);
+    $.ctxfg.fillRect(x_, y_ + 10, 2, 2);
+    $.ctxfg.fillRect(x_ + 20, y_ + 10, 2, 2);
+    $.ctxfg.fillRect(x_ + 3, y_ + 17, 2, 2);
+    $.ctxfg.fillRect(x_ + 17, y_ + 17, 2, 2);
+    $.ctxfg.fillRect(x_ + 10, y_ + 20, 2, 2);
     $.ctxfg.restore();
   };
 
@@ -258,12 +274,12 @@ $.Air = function(x, y, o) {
   this.w = 24;
   this.h = 24;
   this.a = 0.55; /* Acceleration */
-  this.maxSpeed = 6.00; /* Max speed */
+  this.maxS = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = {};
   this.mana = 5;
 
-  this.type = 'a';
+  this.t = $.PW.A;
   this.attack = $.util.randInt(7, 10);
 
   /* Determine direction */
@@ -284,8 +300,8 @@ $.Air = function(x, y, o) {
   this.update = function(i) {
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.range(this.dx, -this.maxSpeed, this.maxSpeed);
-    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
+    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
 
     this.x += this.dx;
     this.y += this.dy;

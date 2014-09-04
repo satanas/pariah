@@ -17,10 +17,10 @@ $.Zombie = function(x, y) {
   this.attack = $.util.randInt(12, 16);
 
   this.damage = function(p) {
-    if (this.hurt) return;
+    if (this.hurt) return null;
     if ($.util.canMiss(this.missingChance)) {
       $.textPops.push(new $.TextPop('miss', this.x, this.y - 5, 'white'));
-      return;
+      return 0;
     }
     var attack = p.attack;
     if (p.type == 'f')
@@ -29,7 +29,8 @@ $.Zombie = function(x, y) {
     this.hurt = true;
     this.ctime = Date.now();
     this.elapsed = 0;
-    $.textPops.push(new $.TextPop(attack, this.x + 6, this.y - 5, 'yellow'));
+    $.textPops.push(new $.TextPop('-' + attack, this.x + 7, this.y - 5, 'yellow'));
+    return attack;
   };
 
   this.update = function(i) {
