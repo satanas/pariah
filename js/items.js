@@ -13,7 +13,7 @@ $.Item = function(x, y, t) {
 
   this.update = function(i) {
     if ($.collide.rect(this, $.hero)) {
-      //$.hero.gainPower(this);
+      $.hero.gain(this.t);
       this.die(i);
     }
   };

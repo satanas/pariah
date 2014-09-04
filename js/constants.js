@@ -8,6 +8,7 @@ $.MANA_USAGE = {
 $.MANA_REGEN = 1.75; /* Per millisecond */
 $.HEALTH_REGEN = 2.15; /* Per millisecond */
 
+// 1=Fire 2=Earth 3=Water 4=Air
 $.PW = {
   F: 1,
   E: 2,

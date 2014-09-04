@@ -1,6 +1,6 @@
 $.init = function() {
   $.input = $.Input;
-  $.input.bind([13, 32, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
+  $.input.bind([13, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
   $.cfg = $.util.byId('fg');
   $.cv1 = document.createElement("canvas");
   $.cv2 = document.createElement("canvas");
@@ -114,7 +114,7 @@ $.startGame = function() {
   $.hero = new $.Hero(40, 50);
   $.walls = [new $.Wall(384, 384), new $.Wall(160, 416)];
   $.enemies = [new $.Zombie(256, 60), new $.Zombie(512, 544)];
-  $.items = [new $.FireItem(400, 200)];
+  $.items = [new $.FireItem(400, 200), new $.WaterItem(400, 360)];
   $.textPops = [];
   $.tiles[12][12] = 1;
   $.tiles[5][13] = 1;

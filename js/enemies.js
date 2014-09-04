@@ -11,7 +11,7 @@ $.Zombie = function(x, y) {
   this.hurt = false;
   this.ctime = 0;
   this.elapsed = 0;
-  this.iTime = 1000; // Invincibility time
+  this.itime = 700; // Invincibility time
   this.blink = false;
   this.bCount = 0;
   this.attack = $.util.randInt(12, 16);
@@ -23,7 +23,7 @@ $.Zombie = function(x, y) {
       return 0;
     }
     var attack = p.attack;
-    if (p.type == 'f')
+    if (p.type === $.PW.F)
       attack = Math.floor(p.attack + (p.attack * this.vulnerability));
     this.he -= attack;
     this.hurt = true;
@@ -50,7 +50,7 @@ $.Zombie = function(x, y) {
         this.blink = !this.blink;
       }
 
-      if (this.elapsed >= this.iTime) {
+      if (this.elapsed >= this.itime) {
         this.hurt = false;
         this.bCount = 0;
         this.blink = false;

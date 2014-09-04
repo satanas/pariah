@@ -7,7 +7,7 @@ $.Hero = function(_x, _y) {
   this.s = 0.13; // Speed
   this.dx = this.dy = 0;
   this.o = 'd'; // Orientation
-  this.cp = $.PW.F; // Current power 1=Fire 2=Earth 3=Water 4=Air */
+  this.pows = []; // Available powers
   this.hurt = false;
   this.he = 100; // Health
   this.ma = 98; // Mana
@@ -66,6 +66,12 @@ $.Hero = function(_x, _y) {
     $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'white'));
   };
 
+  this.gain = function(t) {
+    if (t in this.pows) return;
+    this.pows.push(t);
+    console.log('gained', t, this.pows);
+  };
+
   this.update = function() {
     var self = this;
     var now = Date.now();
@@ -102,16 +108,6 @@ $.Hero = function(_x, _y) {
     } else if ($.input.p(40)) {
       this.o = 'd';
       this.dy += this.s;
-    }
-
-    if ($.input.p(49)) {
-      this.cp = 1;
-    } else if ($.input.p(50)) {
-      this.cp = 2;
-    } else if ($.input.p(51)) {
-      this.cp = 3;
-    } else if ($.input.p(52)) {
-      this.cp = 4;
     }
 
     this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
@@ -161,22 +157,32 @@ $.Hero = function(_x, _y) {
     this.he = $.util.range(this.he, 0, this.maxH);
 
     /* Summon elements */
-    if ($.input.p(32) && this.cd === 0) {
-      if (this.ma >= $.MANA_USAGE[this.cp] && !(this.cp === 3 && this.shield)) {
-        if (this.cp === $.PW.F) {
+    var cp = null;
+    if ($.input.p(49) && this.pows.indexOf($.PW.F) >= 0) {
+      cp = $.PW.F;
+    } else if ($.input.p(50) && this.pows.indexOf($.PW.E) >= 0) {
+      cp = $.PW.E;
+    } else if ($.input.p(51) && this.pows.indexOf($.PW.W) >= 0) {
+      cp = $.PW.W;
+    } else if ($.input.p(52) && this.pows.indexOf($.PW.A) >= 0) {
+      cp = $.PW.A;
+    }
+    if (this.cd === 0 && cp !== null) {
+      if (this.ma >= $.MANA_USAGE[cp] && !(cp === $.PW.W && this.shield)) {
+        this.ma -= $.MANA_USAGE[cp];
+        this.cd = $.POWER_COOLDOWN;
+        if (cp === $.PW.F) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (this.cp === $.PW.E) {
+        } else if (cp === $.PW.E) {
           $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (this.cp === $.PW.W) {
+        } else if (cp === $.PW.W) {
           [0, 120, 240].forEach(function(a) {
             $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
           });
           this.shield = true;
-        } else if (this.cp === $.PW.A) {
+        } else if (cp === $.PW.A) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
-        this.ma -= $.MANA_USAGE[this.cp];
-        this.cd = $.POWER_COOLDOWN;
       }
     }
 
