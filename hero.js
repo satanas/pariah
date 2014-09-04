@@ -10,7 +10,7 @@ $.Hero = function(_x, _y) {
   this.cooldown = 0;
   this.ctime = Date.now(); /* Current time */
   this.cpower = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
-  this.health = 70;
+  this.health = 100;
   this.mana = 98;
   this.shield = false;
 
@@ -27,16 +27,16 @@ $.Hero = function(_x, _y) {
   this.totalFrames = 3;
   this.anim = {
     'run': {
-      'd': [{x:37, y:0},  {x:53, y:0},  {x:69, y:0}],
-      'u': [{x:37, y:16}, {x:53, y:16}, {x:69, y:16}],
-      'r': [{x:37, y:32}, {x:53, y:32}, {x:69, y:32}],
-      'l': [{x:37, y:48}, {x:53, y:48}, {x:69, y:48}],
+      'd': [{x:53, y:0},  {x:69, y:0},  {x:85, y:0}],
+      'u': [{x:53, y:16}, {x:69, y:16}, {x:85, y:16}],
+      'r': [{x:53, y:32}, {x:69, y:32}, {x:85, y:32}],
+      'l': [{x:53, y:48}, {x:69, y:48}, {x:85, y:48}],
     },
     'idle': {
-      'd': {x:37, y:0},
-      'u': {x:37, y:16},
-      'r': {x:37, y:32},
-      'l': {x:37, y:48}
+      'd': {x:53, y:0},
+      'u': {x:53, y:16},
+      'r': {x:53, y:32},
+      'l': {x:53, y:48}
     }
   };
 
@@ -92,7 +92,7 @@ $.Hero = function(_x, _y) {
     if (this.shield) {
       this.health += elapsed * $.HEALTH_REGEN / 1000;
       this.health = $.util.checkRange(this.health, 0, this.maxHealth);
-      this.mana -= elapsed * $.MANA_REGEN / 1000;
+      this.mana -= elapsed * $.MANA_USAGE[3] / 1000;
     } else {
       this.mana += elapsed * $.MANA_REGEN / 1000;
     }

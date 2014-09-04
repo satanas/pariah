@@ -30,6 +30,13 @@ $.util.randInt = function(a, b) {
   return Math.floor(Math.random() * (b - a)) + a;
 };
 
+// Returns true if there is chance to miss one attack
+// Receives p (number between 0 and 1) representing the probability of success
+$.util.canMiss = function(p) {
+  var x = $.util.randInt(1, 100);
+  return (x <= Math.floor(p * 100));
+};
+
 // Enable the passage of the 'this' object through the JavaScript timers
 
 var __nativeST__ = window.setTimeout, __nativeSI__ = window.setInterval;

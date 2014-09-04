@@ -4,9 +4,17 @@ $.Fire = function(x, y, o) {
   this.w = 24;
   this.h = 24;
   this.a = 0.55; /* Acceleration */
-  this.mx_s = 6.00; /* Max speed */
+  this.maxSpeed = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = {};
+  this.anim = {x:19, y:18};
+  this.t = document.getElementById('tileset');
+  this.angle = 0;
+  this.mana = 5;
+
+  // Type and damage
+  this.type = 'f';
+  this.damage = $.util.randInt(8, 12);
 
   /* Determine direction */
   if (o === 'l') {
@@ -24,10 +32,11 @@ $.Fire = function(x, y, o) {
   }
 
   this.update = function(i) {
+    this.angle = (this.angle + 15) % 360;
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.checkRange(this.dx, -this.mx_s, this.mx_s);
-    this.dy = $.util.checkRange(this.dy, -this.mx_s, this.mx_s);
+    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.x += this.dx;
     this.y += this.dy;
@@ -39,25 +48,35 @@ $.Fire = function(x, y, o) {
       r: this.x + this.w
     };
 
-    /* Check world boundaries */
-    if ((this.x + this.w) > $.ww || this.x < 0)
-      this.die(i);
-    if ((this.y + this.h) > $.wh || this.y < 0)
-      this.die(i);
-
+    // Check collision with enemies
     var self = this;
-    /* Check for collisions */
+    $.enemies.forEach(function(e) {
+      if ($.collide.rect(self, e)) {
+        e.damage(self);
+        self.die(i);
+      }
+    });
+
+    // Check for wall collisions
     $.walls.forEach(function(w) {
       if ($.collide.rect(self, w)) {
         self.die(i);
       }
     });
+
+    // Check world boundaries
+    if ((this.x + this.w) > $.ww || this.x < 0)
+      this.die(i);
+    if ((this.y + this.h) > $.wh || this.y < 0)
+      this.die(i);
   };
 
   this.render = function(tx, ty) {
     $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(37, 100%, 50%, 1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.translate(tx + (this.w/2), ty + (this.h/2));
+    $.ctxfg.rotate(this.angle / 180 * Math.PI);
+    $.ctxfg.scale(2.0, 2.0);
+    $.ctxfg.drawImage(this.t, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, this.w/2, this.h/2);
     $.ctxfg.restore();
   };
 
@@ -71,13 +90,16 @@ $.Earth = function(x, y, w, h, o) {
   this.w = 36;
   this.h = 36;
   this.a = 0.7; /* Acceleration */
-  this.mx_s = 6.00; /* Max speed */
+  this.maxSpeed = 6.00; /* Max speed */
   this.dy = 0;
   this.bounds = {};
   this.dirX = 0;
   this.dirY = 1;
   this.x1 = this.x2 = 0; /* Action range for the block */
   this.ctime = Date.now();
+  this.type = 'e';
+  this.damage = $.util.randInt(26, 36);
+  this.mana = 40;
 
   /* Determine direction */
   if (o === 'l') {
@@ -114,7 +136,7 @@ $.Earth = function(x, y, w, h, o) {
     this.ctime = Date.now();
     //this.dy += this.a * this.dirY;
     this.dy += (this.a * (elapsed * elapsed)) / 2;
-    this.dy = $.util.checkRange(this.dy, -this.mx_s, this.mx_s);
+    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.y += this.dy;
 
@@ -125,16 +147,24 @@ $.Earth = function(x, y, w, h, o) {
       r: this.x + this.w
     };
 
+    // Check collision with enemies
+    var self = this;
+    $.enemies.forEach(function(e) {
+      if ($.collide.rect(self, e)) {
+        e.damage(self);
+      }
+    });
+
     /* Check action range */
     if ((this.y + this.h) > this.y2)
       this.die(i);
   };
 
   this.render = function(tx, ty) {
-    var s1 = $.cam.transCoord({x: this.sx1, y: this.sy1});
-    var s2 = $.cam.transCoord({x: this.sx2, y: this.sy2});
-    var cp1 = $.cam.transCoord({x: this.cpx1, y: this.cpy1});
-    var cp2 = $.cam.transCoord({x: this.cpx2, y: this.cpy2});
+    var s1 = $.cam.transCoord({x: this.sx1, y: this.sy1, bounds:{r:0, b:0}});
+    var s2 = $.cam.transCoord({x: this.sx2, y: this.sy2, bounds:{r:0, b:0}});
+    var cp1 = $.cam.transCoord({x: this.cpx1, y: this.cpy1, bounds:{r:0, b:0}});
+    var cp2 = $.cam.transCoord({x: this.cpx2, y: this.cpy2, bounds:{r:0, b:0}});
 
     /* Render shadow */
     $.ctxfg.save();
@@ -164,12 +194,18 @@ $.Water = function(x ,y, w, h, a) {
   this.h = 20;
   this.vw = 2 * Math.PI;
   this.a = a * Math.PI / 180;
-  this.d = 32;
+  this.d = 35;
   this.r = 10; /* Radius */
   this.x = x;
   this.y = y;
-  this.lifetime = 4000; /* Milliseconds */
+  this.lifetime = 6000; /* Milliseconds */
   this.ctime = Date.now();
+  this.bounds = {};
+  this.mana = 20;
+
+  // Type and damage
+  this.type = 'w';
+  this.damage = $.util.randInt(3, 6);
 
   this.update = function(i) {
     var elapsed = Date.now() - this.ctime;
@@ -184,6 +220,21 @@ $.Water = function(x ,y, w, h, a) {
     this.a += this.vw * elapsed / 1000;
     this.x = this.cx + (this.d * Math.cos(this.a));
     this.y = this.cy + (this.d * Math.sin(this.a));
+
+    this.bounds = {
+      b: this.y + this.h,
+      t: this.y,
+      l: this.x,
+      r: this.x + this.w
+    };
+
+    // Check collision with enemies
+    var self = this;
+    $.enemies.forEach(function(e) {
+      if ($.collide.rect(self, e)) {
+        e.damage(self);
+      }
+    });
   };
 
   this.render = function(tx, ty) {
@@ -207,9 +258,13 @@ $.Air = function(x, y, o) {
   this.w = 24;
   this.h = 24;
   this.a = 0.55; /* Acceleration */
-  this.mx_s = 6.00; /* Max speed */
+  this.maxSpeed = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = {};
+  this.mana = 5;
+
+  this.type = 'a';
+  this.damage = $.util.randInt(7, 10);
 
   /* Determine direction */
   if (o === 'l') {
@@ -229,8 +284,8 @@ $.Air = function(x, y, o) {
   this.update = function(i) {
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.checkRange(this.dx, -this.mx_s, this.mx_s);
-    this.dy = $.util.checkRange(this.dy, -this.mx_s, this.mx_s);
+    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.x += this.dx;
     this.y += this.dy;
@@ -242,19 +297,28 @@ $.Air = function(x, y, o) {
       r: this.x + this.w
     };
 
-    /* Check world boundaries */
-    if ((this.x + this.w) > $.ww || this.x < 0)
-      this.die(i);
-    if ((this.y + this.h) > $.wh || this.y < 0)
-      this.die(i);
-
+    // Check collision with enemies
     var self = this;
+    $.enemies.forEach(function(e) {
+      if ($.collide.rect(self, e)) {
+        e.damage(self);
+        self.die(i);
+      }
+    });
+
     /* Check for collisions */
     $.walls.forEach(function(w) {
       if ($.collide.rect(self, w)) {
         self.die(i);
       }
     });
+
+    /* Check world boundaries */
+    if ((this.x + this.w) > $.ww || this.x < 0)
+      this.die(i);
+    if ((this.y + this.h) > $.wh || this.y < 0)
+      this.die(i);
+
   };
 
   this.render = function(tx, ty) {

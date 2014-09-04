@@ -114,6 +114,8 @@ $.startGame = function() {
 
   $.hero = new $.Hero(40, 50);
   $.walls = [new $.Wall(384, 384), new $.Wall(160, 416)];
+  $.enemies = [new $.Zombie(256, 60)];
+  $.textPops = [];
   $.tiles[12][12] = 1;
   $.tiles[5][13] = 1;
   for (i = 0; i < 5; i++) {
@@ -163,6 +165,12 @@ $.loop = function() {
   $.powerGrp.forEach(function(p, i) {
     p.update(i);
   });
+  $.enemies.forEach(function(e, i) {
+    e.update(i);
+  });
+  $.textPops.forEach(function(t, i) {
+    t.update(i);
+  });
   var fow = $.fow.update();
   //$.cam.setTarget($.hero);
   $.cam.ofx = $.ofx;
@@ -170,8 +178,10 @@ $.loop = function() {
 
   /* Render */
   $.cam.render($.walls);
+  $.cam.render($.enemies);
   $.hero.render();
   $.cam.render($.powerGrp);
+  $.cam.render($.textPops);
 
   /* Fog of War */
   $.ctx1.fillStyle = "rgba(0,0,0,1)";
@@ -186,7 +196,7 @@ $.loop = function() {
   $.ctx1.globalCompositeOperation = 'destination-out';
   $.ctx1.drawImage($.cv2, 0, 0, $.vw, $.vh);
   $.ctx1.restore();
-  $.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
+  //$.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
 
 
   //console.log(xx, yy);
