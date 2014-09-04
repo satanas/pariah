@@ -1,5 +1,6 @@
 $.Collide = function() {
   this.rect = function(o1, o2) {
+    if (Object.keys(o1.bounds).length === 0 || Object.keys(o2.bounds).length === 0) return false;
     return !((o1.bounds.b < o2.bounds.t) ||
         (o1.bounds.t > o2.bounds.b) ||
         (o1.bounds.l > o2.bounds.r) ||
