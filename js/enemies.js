@@ -23,7 +23,7 @@ $.Zombie = function(x, y) {
       return 0;
     }
     var attack = p.attack;
-    if (p.type === $.PW.F)
+    if (p.type === $.PW.F.v)
       attack = Math.floor(p.attack + (p.attack * this.vulnerability));
     this.he -= attack;
     this.hurt = true;

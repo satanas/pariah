@@ -19,7 +19,7 @@ $.util._fadeOutStep = function(i, cb) {
   if (e.style.opacity <= 0) {
     clearInterval($.util.fading[i]);
     $.util.fading.splice($.util.fading.indexOf(i), 1);
-    cb();
+    if (cb !== undefined) cb();
   }
 };
 

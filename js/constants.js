@@ -10,8 +10,20 @@ $.HEALTH_REGEN = 2.15; /* Per millisecond */
 
 // 1=Fire 2=Earth 3=Water 4=Air
 $.PW = {
-  F: 1,
-  E: 2,
-  W: 3,
-  A: 4
+  F: {
+    v: 1,
+    n: 'Fire'
+  },
+  E: {
+    v: 2,
+    n: 'Earth'
+  },
+  W: {
+    v: 3,
+    n: 'Water'
+  },
+  A: {
+    v: 4,
+    n: 'Air'
+  }
 };

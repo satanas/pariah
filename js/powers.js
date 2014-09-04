@@ -13,7 +13,7 @@ $.Fire = function(x, y, o) {
   this.mana = 5;
 
   // Type and attack
-  this.t = $.PW.F;
+  this.t = $.PW.F.v;
   this.attack = $.util.randInt(8, 12);
 
   /* Determine direction */
@@ -97,7 +97,7 @@ $.Earth = function(x, y, w, h, o) {
   this.dirY = 1;
   this.x1 = this.x2 = 0; /* Action range for the block */
   this.ctime = Date.now();
-  this.t = $.PW.E;
+  this.t = $.PW.E.v;
   this.attack = $.util.randInt(26, 36);
   this.mana = 40;
 
@@ -204,7 +204,7 @@ $.Water = function(x ,y, w, h, a) {
   this.mana = 20;
 
   // Type and attack
-  this.t = $.PW.W;
+  this.t = $.PW.W.v;
   this.attack = $.util.randInt(3, 6);
 
   this.update = function(i) {
@@ -279,7 +279,7 @@ $.Air = function(x, y, o) {
   this.bounds = {};
   this.mana = 5;
 
-  this.t = $.PW.A;
+  this.t = $.PW.A.v;
   this.attack = $.util.randInt(7, 10);
 
   /* Determine direction */

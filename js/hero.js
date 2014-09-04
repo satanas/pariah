@@ -67,9 +67,11 @@ $.Hero = function(_x, _y) {
   };
 
   this.gain = function(t) {
-    if (t in this.pows) return;
-    this.pows.push(t);
-    console.log('gained', t, this.pows);
+    if (t.v in this.pows) return;
+    this.pows.push(t.v);
+    $.util.byId('m1').innerHTML = ['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' ');
+    $.util.show('m1');
+    setTimeout(function() { $.util.fadeOut('m1'); }, 3000);
   };
 
   this.update = function() {
@@ -158,29 +160,29 @@ $.Hero = function(_x, _y) {
 
     /* Summon elements */
     var cp = null;
-    if ($.input.p(49) && this.pows.indexOf($.PW.F) >= 0) {
-      cp = $.PW.F;
-    } else if ($.input.p(50) && this.pows.indexOf($.PW.E) >= 0) {
-      cp = $.PW.E;
-    } else if ($.input.p(51) && this.pows.indexOf($.PW.W) >= 0) {
-      cp = $.PW.W;
-    } else if ($.input.p(52) && this.pows.indexOf($.PW.A) >= 0) {
-      cp = $.PW.A;
+    if ($.input.p(49) && this.pows.indexOf($.PW.F.v) >= 0) {
+      cp = $.PW.F.v;
+    } else if ($.input.p(50) && this.pows.indexOf($.PW.E.v) >= 0) {
+      cp = $.PW.E.v;
+    } else if ($.input.p(51) && this.pows.indexOf($.PW.W.v) >= 0) {
+      cp = $.PW.W.v;
+    } else if ($.input.p(52) && this.pows.indexOf($.PW.A.v) >= 0) {
+      cp = $.PW.A.v;
     }
     if (this.cd === 0 && cp !== null) {
-      if (this.ma >= $.MANA_USAGE[cp] && !(cp === $.PW.W && this.shield)) {
+      if (this.ma >= $.MANA_USAGE[cp] && !(cp === $.PW.W.v && this.shield)) {
         this.ma -= $.MANA_USAGE[cp];
         this.cd = $.POWER_COOLDOWN;
-        if (cp === $.PW.F) {
+        if (cp === $.PW.F.v) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (cp === $.PW.E) {
+        } else if (cp === $.PW.E.v) {
           $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (cp === $.PW.W) {
+        } else if (cp === $.PW.W.v) {
           [0, 120, 240].forEach(function(a) {
             $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
           });
           this.shield = true;
-        } else if (cp === $.PW.A) {
+        } else if (cp === $.PW.A.v) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
       }
