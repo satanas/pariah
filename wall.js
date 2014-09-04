@@ -4,7 +4,7 @@ $.Wall = function(x, y, hf) {
   this.w = 32;
   this.h = 32;
   this.half = hf;
-  this.t = document.getElementById('tileset');
+  this.t = $.util.byId('tileset');
   this.r = Math.sqrt(Math.pow(this.w/2, 2) + Math.pow(this.h/2, 2));
   var inView = 0;
 

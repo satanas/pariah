@@ -1,7 +1,7 @@
 $.init = function() {
   $.input = $.Input;
   $.input.bind([13, 32, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
-  $.cfg = document.getElementById('fg');
+  $.cfg = $.util.byId('fg');
   $.cv1 = document.createElement("canvas");
   $.cv2 = document.createElement("canvas");
   // Game over messages
@@ -12,80 +12,79 @@ $.init = function() {
 };
 
 $.showWelcome = function() {
-  $.input.update();
+  $.input.u();
   $.quitScenes();
-  document.getElementById('s').style.visibility = 'visible';
+  $.util.visible('s', true);
   $.scene = new $.Scene();
   $.welcomeLoop();
 };
 
 $.showIntro = function() {
-  $.input.update();
+  $.input.u();
   $.quitScenes();
-  document.getElementById('i').style.visibility = 'visible';
+  $.util.visible('i', true);
   $.scene = new $.Scene();
   $.util.show('i0');
   $.introLoop();
 };
 
 $.showGameOver = function() {
-  $.input.update();
+  $.input.u();
   $.quitScenes();
-  document.getElementById('g1').innerHTML = $.goMsg[$.util.randInt(0, $.goMsg.length)];
-  document.getElementById('g').style.visibility = 'visible';
+  $.util.byId('g1').innerHTML = $.goMsg[$.util.randInt(0, $.goMsg.length)];
+  $.util.visible('g', true);
   $.gameOverLoop();
 };
 
 $.welcomeLoop = function() {
-  if ($.input.isReleased(13)) return $.showIntro();
+  if ($.input.r(13)) return $.showIntro();
 
-  $.scene.elapsed = Date.now() - $.scene.ctime;
-  if ($.scene.elapsed > 400) {
-    $.scene.ctime = Date.now();
-    $.scene.elapsed = 0;
-    if ($.scene.step === 0) {
-      $.scene.step = 1;
-      document.getElementById('s1').style.visibility = 'hidden';
+  $.scene.e = Date.now() - $.scene.t;
+  if ($.scene.e > 400) {
+    $.scene.t = Date.now();
+    $.scene.e = 0;
+    if ($.scene.s === 0) {
+      $.scene.s = 1;
+      $.util.visible('s1', false);
     } else {
-      $.scene.step = 0;
-      document.getElementById('s1').style.visibility = 'visible';
+      $.scene.s = 0;
+      $.util.visible('s1', true);
     }
   }
-  $.input.update();
+  $.input.u();
   requestAnimationFrame($.welcomeLoop);
 };
 
 $.introLoop = function() {
-  if ($.input.isReleased(13)) return $.startGame();
-  if ($.scene.step > 7) return $.startGame();
+  if ($.input.r(13)) return $.startGame();
+  if ($.scene.s > 6) return $.startGame();
 
-  $.scene.elapsed = Date.now() - $.scene.ctime;
-  if ($.scene.elapsed >= 1800 && !$.scene.fading) {
-    $.scene.fading = 1;
-    $.util.fadeOut('i' + $.scene.step, function() {
-      $.scene.step += 1;
-      $.scene.ctime = Date.now();
-      $.scene.elapsed = 0;
-      $.scene.fading = 0;
-      $.util.show('i' + $.scene.step);
+  $.scene.e = Date.now() - $.scene.t;
+  if ($.scene.e >= 1800 && !$.scene.f) {
+    $.scene.f = 1;
+    $.util.fadeOut('i' + $.scene.s, function() {
+      $.scene.s += 1;
+      $.scene.t = Date.now();
+      $.scene.e = 0;
+      $.scene.f = 0;
+      $.util.show('i' + $.scene.s);
     });
   }
 
-  $.input.update();
+  $.input.u();
   requestAnimationFrame($.introLoop);
 };
 
 $.gameOverLoop = function() {
-  if ($.input.isReleased(13)) return $.startGame();
-  $.input.update();
+  if ($.input.r(13)) return $.startGame();
+  $.input.u();
   requestAnimationFrame($.gameOverLoop);
 };
 
 $.quitScenes = function() {
-  document.getElementById('s').style.visibility = 'hidden';
-  document.getElementById('s1').style.visibility = 'hidden';
-  document.getElementById('i').style.visibility = 'hidden';
-  document.getElementById('g').style.visibility = 'hidden';
+  ['s', 's1', 'i', 'g'].forEach(function(e) {
+      $.util.visible(e, false);
+  });
 };
 
 $.startGame = function() {
@@ -135,6 +134,7 @@ $.startGame = function() {
     $.walls.push(new $.Wall(0, i * 32, 1));
     $.walls.push(new $.Wall(800 - 32, i * 32, 1));
   }
+  console.log('walls', $.walls.length);
 
   // Map visualization
   //var st = [];

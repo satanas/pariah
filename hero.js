@@ -4,33 +4,36 @@ $.Hero = function(_x, _y) {
   this.w = 16;
   this.h = 32;
   this.bounds = {};
-  this.speed = 0.13;
+  // Speed
+  this.s = 0.13;
   this.dx = this.dy = 0;
   this.o = 'd'; /* Orientation*/
   this.cooldown = 0;
   this.ctime = Date.now(); /* Current time */
-  this.cpower = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
-  this.health = 100;
-  this.mana = 98;
+  // Current Power
+  this.cp = 1; /* 1=Fire 2=Earth 3=Water 4=Air */
+  // Health
+  this.he = 100;
+  this.ma = 98;
   this.shield = false;
 
-  /* Max values */
-  this.maxSpeed = 2.00;
-  this.maxHealth = 100;
-  this.maxMana = 100;
-  this.t = document.getElementById('tileset');
+  /* Max speed, max health and max mana */
+  this.maxS = 2.00;
+  this.maxH = 100;
+  this.maxM = 100;
+  this.t = $.util.byId('tileset');
 
   /* Animations */
   this.count = 0;
   this.frameDuration = 5;
   this.currFrame = 0;
-  this.totalFrames = 3;
+  this.totalFrames = 2;
   this.anim = {
     'run': {
-      'd': [{x:53, y:0},  {x:69, y:0},  {x:85, y:0}],
-      'u': [{x:53, y:16}, {x:69, y:16}, {x:85, y:16}],
-      'r': [{x:53, y:32}, {x:69, y:32}, {x:85, y:32}],
-      'l': [{x:53, y:48}, {x:69, y:48}, {x:85, y:48}],
+      'd': [{x:53, y:0},  {x:69, y:0} ],// {x:85, y:0}],
+      'u': [{x:53, y:16}, {x:69, y:16}],// {x:85, y:16}],
+      'r': [{x:53, y:32}, {x:69, y:32}],// {x:85, y:32}],
+      'l': [{x:53, y:48}, {x:69, y:48}],// {x:85, y:48}],
     },
     'idle': {
       'd': {x:53, y:0},
@@ -45,39 +48,39 @@ $.Hero = function(_x, _y) {
     var elapsed = now - this.ctime;
     this.ctime = now;
 
-    if ($.input.isPressed(37)) {
+    if ($.input.p(37)) {
       this.o = 'l';
-      this.dx -= this.speed;
-    } else if ($.input.isPressed(39)) {
+      this.dx -= this.s;
+    } else if ($.input.p(39)) {
       this.o = 'r';
-      this.dx += this.speed;
+      this.dx += this.s;
     }
 
-    if ($.input.isPressed(38)) {
+    if ($.input.p(38)) {
       this.o = 'u';
-      this.dy -= this.speed;
-    } else if ($.input.isPressed(40)) {
+      this.dy -= this.s;
+    } else if ($.input.p(40)) {
       this.o = 'd';
-      this.dy += this.speed;
+      this.dy += this.s;
     }
 
-    if ($.input.isPressed(49)) {
-      this.cpower = 1;
-    } else if ($.input.isPressed(50)) {
-      this.cpower = 2;
-    } else if ($.input.isPressed(51)) {
-      this.cpower = 3;
-    } else if ($.input.isPressed(52)) {
-      this.cpower = 4;
+    if ($.input.p(49)) {
+      this.cp = 1;
+    } else if ($.input.p(50)) {
+      this.cp = 2;
+    } else if ($.input.p(51)) {
+      this.cp = 3;
+    } else if ($.input.p(52)) {
+      this.cp = 4;
     }
 
-    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
-    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
+    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
 
-    if (!$.input.isPressed(37) && !$.input.isPressed(39)) {
+    if (!$.input.p(37) && !$.input.p(39)) {
       this.dx = 0;
     }
-    if (!$.input.isPressed(38) && !$.input.isPressed(40)) {
+    if (!$.input.p(38) && !$.input.p(40)) {
       this.dy = 0;
     }
 
@@ -90,30 +93,31 @@ $.Hero = function(_x, _y) {
 
     /* Regeneration */
     if (this.shield) {
-      this.health += elapsed * $.HEALTH_REGEN / 1000;
-      this.health = $.util.checkRange(this.health, 0, this.maxHealth);
-      this.mana -= elapsed * $.MANA_USAGE[3] / 1000;
+      this.he += elapsed * $.HEALTH_REGEN / 1000;
+      this.he = $.util.range(this.he, 0, this.maxH);
+      this.ma -= elapsed * $.MANA_USAGE[3] / 1000;
     } else {
-      this.mana += elapsed * $.MANA_REGEN / 1000;
+      this.ma += elapsed * $.MANA_REGEN / 1000;
     }
-    this.mana = $.util.checkRange(this.mana, 0, this.maxMana);
+    this.ma = $.util.range(this.ma, 0, this.maxM);
 
     /* Summon elements */
-    if ($.input.isPressed(32) && this.cooldown === 0) {
-      if (this.mana >= $.MANA_USAGE[this.cpower]) {
-        if (this.cpower === 1) {
+    if ($.input.p(32) && this.cooldown === 0) {
+      if (this.ma >= $.MANA_USAGE[this.cp]) {
+        if (this.cp === 1) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (this.cpower === 2) {
+        } else if (this.cp === 2) {
           $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (this.cpower === 3) {
-          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 0));
-          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 120));
-          $.powerGrp.push(new $.Water(this.x, this.y, this.w, this.h, 240));
+        } else if (this.cp === 3) {
+          var self = this;
+          [0, 120, 240].forEach(function(a) {
+            $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
+          });
           this.shield = true;
-        } else if (this.cpower === 4) {
+        } else if (this.cp === 4) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
-        this.mana -= $.MANA_USAGE[this.cpower];
+        this.ma -= $.MANA_USAGE[this.cp];
         this.cooldown = $.POWER_COOLDOWN;
       }
     }

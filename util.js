@@ -1,7 +1,9 @@
 $.util = {
   'fading': [],
 };
-$.util.checkRange = function(v, ll, lu) {
+
+// Check that v is between ll and lu
+$.util.range = function(v, ll, lu) {
   if (v < ll) return ll;
   if (v > lu) return lu;
   return v;
@@ -12,7 +14,7 @@ $.util.fadeOut = function(i, cb) {
 };
 
 $.util._fadeOutStep = function(i, cb) {
-  var e = document.getElementById(i);
+  var e = $.util.byId(i);
   e.style.opacity -= 0.03;
   if (e.style.opacity <= 0) {
     clearInterval($.util.fading[i]);
@@ -22,7 +24,11 @@ $.util._fadeOutStep = function(i, cb) {
 };
 
 $.util.show = function(i) {
-  document.getElementById(i).style.opacity = 1.0;
+  $.util.byId(i).style.opacity = 1.0;
+};
+
+$.util.visible = function(i, v) {
+  $.util.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
 };
 
 /* Generate random integer in a (min, max) range */
@@ -35,6 +41,10 @@ $.util.randInt = function(a, b) {
 $.util.canMiss = function(p) {
   var x = $.util.randInt(1, 100);
   return (x <= Math.floor(p * 100));
+};
+
+$.util.byId = function(i) {
+  return document.getElementById(i);
 };
 
 // Enable the passage of the 'this' object through the JavaScript timers

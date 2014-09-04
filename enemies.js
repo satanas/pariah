@@ -4,8 +4,8 @@ $.Zombie = function(x, y) {
   this.w = 32;
   this.h = 32;
   this.bounds = {};
-  this.health = 30;
-  this.maxHealth = 30;
+  this.he = 30;
+  this.maxH = 30;
   this.vulnerability = 0.45;
   this.missingChance = 0.05;
   this.hurt = false;
@@ -24,7 +24,7 @@ $.Zombie = function(x, y) {
     var damage = p.damage;
     if (p.type == 'f')
       damage = Math.floor(p.damage + (p.damage * this.vulnerability));
-    this.health -= damage;
+    this.he -= damage;
     this.hurt = true;
     this.ctime = Date.now();
     this.elapsed = 0;
@@ -55,7 +55,7 @@ $.Zombie = function(x, y) {
       }
     }
 
-    if (this.health <= 0)
+    if (this.he <= 0)
       this.die(i);
   };
 
@@ -77,7 +77,7 @@ $.Zombie = function(x, y) {
     $.ctxfg.fillStyle = 'rgb(0,0,0)';
     $.ctxfg.fillRect(tx, ty - 10, 32, 5);
     $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty - 10, (this.health * 32) / this.maxHealth, 5);
+    $.ctxfg.fillRect(tx, ty - 10, (this.he * 32) / this.maxH, 5);
     $.ctxfg.restore();
 
   };

@@ -1,6 +1,10 @@
 $.Scene= function() {
-  this.step = 0;
-  this.elapsed = 0;
-  this.ctime = Date.now();
-  this.fading = 0;
+  // Step
+  this.s = 0;
+  // Elapsed
+  this.e = 0;
+  // Current time
+  this.t = Date.now();
+  // Fading
+  this.f = 0;
 };

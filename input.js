@@ -20,16 +20,20 @@ $.Input = (function() {
   });
 
   return {
-    isPressed: function(c) {
+    /* Is pressed */
+    p: function(c) {
       return !!pressed[c];
     },
-    isReleased: function(c) {
+    /* Is released */
+    r: function(c) {
       return ev[c] === 1;
     },
-    isDown: function(c) {
+    /* Is down */
+    d: function(c) {
       return ev[c] === -1;
     },
-    update: function() {
+    /* Update */
+    u: function() {
       Object.keys(pressed).forEach(function(k){
         ev[k] = 0;
       });

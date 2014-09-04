@@ -8,7 +8,7 @@ $.Fire = function(x, y, o) {
   this.dx = this.dy = 0;
   this.bounds = {};
   this.anim = {x:19, y:18};
-  this.t = document.getElementById('tileset');
+  this.t = $.util.byId('tileset');
   this.angle = 0;
   this.mana = 5;
 
@@ -35,8 +35,8 @@ $.Fire = function(x, y, o) {
     this.angle = (this.angle + 15) % 360;
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
-    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dx = $.util.range(this.dx, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.x += this.dx;
     this.y += this.dy;
@@ -136,7 +136,7 @@ $.Earth = function(x, y, w, h, o) {
     this.ctime = Date.now();
     //this.dy += this.a * this.dirY;
     this.dy += (this.a * (elapsed * elapsed)) / 2;
-    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.y += this.dy;
 
@@ -284,8 +284,8 @@ $.Air = function(x, y, o) {
   this.update = function(i) {
     this.dx += this.a * this.dirX;
     this.dy += this.a * this.dirY;
-    this.dx = $.util.checkRange(this.dx, -this.maxSpeed, this.maxSpeed);
-    this.dy = $.util.checkRange(this.dy, -this.maxSpeed, this.maxSpeed);
+    this.dx = $.util.range(this.dx, -this.maxSpeed, this.maxSpeed);
+    this.dy = $.util.range(this.dy, -this.maxSpeed, this.maxSpeed);
 
     this.x += this.dx;
     this.y += this.dy;
