@@ -1,29 +1,23 @@
-$.POWER_COOLDOWN = 380; /* Milliseconds */
-$.MANA_USAGE = {
-  1: 5,
-  2: 15,
-  3: 3,
-  4: 5
-};
-$.MANA_REGEN = 1.75; /* Per millisecond */
-$.HEALTH_REGEN = 2.15; /* Per millisecond */
-
-// 1=Fire 2=Earth 3=Water 4=Air
+// n: Name, v: Value, m: Mana consumption
 $.PW = {
   F: {
+    n: 'Fire',
     v: 1,
-    n: 'Fire'
+    m: 5
   },
   E: {
+    n: 'Earth',
     v: 2,
-    n: 'Earth'
+    m: 7
   },
   W: {
+    n: 'Water',
     v: 3,
-    n: 'Water'
+    m: 3
   },
   A: {
+    n: 'Air',
     v: 4,
-    n: 'Air'
+    m: 6
   }
 };

@@ -21,10 +21,12 @@ $.Hero = function(_x, _y) {
   this.cd = 0; // Cooldown
   this.rs = 0.15; // Resistance to attacks
 
-  /* Max speed, max health and max mana */
+  /* Max speed, max health, max mana, max cooldown */
   this.maxS = 2.00;
   this.maxH = 100;
   this.maxM = 100;
+  this.maxCD = 380;
+  this.mRegen = 1.75; /* Per millisecond */
   this.ts = $.util.byId('tileset');
 
   /* Animations */
@@ -150,10 +152,9 @@ $.Hero = function(_x, _y) {
 
     /* Regeneration */
     if (this.shield) {
-      //this.he += elapsed * $.HEALTH_REGEN / 1000;
-      this.ma -= elapsed * $.MANA_USAGE[3] / 1000;
+      this.ma -= elapsed * $.PW.W.m / 1000;
     } else {
-      this.ma += elapsed * $.MANA_REGEN / 1000;
+      this.ma += elapsed * this.mRegen / 1000;
     }
     this.ma = $.util.range(this.ma, 0, this.maxM);
     this.he = $.util.range(this.he, 0, this.maxH);
@@ -161,28 +162,28 @@ $.Hero = function(_x, _y) {
     /* Summon elements */
     var cp = null;
     if ($.input.p(49) && this.pows.indexOf($.PW.F.v) >= 0) {
-      cp = $.PW.F.v;
+      cp = $.PW.F;
     } else if ($.input.p(50) && this.pows.indexOf($.PW.E.v) >= 0) {
-      cp = $.PW.E.v;
+      cp = $.PW.E;
     } else if ($.input.p(51) && this.pows.indexOf($.PW.W.v) >= 0) {
-      cp = $.PW.W.v;
+      cp = $.PW.W;
     } else if ($.input.p(52) && this.pows.indexOf($.PW.A.v) >= 0) {
-      cp = $.PW.A.v;
+      cp = $.PW.A;
     }
     if (this.cd === 0 && cp !== null) {
-      if (this.ma >= $.MANA_USAGE[cp] && !(cp === $.PW.W.v && this.shield)) {
-        this.ma -= $.MANA_USAGE[cp];
-        this.cd = $.POWER_COOLDOWN;
-        if (cp === $.PW.F.v) {
+      if (this.ma >= cp.m && !(cp.v === $.PW.W.v && this.shield)) {
+        this.ma -= cp.m;
+        this.cd = this.maxCD;
+        if (cp.v === $.PW.F.v) {
           $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
-        } else if (cp === $.PW.E.v) {
+        } else if (cp.v === $.PW.E.v) {
           $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
-        } else if (cp === $.PW.W.v) {
+        } else if (cp.v === $.PW.W.v) {
           [0, 120, 240].forEach(function(a) {
             $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
           });
           this.shield = true;
-        } else if (cp === $.PW.A.v) {
+        } else if (cp.v === $.PW.A.v) {
           $.powerGrp.push(new $.Air(this.x, this.y, this.o));
         }
       }
