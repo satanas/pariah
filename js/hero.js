@@ -71,6 +71,7 @@ $.Hero = function(_x, _y) {
 
   this.gain = function(t) {
     if (this.pows.indexOf(t.v) >= 0) return;
+    if (t.v === $.PW.F.v) $.fow.radius = 6;
     this.pows.push(t.v);
     $.util.showInstructions(['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' '));
   };

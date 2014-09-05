@@ -1,6 +1,6 @@
 $.FoW = function(r) {
   this.radius = r;
-  this.shadowOffset = Math.ceil(r / 2);
+  this.shadowOffset = Math.ceil(r / 2) + 1;
   this.fow =[];
   this.mult = [
     [1,  0,  0, -1, -1,  0,  0,  1],
@@ -26,7 +26,7 @@ $.FoW = function(r) {
         var x = cx + dx * xx + dy * xy;
         var y = cy + dx * yx + dy * yy;
 
-        if (x >= 0 && y >=0) {
+        if (x < $.ww / 32 && x >= 0 && y < $.wh / 32 && y >=0) {
           var lSlope = (dx - 0.5) / (dy + 0.5);
           var rSlope = (dx + 0.5) / (dy - 0.5);
 
@@ -69,9 +69,9 @@ $.FoW = function(r) {
     var xx = (x % 32 <= 16) ? Math.floor(x / 32) : Math.floor(x / 32) + 1;
     var yy = (y % 32 <= 16) ? Math.floor(y / 32) : Math.floor(y / 32) + 1;
     var i, j = 0;
-    for (i = 0; i < $.vw / 32; i++) {
+    for (i = 0; i <= $.ww / 32; i++) {
       this.fow[i] = [];
-      for (j = 0; j < $.vh / 32; j++) {
+      for (j = 0; j <= $.wh / 32; j++) {
         this.fow[i].push(0);
       }
     }
@@ -82,17 +82,18 @@ $.FoW = function(r) {
   };
 
   this.render = function() {
+    $.ctx1.clearRect(0, 0, $.vw, $.vh);
     $.ctx1.fillStyle = "rgba(0,0,0,1)";
     $.ctx1.fillRect(0, 0, $.vw, $.vh);
     $.ctx2.clearRect(0, 0, $.vw, $.vh);
 
-    for (var i = 0; i < $.vw / 32; i++) {
-      for (var j = 0; j < $.vh / 32; j++) {
+    for (var i = 0; i < $.ww / 32; i++) {
+      for (var j = 0; j < $.wh / 32; j++) {
         var f = this.fow[i][j];
         if (f >= 1) {
           var a = '1.0';
           var o = f - this.shadowOffset;
-          var max = this.radius + 1 - this.shadowOffset;
+          var max = this.radius + this.shadowOffset;
           if (o >= 0)
             a = 1 - (o/max).toString().substr(0,3);
 
