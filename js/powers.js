@@ -124,7 +124,7 @@ $.Earth = function(x, y, w, h, o) {
     // Check collision with enemies
     $.enemies.forEach(function(e) {
       if ($.collide.rect(self, e)) {
-        //e.plant(self);
+        e.damage(self);
         self.die(i);
       }
     });
