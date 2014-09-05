@@ -98,7 +98,7 @@ $.startGame = function() {
   $.wh = 800;
   $.ofx = 0;
   $.ofy = 0;
-  $.fow = new $.FoW(2);
+  $.fow = new $.FoW(5);
   $.cam = new $.Camera(640, 480);
   $.collide = new $.Collide();
   $.hud = new $.Hud();
@@ -187,22 +187,7 @@ $.loop = function() {
   $.cam.render($.items);
   $.hero.render();
   $.cam.render($.powerGrp);
-
-  /* Fog of War */
-  $.ctx1.fillStyle = "rgba(0,0,0,1)";
-  $.ctx1.fillRect(0, 0, $.vw, $.vh);
-  $.ctx2.clearRect(0, 0, $.vw, $.vh);
-  for (i=fow.length; i--;) {
-    $.ctx2.fillStyle = (fow[i][2] === 0) ? "rgb(255,255,255)" : "rgba(255,255,255,0.85)";
-    $.ctx2.fillRect((fow[i][0] * 32) - $.ofx, (fow[i][1] * 32) - $.ofy, 33, 33);
-  }
-
-  $.ctx1.save();
-  $.ctx1.globalCompositeOperation = 'destination-out';
-  $.ctx1.drawImage($.cv2, 0, 0, $.vw, $.vh);
-  $.ctx1.restore();
-  $.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
-
+  $.fow.render();
   $.cam.render($.textPops);
 
   //console.log(xx, yy);
