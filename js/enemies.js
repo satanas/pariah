@@ -50,8 +50,8 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
       return;
     }
 
-    if (p.t === this.vulnerability.t) {
-      attack = Math.floor(p.attack + (p.attack * this.vulnerability.v));
+    if (p.t === this.vul.t) {
+      attack = Math.floor(p.attack + (p.attack * this.vul.v));
       color = 'red';
     }
     this.he -= attack;

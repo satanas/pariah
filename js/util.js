@@ -1,5 +1,6 @@
 $.util = {
   'fading': [],
+  'instID': null,
 };
 
 // Check that v is between ll and lu
@@ -45,6 +46,16 @@ $.util.canMiss = function(p) {
 
 $.util.byId = function(i) {
   return document.getElementById(i);
+};
+
+$.util.showInstructions = function(t) {
+  if ($.util.instID) {
+    clearTimeout($.util.instID);
+    clearInterval($.util.fading.m1);
+  }
+  $.util.byId('m1').innerHTML = t;
+  $.util.show('m1');
+  $.util.instID = setTimeout(function() { $.util.fadeOut('m1'); }, 3000);
 };
 
 // Enable the passage of the 'this' object through the JavaScript timers

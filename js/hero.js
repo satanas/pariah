@@ -72,9 +72,7 @@ $.Hero = function(_x, _y) {
   this.gain = function(t) {
     if (this.pows.indexOf(t.v) >= 0) return;
     this.pows.push(t.v);
-    $.util.byId('m1').innerHTML = ['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' ');
-    $.util.show('m1');
-    setTimeout(function() { $.util.fadeOut('m1'); }, 3000);
+    $.util.showInstructions(['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' '));
   };
 
   this.update = function() {

@@ -149,6 +149,7 @@ $.startGame = function() {
 
   $.powerGrp = [];
 
+  $.util.showInstructions('Use the arrow keys to move');
   $.loop();
 };
 
