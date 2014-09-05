@@ -4,13 +4,22 @@ $.Hero = function(_x, _y) {
   this.w = 16;
   this.h = 32;
   this.bounds = {};
+
+  /* Max speed, max health, max mana, max cooldown, mana regen rate */
+  this.maxS = 2.00;
+  this.maxH = 100;
+  this.maxM = 100;
+  this.maxCD = 380;
+  this.mRegen = 1.75; /* Per millisecond */
+  this.ts = $.util.byId('tileset');
+
   this.s = 0.13; // Speed
   this.dx = this.dy = 0;
   this.o = 'd'; // Orientation
-  this.pows = []; // Available powers
+  this.pows = [2, 4]; // Available powers
   this.hurt = false;
-  this.he = 100; // Health
-  this.ma = 98; // Mana
+  this.he = this.maxH; // Health
+  this.ma = this.maxM; // Mana
   this.shield = false;
   this.ctime = Date.now(); // Current time (for update)
   this.htime = Date.now(); // Hurt time
@@ -20,14 +29,6 @@ $.Hero = function(_x, _y) {
   this.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
   this.cd = 0; // Cooldown
   this.rs = 0.15; // Resistance to attacks
-
-  /* Max speed, max health, max mana, max cooldown */
-  this.maxS = 2.00;
-  this.maxH = 100;
-  this.maxM = 100;
-  this.maxCD = 380;
-  this.mRegen = 1.75; /* Per millisecond */
-  this.ts = $.util.byId('tileset');
 
   /* Animations */
   this.count = 0;
@@ -69,7 +70,7 @@ $.Hero = function(_x, _y) {
   };
 
   this.gain = function(t) {
-    if (t.v in this.pows) return;
+    if (this.pows.indexOf(t.v) >= 0) return;
     this.pows.push(t.v);
     $.util.byId('m1').innerHTML = ['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' ');
     $.util.show('m1');
