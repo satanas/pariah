@@ -1,17 +1,16 @@
 // Based on http://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
 // Arguments: level number, width, height, num of enemies, items
-$.Level = function(n, w, h, e, p) {
+$.Level = function(n, w, h, e, p, ls) {
   this.n = n;
   // Randomize w and h if they are undefined
   this.w = w;
   this.h = h;
-  this.maxLeafSize = 15;
+  this.maxLeafSize = 15 || ls;
   this.leafs = [];
   var root = new $.Leaf(0, 0, w, h);
   this.map = [];
 
   this.leafs.push(root);
-  //this.makeLeafs(root);
 
 
   // Let's create all the leafs using a recursive method
@@ -68,6 +67,10 @@ $.Level = function(n, w, h, e, p) {
     }
     console.log(v, row.join(''));
   }
+
+  this.isWall = function(x, y) {
+    return (this.map[x][y] === '#') ? true : false;
+  };
 
 };
 
@@ -201,7 +204,7 @@ $.Leaf = function(x, y, w, h) {
     } else if (width > 0){
       if (height < 0) {
         if ($.util.randInt(0, 10) > 4) {
-          this.halls.push(new $.Rect(p1.x, p2.y, Math.abs(height), 1));
+          this.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
           this.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
         } else {
           this.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));

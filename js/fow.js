@@ -40,7 +40,7 @@ $.FoW = function(r) {
               this.fow[x][y] = i;
 
             if (blocked) {
-              if ($.tiles[x][y] === 1) {
+              if ($.lvl.isWall(x, y)) {
                 newStart = rSlope;
                 continue;
               } else {
@@ -48,7 +48,7 @@ $.FoW = function(r) {
                 start = newStart;
               }
             } else {
-              if ($.tiles[x][y] === 1 && i < this.radius) {
+              if ($.lvl.isWall(x, y) && i < this.radius) {
                 blocked = true;
                 this.cast(cx, cy, i + 1, start, lSlope, xx, xy, yx, yy);
                 newStart = rSlope;

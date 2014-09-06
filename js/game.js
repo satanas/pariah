@@ -7,7 +7,7 @@ $.init = function() {
   // Game over messages
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
-
+  $.lv = 1;
   $.showWelcome();
 };
 
@@ -94,59 +94,41 @@ $.startGame = function() {
   $.ctx2 = $.cv2.getContext('2d');
   $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
-  $.ww = 800;
-  $.wh = 800;
   $.ofx = 0;
   $.ofy = 0;
+  var lf = 15;
+  if ($.lv === 1) {
+    $.ww = $.util.randInt(800, 1001);
+    $.wh = $.util.randInt(800, 1001);
+    lf = 10;
+  } else {
+    $.ww = $.util.randInt(1000, 2001);
+    $.wh = $.util.randInt(1000, 2001);
+    lf = 20;
+  }
+  $.lvl = new $.Level($.lv, $.ww / 32, $.wh / 32, null, null, lf);
+
   $.fow = new $.FoW(3);
   $.cam = new $.Camera(640, 480);
   $.collide = new $.Collide();
   $.hud = new $.Hud();
-  var l = new $.Level(1, $.ww / 32, $.wh / 32);
 
-  $.tiles = [];
-  for (var i = 0; i < $.ww / 32; i++) {
-    $.tiles.push([]);
-    for (var j = 0; j < $.wh / 32; j++) {
-      $.tiles[i].push(0);
+  $.walls = [];
+  $.enemies = [];
+  $.items = [];
+  $.textPops = [];
+
+  for (var v=0; v<$.lvl.h; v++) {
+    var row = [];
+    for (i=0; i<$.lvl.w; i++) {
+      if ($.lvl.isWall(i, v))
+        $.walls.push(new $.Wall(i*32, v*32));
     }
   }
 
   $.hero = new $.Hero(40, 50);
-  $.walls = [new $.Wall(384, 384), new $.Wall(160, 416)];
-  $.enemies = [new $.Zombie(256, 60), new $.Zombie(512, 544)];
-  $.items = [new $.FireItem(400, 200), new $.WaterItem(400, 360)];
-  $.textPops = [];
-  $.tiles[12][12] = 1;
-  $.tiles[5][13] = 1;
-  for (i = 0; i < 5; i++) {
-    $.tiles[3 + i][3] = 1;
-    $.tiles[8][3 + i] = 1;
-    $.walls.push(new $.Wall(96 + (32 * i), 96, 0));
-    $.walls.push(new $.Wall(256, 96 + (32 * i), 0));
-  }
 
-  for (i = 0; i < $.ww / 32; i++) {
-    $.tiles[i][0] = 1;
-    $.tiles[i][(800 - 32) / 32] = 1;
-    $.tiles[0][i] = 1;
-    $.tiles[(800 - 32) / 32][i] = 1;
-    $.walls.push(new $.Wall(i * 32, 0, 1));
-    $.walls.push(new $.Wall(i * 32, 800 - 32, 1));
-    $.walls.push(new $.Wall(0, i * 32, 1));
-    $.walls.push(new $.Wall(800 - 32, i * 32, 1));
-  }
   console.log('walls', $.walls.length);
-
-  // Map visualization
-  //var st = [];
-  //for (i = 0; i < $.wh / 32; i++) {
-  //  st = [];
-  //  for (var h = 0; h < $.ww / 32; h++) {
-  //    st.push($.tiles[h][i]);
-  //  }
-  //  console.log(i, st.join(' '));
-  //}
 
   $.powerGrp = [];
 
