@@ -1,52 +1,53 @@
 $.Hero = function(_x, _y) {
-  this.x = _x;
-  this.y = _y;
-  this.w = 16;
-  this.h = 32;
-  this.bounds = {};
+  var _ = this;
+  _.x = _x;
+  _.y = _y;
+  _.w = 16;
+  _.h = 32;
+  _.bounds = {};
 
   /* Max speed, max health, max mana, max cooldown, mana regen rate */
-  this.maxS = 2.00;
-  this.maxH = 100;
-  this.maxM = 100;
-  this.maxCD = 380;
-  this.mRegen = 1.75; /* Per millisecond */
-  this.ts = $.util.byId('tileset');
+  _.maxS = 2.00;
+  _.maxH = 100;
+  _.maxM = 100;
+  _.maxCD = 380;
+  _.mRegen = 1.75; /* Per millisecond */
+  _.ts = $.util.byId('tileset');
 
-  this.s = 0.13; // Speed
-  this.dx = this.dy = 0;
-  this.o = 'd'; // Orientation
-  this.pows = [1, 2, 3, 4]; // Available powers
-  this.hurt = false;
-  this.he = this.maxH; // Health
-  this.ma = this.maxM; // Mana
-  this.shield = false;
-  this.ctime = Date.now(); // Current time (for update)
-  this.htime = Date.now(); // Hurt time
-  this.etimeH = 0; // Elapsed time for hurt
-  this.itime = 1000; // Invincibility time (ms)
-  this.blink = false;
-  this.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
-  this.cd = 0; // Cooldown
-  this.rs = 0.15; // Resistance to attacks
+  _.s = 0.13; // Speed
+  _.dx = this.dy = 0;
+  _.o = 'd'; // Orientation
+  _.pows = [1, 2, 3, 4]; // Available powers
+  _.hurt = false;
+  _.he = this.maxH; // Health
+  _.ma = this.maxM; // Mana
+  _.shield = false;
+  _.ctime = Date.now(); // Current time (for update)
+  _.htime = Date.now(); // Hurt time
+  _.etimeH = 0; // Elapsed time for hurt
+  _.itime = 1000; // Invincibility time (ms)
+  _.blink = false;
+  _.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
+  _.cd = 0; // Cooldown
+  _.rs = 0.15; // Resistance to attacks
 
   /* Animations */
-  this.count = 0;
-  this.frameDuration = 5;
-  this.currFrame = 0;
-  this.totalFrames = 2;
-  this.anim = {
+  _.count = 0;
+  _.frameDuration = 5;
+  _.currFrame = 0;
+  _.totalFrames = 2;
+  _.anim = {
     'run': {
-      'd': [{x:53, y:0},  {x:69, y:0} ],
-      'u': [{x:53, y:16}, {x:69, y:16}],
-      'r': [{x:53, y:32}, {x:69, y:32}],
-      'l': [{x:53, y:48}, {x:69, y:48}],
+      'd': [{x:32, y:0},  {x:42, y:0} ],
+      'u': [{x:32, y:16}, {x:42, y:16}],
+      'r': [{x:32, y:32}, {x:42, y:32}],
+      'l': [{x:32, y:48}, {x:42, y:48}],
     },
     'idle': {
-      'd': {x:53, y:0},
-      'u': {x:53, y:16},
-      'r': {x:53, y:32},
-      'l': {x:53, y:48}
+      'd': {x:32, y:0},
+      'u': {x:32, y:16},
+      'r': {x:32, y:32},
+      'l': {x:32, y:48}
     }
   };
 
@@ -171,21 +172,21 @@ $.Hero = function(_x, _y) {
         this.ma -= cp.m;
         this.cd = this.maxCD;
         if (cp.v === $.PW.F.v) {
-          $.powerGrp.push(new $.Fire(this.x, this.y, this.o));
+          $.powers.push(new $.Fire(this.x, this.y, this.o));
         } else if (cp.v === $.PW.E.v) {
-          $.powerGrp.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+          $.powers.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
         } else if (cp.v === $.PW.W.v) {
           [0, 120, 240].forEach(function(a) {
-            $.powerGrp.push(new $.Water(self.x, self.y, self.w, self.h, a));
+            $.powers.push(new $.Water(self.x, self.y, self.w, self.h, a));
           });
           this.shield = true;
         } else if (cp.v === $.PW.A.v) {
-          $.powerGrp.push(new $.Air(this.x, this.y, this.o));
+          $.powers.push(new $.Air(this.x, this.y, this.o));
         }
       }
     }
 
-    // Check for collisions
+    // Check for collisions with walls
     $.walls.forEach(function(w) {
       if ($.collide.rect(self, w)) {
         if ($.collide.isTop(self, w)){
@@ -207,6 +208,12 @@ $.Hero = function(_x, _y) {
         self.damage(e);
       }
     });
+
+    // Exit the level
+    if ($.collide.rect(this, $.exit[0])) {
+      //if ($.collide.isTop(self, w)){
+      //}
+    }
 
     /* Calculate animation frame */
     this.count = (this.count + 1) % this.frameDuration;

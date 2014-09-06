@@ -94,19 +94,24 @@ $.startGame = function() {
   $.ctx2 = $.cv2.getContext('2d');
   $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
+
   $.walls = [];
   $.enemies = [];
   $.items = [];
   $.exit = [];
   $.textPops = [];
+  $.powers = [];
   $.ofx = 0;
   $.ofy = 0;
+
+  // Load level
   var lf = 15,
       en = 0;
   if ($.lv === 1) {
     $.ww = $.util.randInt(800, 1001);
     $.wh = $.util.randInt(800, 1001);
     lf = 10;
+    $.util.showInstructions('Use the arrow keys to move');
   } else {
     $.ww = $.util.randInt(250 * $.lv, 250 * $.lv);
     $.wh = $.util.randInt(250 * $.lv, 250 * $.lv);
@@ -123,21 +128,16 @@ $.startGame = function() {
   // Trick to test
   $.fow.radius = 6;
 
+  // Load the walls
   for (var v=0; v<$.lvl.h; v++) {
-    var row = [];
     for (i=0; i<$.lvl.w; i++) {
       if ($.lvl.isWall(i, v))
         $.walls.push(new $.Wall(i*32, v*32));
     }
   }
 
-  //$.hero = new $.Hero(40, 50);
-
   console.log('walls', $.walls.length);
 
-  $.powerGrp = [];
-
-  $.util.showInstructions('Use the arrow keys to move');
   $.loop();
 };
 
@@ -152,7 +152,7 @@ $.loop = function() {
 
   /* Update */
   $.hero.update();
-  $.powerGrp.forEach(function(p, i) {
+  $.powers.forEach(function(p, i) {
     p.update(i);
   });
   $.enemies.forEach(function(e, i) {
@@ -175,14 +175,9 @@ $.loop = function() {
   $.cam.render($.enemies);
   $.cam.render($.items);
   $.hero.render();
-  $.cam.render($.powerGrp);
+  $.cam.render($.powers);
   $.fow.render();
   $.cam.render($.textPops);
-
-  //console.log(xx, yy);
-  //console.log(fow);
-  //console.log('******************');
-
 
   $.hud.render();
 

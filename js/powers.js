@@ -48,7 +48,7 @@ $.Power = function(x, y, w, h, o, t) {
   };
 
   this.die = function(i) {
-    $.powerGrp.splice(i, 1);
+    $.powers.splice(i, 1);
   };
 };
 
@@ -204,7 +204,7 @@ $.Water = function(x ,y, w, h, a) {
   };
 
   this.die = function(i) {
-    $.powerGrp.splice(i, 1);
+    $.powers.splice(i, 1);
     $.hero.shield = false;
   };
 };
