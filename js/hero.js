@@ -222,33 +222,10 @@ $.Hero = function(_x, _y) {
     }
   };
 
-  this.render = function() {
-    var tx, ty = 0;
-    var mw = $.vw/2;
-    var mh = $.vh/2;
-    if (this.x <= (mw)) {
-      tx = this.x;
-    } else if ((this.x > mw) && (this.x + mw <= $.ww)) {
-      tx = mw;
-    } else if ((this.x > mw) && (this.x + mw > $.ww)) {
-      tx = $.vw - ($.ww - this.x);
-    }
-
-    if (this.y <= (mh)) {
-      ty = this.y;
-    } else if ((this.y > mh) && (this.y + mh <= $.wh)) {
-      ty = mh;
-    } else if ((this.y > mh) && (this.y + mh > $.wh)) {
-      ty = $.vh - ($.wh - this.y);
-    }
-    $.ofx = this.x - tx;
-    $.ofy = this.y - ty;
-
+  this.render = function(tx, ty) {
     var anim = (this.dx === 0 && this.dy === 0) ? this.anim.idle[this.o] : this.anim.run[this.o][this.currFrame];
 
     $.ctxfg.save();
-    //$.ctxfg.fillStyle = 'rgb(255,0,0)';
-    //$.ctxfg.fillRect(tx, ty, 16, 32);
     $.ctxfg.scale(2.0, 2.0);
     if (this.blink)
       $.ctxfg.globalAlpha = 0.3;

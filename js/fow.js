@@ -98,7 +98,7 @@ $.FoW = function(r) {
             a = 1 - (o/max).toString().substr(0,3);
 
           $.ctx2.fillStyle = "rgba(255,255,255," + a +")";
-          $.ctx2.fillRect((i*32) - $.ofx, (j * 32) - $.ofy, 33, 33);
+          $.ctx2.fillRect((i*32) - $.cam.ofx, (j * 32) - $.cam.ofy, 33, 33);
         }
       }
     }

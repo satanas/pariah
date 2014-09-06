@@ -7,7 +7,7 @@ $.init = function() {
   // Game over messages
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
-  $.lv = 5;
+  $.lv = 2;
   $.showWelcome();
 };
 
@@ -101,27 +101,30 @@ $.startGame = function() {
   $.exit = [];
   $.textPops = [];
   $.powers = [];
-  $.ofx = 0;
-  $.ofy = 0;
 
   // Load level
   var lf = 15,
-      en = 0;
+      en = 0,
+      a = 0,
+      b = 0;
   if ($.lv === 1) {
-    $.ww = $.util.randInt(800, 1001);
-    $.wh = $.util.randInt(800, 1001);
+    a = $.util.randInt(30, 40);
+    b = $.util.randInt(30, 40);
     lf = 10;
     $.util.showInstructions('Use the arrow keys to move');
   } else {
-    $.ww = $.util.randInt(250 * $.lv, 250 * $.lv);
-    $.wh = $.util.randInt(250 * $.lv, 250 * $.lv);
+    a = $.util.randInt(10 + (5 * $.lv), 15 + (5 * $.lv));
+    b = $.util.randInt(10 + (5 * $.lv), 15 + (5 * $.lv));
     lf = 10 * $.lv;
     en = $.lv * 3;
   }
+  $.ww = a * 32;
+  $.wh = b * 32;
   $.lvl = new $.Level($.lv, $.ww / 32, $.wh / 32, en, null, lf);
 
   $.fow = new $.FoW(3);
-  $.cam = new $.Camera(640, 480);
+  $.cam = new $.Camera(640, 480, $.ww, $.wh);
+  $.cam.setTarget($.hero);
   $.collide = new $.Collide();
   $.hud = new $.Hud();
 
@@ -165,16 +168,14 @@ $.loop = function() {
     t.update(i);
   });
   var fow = $.fow.update();
-  //$.cam.setTarget($.hero);
-  $.cam.ofx = $.ofx;
-  $.cam.ofy = $.ofy;
+  $.cam.update(); // Always the last to be updated
 
   /* Render */
   $.cam.render($.walls);
   $.cam.render($.exit);
   $.cam.render($.enemies);
   $.cam.render($.items);
-  $.hero.render();
+  $.cam.render([$.hero]);
   $.cam.render($.powers);
   $.fow.render();
   $.cam.render($.textPops);
