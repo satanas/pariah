@@ -16,7 +16,7 @@ $.Hero = function(_x, _y) {
   this.s = 0.13; // Speed
   this.dx = this.dy = 0;
   this.o = 'd'; // Orientation
-  this.pows = [2, 4]; // Available powers
+  this.pows = [1, 2, 3, 4]; // Available powers
   this.hurt = false;
   this.he = this.maxH; // Health
   this.ma = this.maxM; // Mana

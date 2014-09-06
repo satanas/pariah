@@ -8,7 +8,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   this.miss = mi;
   this.vul = vu;
   this.ptime = pt || 4000; // Planted time
-  this.itime = 700; // Invincibility time
+  this.itime = 300; // Invincibility time
 
   this.hurt = false;
   this.planted = false;

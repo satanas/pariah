@@ -120,6 +120,9 @@ $.startGame = function() {
   $.collide = new $.Collide();
   $.hud = new $.Hud();
 
+  // Trick to test
+  $.fow.radius = 6;
+
   for (var v=0; v<$.lvl.h; v++) {
     var row = [];
     for (i=0; i<$.lvl.w; i++) {
@@ -173,7 +176,7 @@ $.loop = function() {
   $.cam.render($.items);
   $.hero.render();
   $.cam.render($.powerGrp);
-  //$.fow.render();
+  $.fow.render();
   $.cam.render($.textPops);
 
   //console.log(xx, yy);
