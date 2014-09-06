@@ -52,10 +52,6 @@ $.Hero = function(_x, _y) {
 
   this.damage = function(e) {
     if (this.hurt) return;
-    //if ($.util.canMiss(this.missingChance)) {
-    //  $.textPops.push(new $.TextPop('miss', this.x, this.y - 5, 'white'));
-    //  return;
-    //}
     var attack = Math.floor(e.attack - (e.attack * $.util.randInt(this.rs * 100, 0) / 100));
     this.he -= attack;
     this.hurt = true;

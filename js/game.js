@@ -102,6 +102,7 @@ $.startGame = function() {
   $.cam = new $.Camera(640, 480);
   $.collide = new $.Collide();
   $.hud = new $.Hud();
+  var l = new $.Level(1, $.ww / 32, $.wh / 32);
 
   $.tiles = [];
   for (var i = 0; i < $.ww / 32; i++) {

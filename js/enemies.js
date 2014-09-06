@@ -18,7 +18,6 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   this.etimeH = 0; // Elapsed time for hurt
   this.etimeP = 0; // Elapsed time for planted
   this.bcount = 0;
-  console.log('planted time', this.ptime);
 
   this.getb = function() {
     return {
