@@ -197,7 +197,6 @@ $.Hero = function(_x, _y) {
         } else if ($.collide.isRight(self, w)) {
           self.x = w.bounds.r;
         } else {
-          console.log('collision');
         }
       }
     });

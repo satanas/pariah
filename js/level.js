@@ -1,6 +1,6 @@
 // Based on http://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
-// Arguments: level number, width, height, num of enemies, items
-$.Level = function(n, w, h, e, p, ls) {
+// Arguments: level number, width, height, number of enemies, items, leaf size
+$.Level = function(n, w, h, en, it, ls) {
   this.n = n;
   // Randomize w and h if they are undefined
   this.w = w;
@@ -12,6 +12,26 @@ $.Level = function(n, w, h, e, p, ls) {
 
   this.leafs.push(root);
 
+  this.isWall = function(x, y) {
+    return (this.map[x][y] === '#') ? true : false;
+  };
+
+  // Return a random point inside a room
+  this.rPoint = function(r, p) {
+    var pad = p || 0; // Padding
+    return {
+      x: $.util.randInt(r.l + pad, r.r - pad),
+      y: $.util.randInt(r.t + pad, r.b - pad)
+    };
+  };
+
+  // Checks if the point (x,y) is a corner of the room r
+  this.isCorner = function(x, y, r) {
+    return ((x === r.t && y === r.l) ||
+            (x === r.t && y === r.r) ||
+            (x === r.b && y === r.l) ||
+            (x === r.b && y === r.r));
+  };
 
   // Let's create all the leafs using a recursive method
   //this.makeLeafs = function(l) {
@@ -39,12 +59,15 @@ $.Level = function(n, w, h, e, p, ls) {
       this.map[i][j] = '#';
     }
   }
+
   var self = this;
+  var ar = []; // Available rooms
   this.leafs.forEach(function(l) {
     var r = l.room;
     if (r !== null) {
-      for (var i=r.l; i<r.r; i++) {
-        for (var j=r.t; j<r.b; j++) {
+      ar.push(r);
+      for (var i=r.l; i<=r.r; i++) {
+        for (var j=r.t; j<=r.b; j++) {
           self.map[i][j] = '.';
         }
       }
@@ -59,18 +82,97 @@ $.Level = function(n, w, h, e, p, ls) {
     });
   });
 
+  // Last room
+  var lr = ar.pop();
+
+  // Place enemies
+  // We chose a random point in a random room and we try to put the 
+  // enemy. If there is an enemy in that position another point will
+  // be selected inside the same room. If after 5 tries the algorithm
+  // can't find a spot for the enemy, another room is selected.
+  var ec = en;
+  var p = null;
+  var epr = (en / ar.length);
+  var t = 0;
+  while (ec > 0) {
+    var rr = ar[$.util.randInt(0, ar.length)];
+    p = this.rPoint(rr);
+    while (this.map[p.x][p.y] === 'e') {
+      t++;
+      if (t > 4) {
+        rr = ar[$.util.randInt(0, ar.length)];
+        t = 0;
+      }
+      p = this.rPoint(rr);
+    }
+    $.enemies.push(new $.Zombie(p.x * 32, p.y * 32));
+    ec--;
+    this.map[p.x][p.y] = 'e';
+  }
+
+  // Place hero and entrance
+  p = this.rPoint(lr);
+  var b = null;
+  while (true) {
+    b = {x: p.x, y: p.y};
+    var rw = $.util.randInt(0, 4);
+    if (rw === 0) { // North wall
+      p.y = lr.t - 1;
+      b.y = p.y + 2;
+    } else if (rw === 1) { // East wall
+      p.x = lr.r + 1;
+      b.x = p.x - 2;
+    } else if (rw === 2) { // South wall
+      p.y = lr.b + 1;
+      b.y = p.y - 2;
+    } else if (rw === 3) { // West wall
+      p.x = lr.l - 1;
+      b.x = p.x + 2;
+    }
+    if (!this.isWall(p.x, p.y) || this.isCorner(p.x, p.y, lr)) {
+      p = this.rPoint(lr);
+    } else {
+      break;
+    }
+  }
+  $.hero = new $.Hero(b.x * 32, b.y * 32);
+  $.walls.push(new $.Entrance(p.x * 32, p.y * 32));
+  this.map[p.x][p.y] = '*';
+  this.map[b.x][b.y] = 'h';
+
+  // Place exit
+  // We select a random room and place the exit in one of its walls
+  var xr = ar[$.util.randInt(0, ar.length)];
+  p = this.rPoint(xr);
+  while (true) {
+    var xw = $.util.randInt(0, 4);
+    if (xw === 0) { // North wall
+      p.y = xr.t - 1;
+    } else if (xw === 1) { // East wall
+      p.x = xr.r + 1;
+    } else if (xw === 2) { // South wall
+      p.y = xr.b + 1;
+    } else if (xw === 3) { // West wall
+      p.x = xr.l - 1;
+    }
+    if (!this.isWall(p.x, p.y) || this.isCorner(p.x, p.y, xr)) {
+      p = this.rPoint(xr);
+    } else {
+      break;
+    }
+  }
+  $.exit[0] = new $.Exit(p.x * 32, p.y * 32);
+  this.map[p.x][p.y] = '@';
+
+
   // Showing off
-  for (var v=0; v<h; v++) {
+  for (var v=0; v<this.h; v++) {
     var row = [];
-    for (var u=0; u<w; u++) {
+    for (var u=0; u<this.w; u++) {
       row.push(self.map[u][v]);
     }
     console.log(v, row.join(''));
   }
-
-  this.isWall = function(x, y) {
-    return (this.map[x][y] === '#') ? true : false;
-  };
 
 };
 
