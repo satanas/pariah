@@ -30,7 +30,7 @@ $.Power = function(x, y, w, h, o, t) {
   };
 
   // Check wall collisions
-  this.walls = function() {
+  this.walls = function(i) {
     var self = this;
     $.walls.forEach(function(w) {
       if ($.collide.rect(self, w)) {
@@ -40,7 +40,7 @@ $.Power = function(x, y, w, h, o, t) {
   };
 
   // Check world boundaries
-  this.boundaries = function() {
+  this.boundaries = function(i) {
     if ((this.x + this.w) > $.ww || this.x < 0)
       this.die(i);
     if ((this.y + this.h) > $.wh || this.y < 0)
@@ -59,7 +59,7 @@ $.Fire = function(x, y, o) {
   this.maxS = 6.00; /* Max speed */
   this.dx = this.dy = 0;
   this.bounds = this.getb();
-  this.anim = {x:19, y:18};
+  this.anim = {x:70, y:21};
   this.ts = $.util.byId('tileset');
   this.angle = 0;
   this.attack = $.util.randInt(8, 12);
@@ -84,8 +84,8 @@ $.Fire = function(x, y, o) {
       }
     });
 
-    this.walls();
-    this.boundaries();
+    this.walls(i);
+    this.boundaries(i);
   };
 
   this.render = function(tx, ty) {
@@ -93,6 +93,9 @@ $.Fire = function(x, y, o) {
     $.ctxfg.translate(tx + (this.w/2), ty + (this.h/2));
     $.ctxfg.rotate(this.angle / 180 * Math.PI);
     $.ctxfg.scale(2.0, 2.0);
+    //$.ctxfg.fillStyle = 'rgb(255,159,7)';
+    //$.ctxfg.fillRect(tx/2 + 2, ty/2 + 1, 6, 6);
+    //$.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 10, 9, tx/2, ty/2, 10, 9);
     $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, this.w/2, this.h/2);
     $.ctxfg.restore();
   };
@@ -129,8 +132,8 @@ $.Earth = function(x, y, w, h, o) {
       }
     });
 
-    this.walls();
-    this.boundaries();
+    this.walls(i);
+    this.boundaries(i);
   };
 
   this.render = function(tx, ty) {
@@ -237,8 +240,8 @@ $.Air = function(x, y, o) {
       }
     });
 
-    this.walls();
-    this.boundaries();
+    this.walls(i);
+    this.boundaries(i);
   };
 
   this.render = function(tx, ty) {
