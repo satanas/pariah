@@ -1,9 +1,10 @@
-$.Item = function(x, y, t) {
+$.Item = function(x, y, t, c) {
   this.x = x;
   this.y = y;
   this.w = 16;
   this.h = 16;
-  this.t = t;
+  this.t = t; // Type
+  this.c = c || false; // Consumible?
   this.bounds = {
     b: this.y + this.h,
     t: this.y,
@@ -62,6 +63,39 @@ $.AirItem = function(x, y) {
   this.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'hsla(78, 100%, 92%, 1)';
+    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.restore();
+  };
+};
+
+$.Key = function(x, y) {
+  $.Item.call(this, x, y, 'k', true);
+
+  this.render = function(tx, ty) {
+    $.ctxfg.save();
+    $.ctxfg.fillStyle = 'rgb(255,255,0)';
+    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.restore();
+  };
+};
+
+$.HealthPack = function(x, y) {
+  $.Item.call(this, x, y, 'h', true);
+
+  this.render = function(tx, ty) {
+    $.ctxfg.save();
+    $.ctxfg.fillStyle = $.HCOLOR;
+    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.restore();
+  };
+};
+
+$.ManaPack = function(x, y) {
+  $.Item.call(this, x, y, 'm', true);
+
+  this.render = function(tx, ty) {
+    $.ctxfg.save();
+    $.ctxfg.fillStyle = $.HCOLOR;
     $.ctxfg.fillRect(tx, ty, this.w, this.h);
     $.ctxfg.restore();
   };

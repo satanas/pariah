@@ -16,7 +16,7 @@ $.Entrance = function(x, y) {
     $.ctxfg.save();
     $.ctxfg.scale(2.0, 2.0);
     $.ctxfg.drawImage(this.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
-    $.ctxfg.drawImage(this.t, 0, 48, 16, 16, tx/2, ty/2, 16, 16);
+    $.ctxfg.drawImage(this.t, 0, 49, 16, 16, tx/2, ty/2 + 1, 16, 16);
     $.ctxfg.restore();
   };
 };
@@ -38,7 +38,8 @@ $.Exit = function(x, y) {
   this.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.scale(2.0, 2.0);
-    $.ctxfg.drawImage(this.t, 16, 48, 16, 16, tx/2, ty/2, 16, 16);
+    $.ctxfg.drawImage(this.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
+    $.ctxfg.drawImage(this.t, 16, 49, 16, 16, tx/2, ty/2 + 1, 16, 16);
     $.ctxfg.restore();
   };
 };
