@@ -14,7 +14,7 @@ $.Item = function(x, y, t, c) {
 
   this.update = function(i) {
     if ($.collide.rect(this, $.hero)) {
-      $.hero.gain(this.t);
+      $.hero.gain(this);
       this.die(i);
     }
   };

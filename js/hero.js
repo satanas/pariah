@@ -17,7 +17,7 @@ $.Hero = function(_x, _y) {
   _.s = 0.13; // Speed
   _.dx = this.dy = 0;
   _.o = 'd'; // Orientation
-  _.pows = [1, 2, 3, 4]; // Available powers
+  _.pows = []; // Available powers
   _.hurt = false;
   _.he = this.maxH; // Health
   _.ma = this.maxM; // Mana
@@ -32,6 +32,7 @@ $.Hero = function(_x, _y) {
   _.rs = 0.15; // Resistance to attacks
   _.key = false;
   _.exit = false;
+  _.dead = false;
 
   /* Animations */
   _.count = 0;
@@ -54,13 +55,17 @@ $.Hero = function(_x, _y) {
   };
 
   this.damage = function(e) {
-    if (this.hurt) return;
+    if (this.hurt || this.dead) return;
     var attack = Math.floor(e.attack - (e.attack * $.util.randInt(this.rs * 100, 0) / 100));
     this.he -= attack;
     this.hurt = true;
     this.htime = Date.now();
     this.etimeH = 0;
     $.textPops.push(new $.TextPop('-' + attack, this.x + 7, this.y - 5, 'red'));
+    if (this.he <= 0) {
+      this.he = 0;
+      this.dead = true;
+    }
   };
 
   this.heal = function(v) {
@@ -76,17 +81,20 @@ $.Hero = function(_x, _y) {
   };
 
   this.gain = function(t) {
+    console.log(t);
     if (t.c === false) {
-      if (this.pows.indexOf(t.v) >= 0) return;
-      if (t.v === $.PW.F.v) $.fow.radius = 6;
-      this.pows.push(t.v);
-      $.util.showInstructions(['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' '));
+      if (this.pows.indexOf(t.t.v) >= 0) return;
+      if (t.t.v === $.PW.F.v) $.fow.radius = 6;
+      this.pows.push(t.t.v);
+      $.epow.push(t.t.v);
+      $.util.showInstructions(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
-      if (t === 'k') {
+      if (t.t === 'k') {
         this.key = true;
-      } else if (t === 'h') {
+        $.util.showInstructions('You got the key of this dungeon');
+      } else if (t.t === 'h') {
         this.heal(10);
-      } else if (t === 'm') {
+      } else if (t.t === 'm') {
         this.charge(10);
       }
     }
