@@ -10,7 +10,9 @@ $.TextPop = function(text, x, y, color) {
   this.colors = {
     white: 'rgb(255,255,255)',
     yellow: 'rgb(255,255,0)',
-    red: 'rgb(255,0,0)'
+    red: 'rgb(255,0,0)',
+    green: $.HCOLOR,
+    blue: $.MCOLOR
   };
   if (color === undefined)
     this.c = this.colors.white;
