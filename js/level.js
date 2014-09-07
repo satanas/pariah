@@ -1,11 +1,11 @@
 // Based on http://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
-// Arguments: level number, width, height, number of enemies, items, leaf size
+// Arguments: level number, width, height, number of enemies, item to be placed, leaf size
 $.Level = function(n, w, h, en, it, ls) {
   this.n = n;
   // Randomize w and h if they are undefined
   this.w = w;
   this.h = h;
-  this.maxLeafSize = 15 || ls;
+  this.maxLeafSize = ls || 15;
   this.leafs = [];
   var root = new $.Leaf(0, 0, w, h);
   this.map = [];
@@ -163,6 +163,14 @@ $.Level = function(n, w, h, en, it, ls) {
   }
   $.exit[0] = new $.Exit(p.x * 32, p.y * 32);
   this.map[p.x][p.y] = '@';
+
+  // Place items
+  for (i=it.length; i--;) {
+    var ir = ar[$.util.randInt(0, ar.length)];
+    p = this.rPoint(ir);
+    $.items.push(new it[i](p.x * 32 + 8, p.y * 32 + 8));
+    this.map[p.x][p.y] = 'i';
+  }
 
 
   // Showing off

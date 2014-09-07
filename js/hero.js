@@ -30,6 +30,8 @@ $.Hero = function(_x, _y) {
   _.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
   _.cd = 0; // Cooldown
   _.rs = 0.15; // Resistance to attacks
+  _.key = false;
+  _.exit = false;
 
   /* Animations */
   _.count = 0;
@@ -63,18 +65,36 @@ $.Hero = function(_x, _y) {
 
   this.heal = function(v) {
     this.he += v;
-    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'white'));
+    this.he = $.util.range(this.he, 0, this.maxH);
+    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'green'));
+  };
+
+  this.charge = function(v) {
+    this.ma += v;
+    this.ma = $.util.range(this.ma, 0, this.maxM);
+    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'blue'));
   };
 
   this.gain = function(t) {
-    if (this.pows.indexOf(t.v) >= 0) return;
-    if (t.v === $.PW.F.v) $.fow.radius = 6;
-    this.pows.push(t.v);
-    $.util.showInstructions(['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' '));
+    if (t.c === false) {
+      if (this.pows.indexOf(t.v) >= 0) return;
+      if (t.v === $.PW.F.v) $.fow.radius = 6;
+      this.pows.push(t.v);
+      $.util.showInstructions(['You now control the', t.n, 'element. Press', t.v, 'to use it'].join(' '));
+    } else {
+      if (t === 'k') {
+        this.key = true;
+      } else if (t === 'h') {
+        this.heal(10);
+      } else if (t === 'm') {
+        this.charge(10);
+      }
+    }
   };
 
   this.update = function() {
     var self = this;
+    _.exit = false;
     var now = Date.now();
     var elapsed = now - this.ctime;
     this.ctime = now;
@@ -211,8 +231,7 @@ $.Hero = function(_x, _y) {
 
     // Exit the level
     if ($.collide.rect(this, $.exit[0])) {
-      //if ($.collide.isTop(self, w)){
-      //}
+      _.exit = true;
     }
 
     /* Calculate animation frame */
