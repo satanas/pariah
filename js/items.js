@@ -95,7 +95,7 @@ $.ManaPack = function(x, y) {
 
   this.render = function(tx, ty) {
     $.ctxfg.save();
-    $.ctxfg.fillStyle = $.HCOLOR;
+    $.ctxfg.fillStyle = $.MCOLOR;
     $.ctxfg.fillRect(tx, ty, this.w, this.h);
     $.ctxfg.restore();
   };

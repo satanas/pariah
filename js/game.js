@@ -11,7 +11,7 @@ $.init = function() {
   $.lv = 1;
   $.epow = []; // Earned powers
   // Array of items to be placed on each level
-  $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem]];
+  $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
   // Array of in-game messages
   // t: Text of message, s: showed
   $.msg = {
@@ -170,7 +170,13 @@ $.nextLevel = function() {
   cancelAnimationFrame($.animId);
   $.lv += 1;
   console.log('next level');
-  $.startGame();
+  if ($.lv < 6) {
+    $.startGame();
+  } else {
+    $.lv = 1;
+    // Mostrar la pantalla de final
+    $.showGameOver();
+  }
 };
 
 $.cleanMsg = function() {
@@ -237,7 +243,7 @@ $.loop = function() {
   $.cam.render($.items);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //$.fow.render();
+  $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 

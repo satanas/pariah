@@ -211,6 +211,8 @@ $.Hero = function(_x, _y) {
         } else if (cp.v === $.PW.A.v) {
           $.powers.push(new $.Air(this.x, this.y, this.o));
         }
+      } else if (this.ma < cp.m) {
+        $.util.showInstructions('You do not have enough mana to cast the ' + cp.n + ' element');
       }
     }
 
