@@ -48,14 +48,15 @@ $.util.byId = function(i) {
   return document.getElementById(i);
 };
 
-$.util.showInstructions = function(t) {
+$.util.showInstructions = function(t, d) {
+  var dx = d || 3000;
   if ($.util.instID) {
     clearTimeout($.util.instID);
     clearInterval($.util.fading.m1);
   }
   $.util.byId('m1').innerHTML = t;
   $.util.show('m1');
-  $.util.instID = setTimeout(function() { $.util.fadeOut('m1', $.cleanMsg); }, 3000);
+  $.util.instID = setTimeout(function() { $.util.fadeOut('m1', $.cleanMsg); }, dx);
 };
 
 // Enable the passage of the 'this' object through the JavaScript timers

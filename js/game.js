@@ -10,6 +10,7 @@ $.init = function() {
   $.animId = 0;
   $.lv = 1;
   $.epow = []; // Earned powers
+  $.fadeIn = new $.FadeIn();
   // Array of items to be placed on each level
   $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
   // Array of in-game messages
@@ -136,7 +137,7 @@ $.startGame = function() {
     b = $.util.randInt(15 + (6 * $.lv), 20 + (6 * $.lv));
     lf = 10 + (7 * $.lv);
   if ($.lv === 1) {
-    $.util.showInstructions('Use the arrow keys to move');
+    $.util.showInstructions('Use the arrow keys to move and escape the dungeon', 4500);
   } else {
     en = $.lv * 3;
   }
@@ -162,6 +163,7 @@ $.startGame = function() {
     }
   }
 
+  $.fadeIn.start(1000);
   $.animId = requestAnimationFrame($.loop);
   console.log('walls', $.walls.length);
 };
@@ -193,23 +195,25 @@ $.clearFg = function() {
 $.loop = function() {
   $.clearFg();
 
-  /* Update */
-  $.hero.update();
-  $.powers.forEach(function(p, i) {
-    p.update(i);
-  });
-  $.enemies.forEach(function(e, i) {
-    e.update(i);
-  });
-  $.textPops.forEach(function(t, i) {
-    t.update(i);
-  });
-  $.items.forEach(function(t, i) {
-    t.update(i);
-  });
+  // Update only when not fading
+  if ($.fadeIn.done) {
+    $.hero.update();
+    $.powers.forEach(function(p, i) {
+      p.update(i);
+    });
+    $.enemies.forEach(function(e, i) {
+      e.update(i);
+    });
+    $.textPops.forEach(function(t, i) {
+      t.update(i);
+    });
+    $.items.forEach(function(t, i) {
+      t.update(i);
+    });
+  }
+
   var fow = $.fow.update();
   $.cam.update(); // Always the last to be updated
-
 
   // Check is conditions are ready for the next level
   if ($.hero.exit) {
@@ -235,6 +239,7 @@ $.loop = function() {
     $.showGameOver();
     return;
   }
+  
 
   /* Render */
   $.cam.render($.walls);
@@ -246,6 +251,8 @@ $.loop = function() {
   $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
+
+  $.fadeIn.render();
 
   requestAnimationFrame($.loop);
 };
