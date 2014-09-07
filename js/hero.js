@@ -81,7 +81,6 @@ $.Hero = function(_x, _y) {
   };
 
   this.gain = function(t) {
-    console.log(t);
     if (t.c === false) {
       if (this.pows.indexOf(t.t.v) >= 0) return;
       if (t.t.v === $.PW.F.v) $.fow.radius = 6;
@@ -202,10 +201,10 @@ $.Hero = function(_x, _y) {
         if (cp.v === $.PW.F.v) {
           $.powers.push(new $.Fire(this.x, this.y, this.o));
         } else if (cp.v === $.PW.E.v) {
-          $.powers.push(new $.Earth(this.x, this.y, this.w, this.h, this.o));
+          $.powers.push(new $.Earth(this.x, this.y, this.o, 1));
         } else if (cp.v === $.PW.W.v) {
           [0, 120, 240].forEach(function(a) {
-            $.powers.push(new $.Water(self.x, self.y, self.w, self.h, a));
+            $.powers.push(new $.Water(self.x, self.y, a));
           });
           this.shield = true;
         } else if (cp.v === $.PW.A.v) {

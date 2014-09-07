@@ -8,8 +8,8 @@ $.init = function() {
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
-  $.lv = 1;
-  $.epow = []; // Earned powers
+  $.lv = 2;
+  $.epow = [1, 2, 3, 4]; // Earned powers
   $.fadeIn = new $.FadeIn();
   // Array of items to be placed on each level
   $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
@@ -158,8 +158,10 @@ $.startGame = function() {
   // Load the walls
   for (var v=0; v<$.lvl.h; v++) {
     for (i=0; i<$.lvl.w; i++) {
-      if ($.lvl.isWall(i, v))
-        $.walls.push(new $.Wall(i*32, v*32));
+      if ($.lvl.isWall(i, v)) {
+        var hf = ($.lvl.isWall(i, v + 1)) ? 0 : 1;
+        $.walls.push(new $.Wall(i*32, v*32, hf));
+      }
     }
   }
 
@@ -239,7 +241,6 @@ $.loop = function() {
     $.showGameOver();
     return;
   }
-  
 
   /* Render */
   $.cam.render($.walls);
@@ -248,7 +249,7 @@ $.loop = function() {
   $.cam.render($.items);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  $.fow.render();
+  //$.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
