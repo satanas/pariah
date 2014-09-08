@@ -15,12 +15,12 @@ $.Hero = function(_x, _y, o) {
   _.ts = $.util.byId('tileset');
 
   _.s = 0.13; // Speed
-  _.dx = this.dy = 0;
+  _.dx = _.dy = 0;
   _.o = o || 'd'; // Orientation
   _.pows = []; // Available powers
   _.hurt = false;
-  _.he = this.maxH; // Health
-  _.ma = this.maxM; // Mana
+  _.he = _.maxH; // Health
+  _.ma = _.maxM; // Mana
   _.shield = false;
   _.ctime = Date.now(); // Current time (for update)
   _.htime = Date.now(); // Hurt time
@@ -55,183 +55,183 @@ $.Hero = function(_x, _y, o) {
   };
 
   this.damage = function(e) {
-    if (this.hurt || this.dead) return;
-    var attack = Math.floor(e.attack - (e.attack * $.util.randInt(this.rs * 100, 0) / 100));
-    this.he -= attack;
-    this.hurt = true;
-    this.htime = Date.now();
-    this.etimeH = 0;
-    $.textPops.push(new $.TextPop('-' + attack, this.x + 7, this.y - 5, 'red'));
-    if (this.he <= 0) {
-      this.he = 0;
-      this.dead = true;
+    if (_.hurt || _.dead) return;
+    var attack = Math.floor(e.attack - (e.attack * $.util.randInt(_.rs * 100, 0) / 100));
+    _.he -= attack;
+    _.hurt = true;
+    _.htime = Date.now();
+    _.etimeH = 0;
+    $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, 'red'));
+    if (_.he <= 0) {
+      _.he = 0;
+      _.dead = true;
     }
   };
 
   this.heal = function(v) {
-    this.he += v;
-    this.he = $.util.range(this.he, 0, this.maxH);
-    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'green'));
+    _.he += v;
+    var m = (_.he > _.maxH) ? 'full' : '+' + v;
+    _.he = $.util.range(_.he, 0, _.maxH);
+    $.textPops.push(new $.TextPop(m, _.x + 7, _.y - 5, 'green'));
   };
 
   this.charge = function(v) {
-    this.ma += v;
-    this.ma = $.util.range(this.ma, 0, this.maxM);
-    $.textPops.push(new $.TextPop('+' + v, this.x + 7, this.y - 5, 'blue'));
+    _.ma += v;
+    var m = (_.ma > _.maxM) ? 'full' : '+' + v;
+    _.ma = $.util.range(_.ma, 0, _.maxM);
+    $.textPops.push(new $.TextPop(m, _.x + 7, _.y - 5, 'blue'));
   };
 
   this.gain = function(t) {
     if (t.c === false) {
-      if (this.pows.indexOf(t.t.v) >= 0) return;
+      if (_.pows.indexOf(t.t.v) >= 0) return;
       if (t.t.v === $.PW.F.v) $.fow.radius = 6;
-      this.pows.push(t.t.v);
+      _.pows.push(t.t.v);
       $.epow.push(t.t.v);
       $.util.showInstructions(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
       if (t.t === 'k') {
-        this.key = true;
+        _.key = true;
         $.util.showInstructions('You got the key of this dungeon');
       } else if (t.t === 'h') {
-        this.heal(10);
+        _.heal(10);
       } else if (t.t === 'm') {
-        this.charge(10);
+        _.charge(10);
       }
     }
   };
 
   this.lose = function(e) {
-    var i = this.pows.indexOf(e.v);
-    this.pows.splice(i, 1);
-    console.log(this.pows);
+    var i = _.pows.indexOf(e.v);
+    _.pows.splice(i, 1);
   };
 
   this.update = function() {
-    var self = this;
     _.exit = false;
     var now = Date.now();
-    var elapsed = now - this.ctime;
-    this.ctime = now;
+    var elapsed = now - _.ctime;
+    _.ctime = now;
 
-    if (this.hurt) {
-      this.etimeH = Date.now() - this.htime;
+    if (_.hurt) {
+      _.etimeH = Date.now() - _.htime;
 
-      var c = Math.floor(this.etimeH / 100);
-      if (c > this.bcount) {
-        this.bcount = c;
-        this.blink = !this.blink;
+      var c = Math.floor(_.etimeH / 100);
+      if (c > _.bcount) {
+        _.bcount = c;
+        _.blink = !_.blink;
       }
 
-      if (this.etimeH >= this.itime) {
-        this.hurt = false;
-        this.bcount = 0;
-        this.blink = false;
+      if (_.etimeH >= _.itime) {
+        _.hurt = false;
+        _.bcount = 0;
+        _.blink = false;
       }
     }
 
     if ($.input.p(37)) {
-      this.o = 'l';
-      this.dx -= this.s;
+      _.o = 'l';
+      _.dx -= _.s;
     } else if ($.input.p(39)) {
-      this.o = 'r';
-      this.dx += this.s;
+      _.o = 'r';
+      _.dx += _.s;
     }
 
     if ($.input.p(38)) {
-      this.o = 'u';
-      this.dy -= this.s;
+      _.o = 'u';
+      _.dy -= _.s;
     } else if ($.input.p(40)) {
-      this.o = 'd';
-      this.dy += this.s;
+      _.o = 'd';
+      _.dy += _.s;
     }
 
-    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
-    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
+    _.dx = $.util.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.util.range(_.dy, -_.maxS, _.maxS);
 
     if (!$.input.p(37) && !$.input.p(39)) {
-      this.dx = 0;
+      _.dx = 0;
     }
     if (!$.input.p(38) && !$.input.p(40)) {
-      this.dy = 0;
+      _.dy = 0;
     }
 
-    if (this.cd > 0) {
-      this.cd -= elapsed;
-      if (this.cd <= 0) {
-        this.cd = 0;
+    if (_.cd > 0) {
+      _.cd -= elapsed;
+      if (_.cd <= 0) {
+        _.cd = 0;
       }
     }
 
-    this.x += this.dx;
-    this.y += this.dy;
+    _.x += _.dx;
+    _.y += _.dy;
 
-    if ((this.x + this.w) > $.ww)
-      this.x = $.ww - this.w;
-    if ((this.y + this.h) > $.wh)
-      this.y = $.wh - this.h;
-    if (this.x < 0)
-      this.x = 0;
-    if (this.y < 0)
-      this.y = 0;
+    if ((_.x + _.w) > $.ww)
+      _.x = $.ww - _.w;
+    if ((_.y + _.h) > $.wh)
+      _.y = $.wh - _.h;
+    if (_.x < 0)
+      _.x = 0;
+    if (_.y < 0)
+      _.y = 0;
 
-    this.bounds = {
-      b: this.y + this.h,
-      t: this.y,
-      l: this.x,
-      r: this.x + this.w
+    _.bounds = {
+      b: _.y + _.h,
+      t: _.y,
+      l: _.x,
+      r: _.x + _.w
     };
 
     /* Regeneration */
-    if (this.shield) {
-      this.ma -= elapsed * $.PW.W.m / 1000;
+    if (_.shield) {
+      _.ma -= elapsed * $.PW.W.m / 1000;
     } else {
-      this.ma += elapsed * this.mRegen / 1000;
+      _.ma += elapsed * _.mRegen / 1000;
     }
-    this.ma = $.util.range(this.ma, 0, this.maxM);
-    this.he = $.util.range(this.he, 0, this.maxH);
+    _.ma = $.util.range(_.ma, 0, _.maxM);
+    _.he = $.util.range(_.he, 0, _.maxH);
 
     /* Summon elements */
     var cp = null;
-    if ($.input.p(49) && this.pows.indexOf($.PW.F.v) >= 0) {
+    if ($.input.p(49) && _.pows.indexOf($.PW.F.v) >= 0) {
       cp = $.PW.F;
-    } else if ($.input.p(50) && this.pows.indexOf($.PW.E.v) >= 0) {
+    } else if ($.input.p(50) && _.pows.indexOf($.PW.E.v) >= 0) {
       cp = $.PW.E;
-    } else if ($.input.p(51) && this.pows.indexOf($.PW.W.v) >= 0) {
+    } else if ($.input.p(51) && _.pows.indexOf($.PW.W.v) >= 0) {
       cp = $.PW.W;
-    } else if ($.input.p(52) && this.pows.indexOf($.PW.A.v) >= 0) {
+    } else if ($.input.p(52) && _.pows.indexOf($.PW.A.v) >= 0) {
       cp = $.PW.A;
     }
-    if (this.cd === 0 && cp !== null) {
-      if (this.ma >= cp.m && !(cp.v === $.PW.W.v && this.shield)) {
-        this.ma -= cp.m;
-        this.cd = this.maxCD;
+    if (_.cd === 0 && cp !== null) {
+      if (_.ma >= cp.m && !(cp.v === $.PW.W.v && _.shield)) {
+        _.ma -= cp.m;
+        _.cd = _.maxCD;
         if (cp.v === $.PW.F.v) {
-          $.powers.push(new $.Fire(this.x, this.y, this.o));
+          $.powers.push(new $.Fire(_.x, _.y, _.o));
         } else if (cp.v === $.PW.E.v) {
-          $.powers.push(new $.Earth(this.x, this.y, this.o, 1));
+          $.powers.push(new $.Earth(_.x, _.y, _.o, 1));
         } else if (cp.v === $.PW.W.v) {
           [0, 120, 240].forEach(function(a) {
-            $.powers.push(new $.Water(self.x, self.y, a));
+            $.powers.push(new $.Water(_.x, _.y, a));
           });
-          this.shield = true;
+          _.shield = true;
         } else if (cp.v === $.PW.A.v) {
-          $.powers.push(new $.Air(this.x, this.y, this.o));
+          $.powers.push(new $.Air(_.x, _.y, _.o));
         }
-      } else if (this.ma < cp.m) {
+      } else if (_.ma < cp.m) {
         $.util.showInstructions('You do not have enough mana to cast the ' + cp.n + ' element');
       }
     }
 
     // Check for collisions with walls
     $.walls.forEach(function(w) {
-      if ($.collide.rect(self, w)) {
-        if ($.collide.isTop(self, w)){
-          self.y = w.bounds.t - self.h;
-        } else if ($.collide.isBottom(self, w)) {
-          self.y = w.bounds.b;
-        } else if ($.collide.isLeft(self, w)) {
-          self.x = w.bounds.l - self.w;
-        } else if ($.collide.isRight(self, w)) {
-          self.x = w.bounds.r;
+      if ($.collide.rect(_, w)) {
+        if ($.collide.isTop(_, w)){
+          _.y = w.bounds.t - _.h;
+        } else if ($.collide.isBottom(_, w)) {
+          _.y = w.bounds.b;
+        } else if ($.collide.isLeft(_, w)) {
+          _.x = w.bounds.l - _.w;
+        } else if ($.collide.isRight(_, w)) {
+          _.x = w.bounds.r;
         } else {
         }
       }
@@ -239,33 +239,33 @@ $.Hero = function(_x, _y, o) {
 
     // Check collision with enemies
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(self, e)) {
-        self.damage(e);
+      if ($.collide.rect(_, e)) {
+        _.damage(e);
       }
     });
 
     // Exit the level
     if ($.exit !== null) {
-      if ($.collide.rect(this, $.exit[0])) {
+      if ($.collide.rect(_, $.exit[0])) {
         _.exit = true;
       }
     }
 
     /* Calculate animation frame */
-    this.count = (this.count + 1) % this.frameDuration;
-    if (this.count === (this.frameDuration - 1)) {
-      this.currFrame = (this.currFrame + 1) % this.totalFrames;
+    _.count = (_.count + 1) % _.frameDuration;
+    if (_.count === (_.frameDuration - 1)) {
+      _.currFrame = (_.currFrame + 1) % _.totalFrames;
     }
   };
 
   this.render = function(tx, ty) {
-    var anim = (this.dx === 0 && this.dy === 0) ? this.anim.idle[this.o] : this.anim.run[this.o][this.currFrame];
+    var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
 
     $.ctxfg.save();
     $.ctxfg.scale(2.0, 2.0);
-    if (this.blink)
+    if (_.blink)
       $.ctxfg.globalAlpha = 0.3;
-    $.ctxfg.drawImage(this.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
+    $.ctxfg.drawImage(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
     $.ctxfg.restore();
   };
 };

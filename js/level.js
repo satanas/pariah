@@ -1,19 +1,20 @@
 // Based on http://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
 // Arguments: level number, width, height, number of enemies, item to be placed, leaf size
 $.Level = function(n, w, h, en, it, ls) {
-  this.n = n;
-  // Randomize w and h if they are undefined
-  this.w = w;
-  this.h = h;
-  this.maxLeafSize = ls || 15;
-  this.leafs = [];
+  var _ = this;
   var root = new $.Leaf(0, 0, w, h);
-  this.map = [];
+  _.n = n;
+  // Randomize w and h if they are undefined
+  _.w = w;
+  _.h = h;
+  _.maxLeafSize = ls || 15;
+  _.leafs = [];
+  _.map = [];
 
-  this.leafs.push(root);
+  _.leafs.push(root);
 
   this.isWall = function(x, y) {
-    return (this.map[x][y] === '#') ? true : false;
+    return (_.map[x][y] === '#') ? true : false;
   };
 
   // Return a random point inside a room
@@ -38,31 +39,31 @@ $.Level = function(n, w, h, en, it, ls) {
   function makeLeafs(l) {
     if (l.lc === null && l.rc === null) {
       // Split if the leaf is too big or 75% chance
-      if (l.w > this.maxLeafSize || l.height > this.maxLeafSize || $.util.randInt(0, 101) > 25) {
+      if (l.w > _.maxLeafSize || l.height > _.maxLeafSize || $.util.randInt(0, 101) > 25) {
         if (l.split()) {
-          this.leafs.push(l.lc);
-          this.leafs.push(l.rc);
-          makeLeafs.call(this, l.lc);
-          makeLeafs.call(this, l.rc);
+          _.leafs.push(l.lc);
+          _.leafs.push(l.rc);
+          makeLeafs.call(_, l.lc);
+          makeLeafs.call(_, l.rc);
         }
       }
     }
   }
 
-  makeLeafs.call(this, root);
+  makeLeafs.call(_, root);
   root.makeRooms();
 
   // Make map
   for (var i=0; i<w; i++) {
-    this.map[i] = [];
+    _.map[i] = [];
     for (var j=0; j<h; j++){
-      this.map[i][j] = '#';
+      _.map[i][j] = '#';
     }
   }
 
   var self = this;
   var ar = []; // Available rooms
-  this.leafs.forEach(function(l) {
+  _.leafs.forEach(function(l) {
     var r = l.room;
     if (r !== null) {
       ar.push(r);
@@ -96,22 +97,22 @@ $.Level = function(n, w, h, en, it, ls) {
   var t = 0;
   while (ec > 0) {
     var rr = ar[$.util.randInt(0, ar.length)];
-    p = this.rPoint(rr);
-    while (this.map[p.x][p.y] === 'e') {
+    p = _.rPoint(rr);
+    while (_.map[p.x][p.y] === 'e') {
       t++;
       if (t > 4) {
         rr = ar[$.util.randInt(0, ar.length)];
         t = 0;
       }
-      p = this.rPoint(rr);
+      p = _.rPoint(rr);
     }
     $.enemies.push(new $.Zombie(p.x * 32, p.y * 32));
     ec--;
-    this.map[p.x][p.y] = 'e';
+    _.map[p.x][p.y] = 'e';
   }
 
   // Place hero and entrance
-  p = this.rPoint(lr);
+  p = _.rPoint(lr);
   var b = null;
   while (true) {
     b = {x: p.x, y: p.y};
@@ -129,21 +130,21 @@ $.Level = function(n, w, h, en, it, ls) {
       p.x = lr.l - 1;
       b.x = p.x + 2;
     }
-    if (!this.isWall(p.x, p.y) || this.isCorner(p.x, p.y, lr)) {
-      p = this.rPoint(lr);
+    if (!_.isWall(p.x, p.y) || _.isCorner(p.x, p.y, lr)) {
+      p = _.rPoint(lr);
     } else {
       break;
     }
   }
   $.hero = new $.Hero(b.x * 32, b.y * 32);
   $.walls.push(new $.Entrance(p.x * 32, p.y * 32));
-  this.map[p.x][p.y] = '*';
-  this.map[b.x][b.y] = 'h';
+  _.map[p.x][p.y] = '*';
+  _.map[b.x][b.y] = 'h';
 
   // Place exit
   // We select a random room and place the exit in one of its walls
   var xr = ar[$.util.randInt(0, ar.length)];
-  p = this.rPoint(xr);
+  p = _.rPoint(xr);
   while (true) {
     var xw = $.util.randInt(0, 4);
     if (xw === 0) { // North wall
@@ -155,49 +156,50 @@ $.Level = function(n, w, h, en, it, ls) {
     } else if (xw === 3) { // West wall
       p.x = xr.l - 1;
     }
-    if (!this.isWall(p.x, p.y) || this.isCorner(p.x, p.y, xr)) {
-      p = this.rPoint(xr);
+    if (!_.isWall(p.x, p.y) || _.isCorner(p.x, p.y, xr)) {
+      p = _.rPoint(xr);
     } else {
       break;
     }
   }
   $.exit[0] = new $.Exit(p.x * 32, p.y * 32);
-  this.map[p.x][p.y] = '@';
+  _.map[p.x][p.y] = '@';
 
   // Place items
   for (i=it.length; i--;) {
     var ir = ar[$.util.randInt(0, ar.length)];
-    p = this.rPoint(ir);
+    p = _.rPoint(ir);
     $.items.push(new it[i](p.x * 32 + 8, p.y * 32 + 8));
-    this.map[p.x][p.y] = 'i';
+    _.map[p.x][p.y] = 'i';
   }
 
 
   // Showing off
-  for (var v=0; v<this.h; v++) {
-    var row = [];
-    for (var u=0; u<this.w; u++) {
-      row.push(self.map[u][v]);
-    }
-    console.log(v, row.join(''));
-  }
+  //for (var v=0; v<_.h; v++) {
+  //  var row = [];
+  //  for (var u=0; u<_.w; u++) {
+  //    row.push(self.map[u][v]);
+  //  }
+  //  console.log(v, row.join(''));
+  //}
 
 };
 
 $.Leaf = function(x, y, w, h) {
-  this.x = x;
-  this.y = y;
-  this.w = w;
-  this.h = h;
-  this.lc = null; // left child
-  this.rc = null; // right child
-  this.min = 6; // Min leaf size
-  this.room = null;
-  this.halls = [];
+  var _ = this;
+  _.x = x;
+  _.y = y;
+  _.w = w;
+  _.h = h;
+  _.lc = null; // left child
+  _.rc = null; // right child
+  _.min = 6; // Min leaf size
+  _.room = null;
+  _.halls = [];
 
   this.split = function() {
     // Abort if the leaf is already splitted
-    if (this.lc !== null || this.rc !== null)
+    if (_.lc !== null || _.rc !== null)
       return false;
 
     // Determine direction of split
@@ -205,62 +207,62 @@ $.Leaf = function(x, y, w, h) {
     // If the height is >25% larger than the width, we split horizontally
     // Else we split randomly
     var splith = !!$.util.randInt(0, 2);
-    if (this.w > this.h && this.w / this.h >= 0.25)
+    if (_.w > _.h && _.w / _.h >= 0.25)
       splith = false;
-    else if (this.h > this.w && this.h / this.w >= 0.25)
+    else if (_.h > _.w && _.h / _.w >= 0.25)
       splith = true;
 
-    var max = (splith ? this.h : this.w) - this.min;
+    var max = (splith ? _.h : _.w) - _.min;
     // Abort if the area is too small to split
-    if (max <= this.min)
+    if (max <= _.min)
       return false;
 
-    var split = $.util.randInt(this.min, max);
+    var split = $.util.randInt(_.min, max);
 
     // Create the left and right children
     if (splith) {
-      this.lc = new $.Leaf(this.x, this.y, this.w, split);
-      this.rc = new $.Leaf(this.x, this.y + split, this.w, this.h - split);
+      _.lc = new $.Leaf(_.x, _.y, _.w, split);
+      _.rc = new $.Leaf(_.x, _.y + split, _.w, _.h - split);
     } else {
-      this.lc = new $.Leaf(this.x, this.y, split, this.h);
-      this.rc = new $.Leaf(this.x + split, this.y, this.w - split, this.h);
+      _.lc = new $.Leaf(_.x, _.y, split, _.h);
+      _.rc = new $.Leaf(_.x + split, _.y, _.w - split, _.h);
     }
 
     return true;
   };
 
   this.makeRooms = function() {
-    if (this.lc !== null || this.rc !== null) {
-      if (this.lc !== null)
-        this.lc.makeRooms();
-      if (this.rc !== null)
-        this.rc.makeRooms();
-      if (this.lc !== null && this.rc !== null)
-        this.makeHall(this.lc.getRoom(), this.rc.getRoom());
+    if (_.lc !== null || _.rc !== null) {
+      if (_.lc !== null)
+        _.lc.makeRooms();
+      if (_.rc !== null)
+        _.rc.makeRooms();
+      if (_.lc !== null && _.rc !== null)
+        _.makeHall(_.lc.getRoom(), _.rc.getRoom());
     } else {
       var size = {
-        w: $.util.randInt(3, this.w - 2),
-        h: $.util.randInt(3, this.h - 2)
+        w: $.util.randInt(3, _.w - 2),
+        h: $.util.randInt(3, _.h - 2)
       };
       var pos = {
-        x: $.util.randInt(1, this.w - size.w - 1),
-        y: $.util.randInt(1, this.h - size.h - 1),
+        x: $.util.randInt(1, _.w - size.w - 1),
+        y: $.util.randInt(1, _.h - size.h - 1),
       };
-      this.room = new $.Rect(this.x + pos.x, this.y + pos.y, size.w, size.h);
+      _.room = new $.Rect(_.x + pos.x, _.y + pos.y, size.w, size.h);
     }
   };
 
   this.getRoom = function() {
-    if (this.room !== null) {
-      return this.room;
+    if (_.room !== null) {
+      return _.room;
     } else {
       var lRoom = null;
       var rRoom = null;
 
-      if (this.lc !== null)
-        lRoom = this.lc.getRoom();
-      if (this.rc !== null)
-        rRoom = this.lc.getRoom();
+      if (_.lc !== null)
+        lRoom = _.lc.getRoom();
+      if (_.rc !== null)
+        rRoom = _.lc.getRoom();
 
       if (lRoom === null && rRoom === null) {
         return null;
@@ -293,51 +295,51 @@ $.Leaf = function(x, y, w, h) {
     if (width < 0) {
       if (height < 0) {
         if ($.util.randInt(0, 10) > 4) {
-          this.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
         } else {
-          this.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
         }
       } else if (height > 0) {
         if ($.util.randInt(0, 10) > 4) {
-          this.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
         } else {
-          this.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
         }
       // if (height === 0)
       } else {
-        this.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
+        _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
       }
     } else if (width > 0){
       if (height < 0) {
         if ($.util.randInt(0, 10) > 4) {
-          this.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
         } else {
-          this.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
         }
       } else if (height > 0) {
         if ($.util.randInt(0, 10) > 4) {
-          this.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
         } else {
-          this.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
-          this.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
+          _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
         }
       // if (height === 0)
       } else {
-        this.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
+        _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
       }
     // if (width === 0)
     } else {
       if (height < 0) {
-        this.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+        _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
       } else {
-        this.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+        _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
       }
     }
   };
