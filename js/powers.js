@@ -61,16 +61,16 @@ $.Fire = function(x, y, o) {
   _.dx = _.dy = 0;
   _.bounds = _.getb();
   _.anim = {x:18, y:17};
-  _.ts = $.util.ts();
+  _.ts = $.u.ts();
   _.angle = 0;
-  _.attack = $.util.rand(8, 12);
+  _.attack = $.u.rand(8, 12);
 
   this.update = function(i) {
     _.angle = (_.angle + 15) % 360;
     _.dx += _.a * _.dirX;
     _.dy += _.a * _.dirY;
-    _.dx = $.util.range(_.dx, -_.maxS, _.maxS);
-    _.dy = $.util.range(_.dy, -_.maxS, _.maxS);
+    _.dx = $.u.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.u.range(_.dy, -_.maxS, _.maxS);
 
     _.x += _.dx;
     _.y += _.dy;
@@ -128,7 +128,7 @@ $.Earth = function(x, y, o, n) {
   _.ctime = Date.now(); // Creation time
   _.attack = 0;
   _.anim = {x:5, y:17};
-  _.ts = $.util.ts();
+  _.ts = $.u.ts();
   _.summon = false;
 
   this.update = function(i) {
@@ -177,7 +177,7 @@ $.Water = function(x ,y, a) {
   _.lifetime = 6000; /* Milliseconds */
   _.ctime = Date.now();
   _.bounds = _.getb();
-  _.attack = $.util.rand(3, 6);
+  _.attack = $.u.rand(3, 6);
 
   this.update = function(i) {
     var elapsed = Date.now() - _.ctime;
@@ -245,9 +245,9 @@ $.Air = function(x, y, o) {
   _.maxS = 7.00; /* Max speed */
   _.dx = _.dy = 0;
   _.bounds = _.getb();
-  _.attack = $.util.rand(7, 10);
+  _.attack = $.u.rand(7, 10);
   _.anim = {x:11, y:17};
-  _.ts = $.util.ts();
+  _.ts = $.u.ts();
   _.blink = false;
   _.bcount = 0;
   _.ctime = Date.now();
@@ -255,8 +255,8 @@ $.Air = function(x, y, o) {
   this.update = function(i) {
     _.dx += _.a * _.dirX;
     _.dy += _.a * _.dirY;
-    _.dx = $.util.range(_.dx, -_.maxS, _.maxS);
-    _.dy = $.util.range(_.dy, -_.maxS, _.maxS);
+    _.dx = $.u.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.u.range(_.dy, -_.maxS, _.maxS);
 
     _.x += _.dx;
     _.y += _.dy;

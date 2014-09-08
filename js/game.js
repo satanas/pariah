@@ -1,7 +1,7 @@
 $.init = function() {
   $.input = $.Input;
   $.input.bind([13, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
-  $.cfg = $.util.byId('fg');
+  $.cfg = $.u.byId('fg');
   $.cv1 = document.createElement("canvas");
   $.cv2 = document.createElement("canvas");
   $.ctxfg = $.cfg.getContext('2d');
@@ -38,7 +38,7 @@ $.init = function() {
 $.showWelcome = function() {
   caf($.animId);
   $.quitScenes();
-  $.util.v('s', true);
+  $.u.v('s', true);
   $.scene = new $.Scene();
   $.input.u();
 
@@ -48,9 +48,9 @@ $.showWelcome = function() {
 $.showIntro = function() {
   caf($.animId);
   $.quitScenes();
-  $.util.v('i', true);
+  $.u.v('i', true);
   $.scene = new $.Scene();
-  $.util.show('i0');
+  $.u.show('i0');
   $.input.u();
 
   $.animId = raf($.introLoop);
@@ -61,8 +61,8 @@ $.showGameOver = function() {
   $.lv = 1;
   $.epow = [];
   $.quitScenes();
-  $.util.byId('g1').innerHTML = $.goMsg[$.util.rand(0, $.goMsg.length)];
-  $.util.v('g', true);
+  $.u.byId('g1').innerHTML = $.goMsg[$.u.rand(0, $.goMsg.length)];
+  $.u.v('g', true);
   $.input.u();
 
   $.animId = raf($.gameOverLoop);
@@ -76,8 +76,8 @@ $.showEnd = function() {
   $.fadeOut.quit = true;
   $.quitScenes();
   $.scene = new $.Scene();
-  $.util.show('e0');
-  $.util.v('e', true);
+  $.u.show('e0');
+  $.u.v('e', true);
   $.input.u();
 
   $.animId = raf($.endLoop);
@@ -87,8 +87,8 @@ $.showCredits = function() {
   caf($.animId);
   $.quitScenes();
   $.scene = new $.Scene();
-  $.util.v('c', true);
-  $.util.hide('e2');
+  $.u.v('c', true);
+  $.u.hide('e2');
   $.input.u();
 
   $.animId = raf($.creditsLoop);
@@ -104,10 +104,10 @@ $.welcomeLoop = function() {
     $.scene.e = 0;
     if ($.scene.s === 0) {
       $.scene.s = 1;
-      $.util.v('s1', false);
+      $.u.v('s1', false);
     } else {
       $.scene.s = 0;
-      $.util.v('s1', true);
+      $.u.v('s1', true);
     }
   }
   $.input.u();
@@ -122,12 +122,12 @@ $.introLoop = function() {
   $.scene.e = Date.now() - $.scene.t;
   if ($.scene.e >= 1800 && !$.scene.f) {
     $.scene.f = 1;
-    $.util.fadeOut('i' + $.scene.s, function() {
+    $.u.fadeOut('i' + $.scene.s, function() {
       $.scene.s += 1;
       $.scene.t = Date.now();
       $.scene.e = 0;
       $.scene.f = 0;
-      $.util.show('i' + $.scene.s);
+      $.u.show('i' + $.scene.s);
     });
   }
 
@@ -148,12 +148,12 @@ $.endLoop = function() {
   $.scene.e = Date.now() - $.scene.t;
   if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
     $.scene.f = 1;
-    $.util.fadeOut('e' + $.scene.s, function() {
+    $.u.fadeOut('e' + $.scene.s, function() {
       $.scene.s += 1;
       $.scene.t = Date.now();
       $.scene.e = 0;
       $.scene.f = 0;
-      $.util.show('e' + $.scene.s);
+      $.u.show('e' + $.scene.s);
     });
   } else if ($.scene.s === 2) {
     setTimeout($.showCredits, 6000);
@@ -170,7 +170,7 @@ $.creditsLoop = function() {
   $.scene.e = Date.now() - $.scene.t;
   if ($.scene.e >= 5000 && !$.scene.f) {
     $.scene.f = 1;
-    $.util.show('ci');
+    $.u.show('ci');
   }
 
   $.input.u();
@@ -179,9 +179,9 @@ $.creditsLoop = function() {
 
 $.quitScenes = function() {
   ['s', 's1', 'i', 'g', 'e', 'c'].forEach(function(e) {
-      $.util.v(e, false);
+      $.u.v(e, false);
   });
-  $.util.hide('m1');
+  $.u.hide('m1');
 };
 
 
@@ -202,11 +202,11 @@ $.startGame = function() {
       en = 0,
       a = 0,
       b = 0;
-    a = $.util.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
-    b = $.util.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
+    a = $.u.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
+    b = $.u.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
     //lf = 10 + (7 * $.lv);
   if ($.lv === 1) {
-    $.util.instruction('Use the arrow keys to move and escape the dungeon', 4500);
+    $.u.instruction('Use the arrow keys to move and escape the dungeon', 4500);
   } else {
     en = $.lv * 3;
   }
@@ -297,7 +297,7 @@ $.finalRoom = function() {
   $.switches.push(new $.AirSwitch(496, 256));
 
   $.fadeIn.start(1000);
-  $.util.instruction('Offer each element on its altar to start the ritual', 4500);
+  $.u.instruction('Offer each element on its altar to start the ritual', 4500);
   $.animId = raf($.loop);
 };
 
@@ -363,7 +363,7 @@ $.loop = function() {
       }
       if (!$.msg[k].s) {
         $.msg[k].s = true;
-        $.util.instruction($.msg[k].t);
+        $.u.instruction($.msg[k].t);
       }
     }
   }

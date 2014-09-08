@@ -1,61 +1,64 @@
 $.Scene= function() {
+  var _ = this;
   // Step
-  this.s = 0;
+  _.s = 0;
   // Elapsed
-  this.e = 0;
+  _.e = 0;
   // Current time
-  this.t = Date.now();
+  _.t = Date.now();
   // Fading
-  this.f = 0;
+  _.f = 0;
 };
 
 $.FadeIn = function() {
-  this.done = true;
+  var _ = this;
+  _.done = true;
 
-  this.start = function(d) {
-    this.done = false;
-    this.d = d; // Fade duration
-    this.e = 0; // Elapsed time
-    this.c = Date.now(); // Activation time
+  _.start = function(d) {
+    _.done = false;
+    _.d = d; // Fade duration
+    _.e = 0; // Elapsed time
+    _.c = Date.now(); // Activation time
   };
 
-  this.render = function() {
-    if (this.done) return;
+  _.render = function() {
+    if (_.done) return;
 
-    this.e = Date.now() - this.c;
-    if (this.e > this.d) {
-      this.e = this.d;
-      this.done = true;
+    _.e = Date.now() - _.c;
+    if (_.e > _.d) {
+      _.e = _.d;
+      _.done = true;
     }
-    var a = (1 - this.e / this.d).toString().substr(0, 3);
+    var a = (1 - _.e / _.d).toString().substr(0, 3);
     $.ctxfg.fillStyle = "rgba(0,0,0," + a +")";
     $.ctxfg.fillRect(0, 0, $.cam.w, $.cam.h);
   };
 };
 
 $.FadeOut = function() {
-  this.done = true;
-  this.quit = true;
+  var _ = this;
+  _.done = true;
+  _.quit = true;
 
-  this.start = function(d, c) {
-    this.color = c || '0,0,0';
-    this.done = false;
-    this.quit = false;
-    this.d = d; // Fade duration
-    this.e = 0; // Elapsed time
-    this.c = Date.now(); // Activation time
+  _.start = function(d, c) {
+    _.color = c || '0,0,0';
+    _.done = false;
+    _.quit = false;
+    _.d = d; // Fade duration
+    _.e = 0; // Elapsed time
+    _.c = Date.now(); // Activation time
   };
 
-  this.render = function() {
-    if (this.quit) return;
+  _.render = function() {
+    if (_.quit) return;
 
-    this.e = Date.now() - this.c;
-    if (this.e > this.d) {
-      this.e = this.d;
-      this.done = true;
+    _.e = Date.now() - _.c;
+    if (_.e > _.d) {
+      _.e = _.d;
+      _.done = true;
     }
-    var a = (this.e / this.d).toString().substr(0, 3);
-    $.ctxfg.fillStyle = "rgba(" + this.color + "," + a +")";
+    var a = (_.e / _.d).toString().substr(0, 3);
+    $.ctxfg.fillStyle = "rgba(" + _.color + "," + a +")";
     $.ctxfg.fillRect(0, 0, $.cam.w, $.cam.h);
   };
 };

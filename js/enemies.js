@@ -1,43 +1,44 @@
 $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
-  this.x = x;
-  this.y = y;
-  this.w = w;
-  this.h = h;
-  this.he = he;
-  this.maxH = he;
-  this.miss = mi;
-  this.vul = vu;
-  this.ptime = pt || 4000; // Planted time
-  this.itime = 300; // Invincibility time
+  var _ = this;
+  _.x = x;
+  _.y = y;
+  _.w = w;
+  _.h = h;
+  _.he = he;
+  _.maxH = he;
+  _.miss = mi;
+  _.vul = vu;
+  _.ptime = pt || 4000; // Planted time
+  _.itime = 300; // Invincibility time
 
-  this.hurt = false;
-  this.planted = false;
-  this.blink = false;
-  this.ctimeH = 0; // Current time for hurt
-  this.ctimeP = 0; // Current time for planted
-  this.etimeH = 0; // Elapsed time for hurt
-  this.etimeP = 0; // Elapsed time for planted
-  this.bcount = 0;
-  this.minD = 300; // Min distance to start chasing hero
-  this.hasRoute = false; // Has a valid route returned by AI
-  this.route = []; // Points of route
-  this.nextPoint = [];
-  this.speed = 0.7;
+  _.hurt = false;
+  _.planted = false;
+  _.blink = false;
+  _.ctimeH = 0; // Current time for hurt
+  _.ctimeP = 0; // Current time for planted
+  _.etimeH = 0; // Elapsed time for hurt
+  _.etimeP = 0; // Elapsed time for planted
+  _.bcount = 0;
+  _.minD = 300; // Min distance to start chasing hero
+  _.hasRoute = false; // Has a valid route returned by AI
+  _.route = []; // Points of route
+  _.nextPoint = [];
+  _.speed = 0.7;
 
-  this.getb = function() {
+  _.getb = function() {
     return {
-      b: this.y + this.h,
-      t: this.y,
-      l: this.x,
-      r: this.x + this.w
+      b: _.y + _.h,
+      t: _.y,
+      l: _.x,
+      r: _.x + _.w
     };
   };
 
-  this.damage = function(p) {
-    if (this.hurt) return null;
+  _.damage = function(p) {
+    if (_.hurt) return null;
 
-    if ($.util.canMiss(this.miss)) {
-      $.textPops.push(new $.TextPop('miss', this.x, this.y - 5, 'white'));
+    if ($.u.canMiss(_.miss)) {
+      $.textPops.push(new $.TextPop('miss', _.x, _.y - 5, 'white'));
       return 0;
     }
 
@@ -45,139 +46,140 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     var color = 'yellow';
 
     if (p.t === $.PW.E.v) {
-      if (!this.planted) {
-        this.planted = true;
-        this.ctimeP = Date.now();
-        this.etimeP = 0;
-        $.textPops.push(new $.TextPop('planted', this.x + 2, this.y - 5, color));
+      if (!_.planted) {
+        _.planted = true;
+        _.ctimeP = Date.now();
+        _.etimeP = 0;
+        $.textPops.push(new $.TextPop('planted', _.x + 2, _.y - 5, color));
       }
       return;
     }
 
-    if (p.t === this.vul.t) {
-      attack = Math.floor(p.attack + (p.attack * this.vul.v));
+    if (p.t === _.vul.t) {
+      attack = Math.floor(p.attack + (p.attack * _.vul.v));
       color = 'red';
     }
-    this.he -= attack;
-    this.hurt = true;
-    this.ctimeH = Date.now();
-    this.etimeH = 0;
-    $.textPops.push(new $.TextPop('-' + attack, this.x + 7, this.y - 5, color));
+    _.he -= attack;
+    _.hurt = true;
+    _.ctimeH = Date.now();
+    _.etimeH = 0;
+    $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, color));
     return attack;
   };
 
-  this.planting = function() {
-    if (this.planted) {
-      this.etimeP = Date.now() - this.ctimeP;
+  _.planting = function() {
+    if (_.planted) {
+      _.etimeP = Date.now() - _.ctimeP;
 
-      if (this.etimeP >= this.ptime) {
-        this.planted = false;
+      if (_.etimeP >= _.ptime) {
+        _.planted = false;
       }
     }
   };
 
-  this.blinking = function() {
-    if (this.hurt) {
-      this.etimeH = Date.now() - this.ctimeH;
+  _.blinking = function() {
+    if (_.hurt) {
+      _.etimeH = Date.now() - _.ctimeH;
 
-      var c = Math.floor(this.etimeH / 100);
-      if (c > this.bcount) {
-        this.bcount = c;
-        this.blink = !this.blink;
+      var c = Math.floor(_.etimeH / 100);
+      if (c > _.bcount) {
+        _.bcount = c;
+        _.blink = !_.blink;
       }
 
-      if (this.etimeH >= this.itime) {
-        this.hurt = false;
-        this.bcount = 0;
-        this.blink = false;
+      if (_.etimeH >= _.itime) {
+        _.hurt = false;
+        _.bcount = 0;
+        _.blink = false;
       }
     }
   };
 
-  this.die = function(i) {
+  _.die = function(i) {
     $.enemies.splice(i, 1);
-    // If this is the last enemy, drop the key, otherwise drop
+    // If _ is the last enemy, drop the key, otherwise drop
     // something according probability
     if ($.enemies.length === 0) {
-      $.items.push(new $.Key(this.x + (this.w)/2, this.y + 4));
+      $.items.push(new $.Key(_.x + (_.w)/2, _.y + 4));
     } else {
-      if ($.util.rand(0, 10) > 4) {
+      if ($.u.rand(0, 10) > 4) {
         var items = [$.HealthPack, $.ManaPack];
-        var k = $.util.rand(0, 2);
-        $.items.push(new items[k](this.x + (this.w)/2, this.y + 4));
+        var k = $.u.rand(0, 2);
+        $.items.push(new items[k](_.x + (_.w)/2, _.y + 4));
       }
     }
   };
 
   // Render health bar
-  this.renderBar = function(tx, ty) {
+  _.renderBar = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'rgb(0,0,0)';
     $.ctxfg.fillRect(tx, ty - 10, 32, 5);
     $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty - 10, (this.he * 32) / this.maxH, 5);
+    $.ctxfg.fillRect(tx, ty - 10, (_.he * 32) / _.maxH, 5);
     $.ctxfg.restore();
   };
 };
 
 $.Zombie = function(x, y) {
-  $.Enemy.call(this, x, y, 32, 32, 30, 0.05, {t: $.PW.F.v, v:0.45});
+  var _ = this;
+  $.Enemy.call(_, x, y, 32, 32, 30, 0.05, {t: $.PW.F.v, v:0.45});
 
-  this.bounds = this.getb();
-  this.attack = $.util.rand(12, 16);
+  _.bounds = _.getb();
+  _.attack = $.u.rand(12, 16);
 
-  this.update = function(i) {
-    this.bounds = this.getb();
+  _.update = function(i) {
+    _.bounds = _.getb();
 
-    this.blinking();
-    this.planting();
-    if (this.planted)
+    _.blinking();
+    _.planting();
+    if (_.planted)
       console.log('planted');
 
-    if (this.he <= 0)
-      this.die(i);
+    if (_.he <= 0)
+      _.die(i);
 
-    if(!this.hasRoute) {
-       var distance = $.ai.getDistance({x:this.x, y:this.y}, {x:$.hero.x, y:$.hero.y});
-       if((distance <= this.minD) && (Math.round(distance) > 0)) {
+    if(!_.hasRoute) {
+       var distance = $.ai.getDistance({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
+       if((distance <= _.minD) && (Math.round(distance) > 0)) {
           console.log('Get route');
-          this.route = $.ai.calculatePath([Math.round(this.x / 32), Math.round(this.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
-          this.hasRoute = true;
-          this.nextPoint = this.route.shift();
+          _.route = $.ai.calculatePath([Math.round(_.x / 32), Math.round(_.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
+          _.hasRoute = true;
+          _.nextPoint = _.route.shift();
        }
     } else {
-      if((Math.round(this.x / 32) == this.nextPoint[0]) && (Math.round(this.y / 32) == this.nextPoint[1])) {
-        if(this.route.length > 0) {
-          this.nextPoint = this.route.shift();
+      if((Math.round(_.x / 32) == _.nextPoint[0]) && (Math.round(_.y / 32) == _.nextPoint[1])) {
+        if(_.route.length > 0) {
+          _.nextPoint = _.route.shift();
         } else {
-          this.hasRoute = false;
-          this.route = [];
+          _.hasRoute = false;
+          _.route = [];
         }
       } else {
-        if(Math.round(this.x / 32) < this.nextPoint[0]) {
-          this.x += this.speed;
-        } else if(Math.round(this.x / 32) > this.nextPoint[0]) {
-          this.x -= this.speed;
+        if(Math.round(_.x / 32) < _.nextPoint[0]) {
+          _.x += _.speed;
+        } else if(Math.round(_.x / 32) > _.nextPoint[0]) {
+          _.x -= _.speed;
         }
-        if(Math.round(this.y / 32) < this.nextPoint[1]) {
-          this.y += this.speed;
-        } else if(Math.round(this.y / 32) > this.nextPoint[1]) {
-          this.y -= this.speed;
+        if(Math.round(_.y / 32) < _.nextPoint[1]) {
+          _.y += _.speed;
+        } else if(Math.round(_.y / 32) > _.nextPoint[1]) {
+          _.y -= _.speed;
         }
       }
     }
 
   };
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
-    if (!this.blink)
+    if (!_.blink)
       $.ctxfg.fillStyle = 'rgb(0,150,0)';
     else
       $.ctxfg.fillStyle = 'rgba(0,150,0,0.3)';
     $.ctxfg.fillRect(tx, ty, 32, 32);
     $.ctxfg.restore();
 
-    this.renderBar(tx, ty);
+    _.renderBar(tx, ty);
   };
 };

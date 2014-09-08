@@ -77,7 +77,7 @@ $.Key = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, 'k', true);
   _.anim = {x:0, y:17};
-  _.ts = $.util.ts();
+  _.ts = $.u.ts();
   _.w = 6;
   _.h = 20;
 
@@ -117,7 +117,7 @@ $.DrawBottle = function(tx, ty, color) {
     $.ctxfg.globalAlpha = 0.7;
 
     $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
+    $.ctxfg.fillRect(tx, ty, this.w, this.h);
 
     $.ctxfg.fillStyle = 'hsl(36, 43%, 59%)';
     $.ctxfg.fillRect(tx + 3, ty + 1, 3, 3);

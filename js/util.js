@@ -1,74 +1,74 @@
-$.util = {
+$.u = {
   'fading': [],
   'instID': null,
 };
 
 // Check that v is between ll and lu
-$.util.range = function(v, ll, lu) {
+$.u.range = function(v, ll, lu) {
   if (v < ll) return ll;
   if (v > lu) return lu;
   return v;
 };
 
-$.util.fadeOut = function(i, cb) {
-  $.util.fading[i] = setInterval($.util._fade, 50, i, cb);
+$.u.fadeOut = function(i, cb) {
+  $.u.fading[i] = setInterval($.u._fade, 50, i, cb);
 };
 
 // Fade out step
-$.util._fade = function(i, cb) {
-  var e = $.util.byId(i);
+$.u._fade = function(i, cb) {
+  var e = $.u.byId(i);
   e.style.opacity -= 0.03;
   if (e.style.opacity <= 0) {
-    clearInterval($.util.fading[i]);
-    $.util.fading.splice($.util.fading.indexOf(i), 1);
+    clearInterval($.u.fading[i]);
+    $.u.fading.splice($.u.fading.indexOf(i), 1);
     if (cb !== undefined) cb();
   }
 };
 
 // Shows a DOM object putting its opacity in one
-$.util.show = function(i) {
-  $.util.byId(i).style.opacity = 1.0;
+$.u.show = function(i) {
+  $.u.byId(i).style.opacity = 1.0;
 };
 
 // Hides a DOM object putting its opacity in zero
-$.util.hide = function(i) {
-  $.util.byId(i).style.opacity = 0.0;
+$.u.hide = function(i) {
+  $.u.byId(i).style.opacity = 0.0;
 };
 
 // Makes a DOM object visible or invisible
-$.util.v = function(i, v) {
-  $.util.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
+$.u.v = function(i, v) {
+  $.u.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
 };
 
 /* Generate random integer in a (min, max) range */
-$.util.rand = function(a, b) {
+$.u.rand = function(a, b) {
   return Math.floor(Math.random() * (b - a)) + a;
 };
 
 // Returns true if there is chance to miss one attack
 // Receives p (number between 0 and 1) representing the probability of success
-$.util.canMiss = function(p) {
-  var x = $.util.rand(1, 100);
+$.u.canMiss = function(p) {
+  var x = $.u.rand(1, 100);
   return (x <= Math.floor(p * 100));
 };
 
-$.util.byId = function(i) {
+$.u.byId = function(i) {
   return document.getElementById(i);
 };
 
-$.util.instruction = function(t, d) {
+$.u.instruction = function(t, d) {
   var dx = d || 3000;
-  if ($.util.instID) {
-    clearTimeout($.util.instID);
-    clearInterval($.util.fading.m1);
+  if ($.u.instID) {
+    clearTimeout($.u.instID);
+    clearInterval($.u.fading.m1);
   }
-  $.util.byId('m1').innerHTML = t;
-  $.util.show('m1');
-  $.util.instID = setTimeout(function() { $.util.fadeOut('m1', $.cleanMsg); }, dx);
+  $.u.byId('m1').innerHTML = t;
+  $.u.show('m1');
+  $.u.instID = setTimeout(function() { $.u.fadeOut('m1', $.cleanMsg); }, dx);
 };
 
-$.util.ts = function() {
-  return $.util.byId('ts');
+$.u.ts = function() {
+  return $.u.byId('ts');
 };
 
 // Enable the passage of the 'this' object through the JavaScript timers

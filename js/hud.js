@@ -1,32 +1,33 @@
 $.Hud = function() {
-  this.hBar = {
+  var _ = this;
+  _.hBar = {
     x: 10,
     y: 10,
     w: 80,
     h: 10,
   };
-  this.mBar = {
+  _.mBar = {
     x: 10,
     y: 22,
     w: 80,
     h: 10,
   };
 
-  this.render = function() {
+  _.render = function() {
     $.ctxfg.save();
     /* Health bar */
-    var v = $.hero.he * this.hBar.w / $.hero.maxH;
+    var v = $.hero.he * _.hBar.w / $.hero.maxH;
     $.ctxfg.fillStyle = 'hsla(0, 0%, 30%, 1)';
-    $.ctxfg.fillRect(this.hBar.x, this.hBar.y, this.hBar.w, this.hBar.h);
+    $.ctxfg.fillRect(_.hBar.x, _.hBar.y, _.hBar.w, _.hBar.h);
     $.ctxfg.fillStyle = $.HCOLOR;
-    $.ctxfg.fillRect(this.hBar.x, this.hBar.y, v, this.hBar.h);
+    $.ctxfg.fillRect(_.hBar.x, _.hBar.y, v, _.hBar.h);
 
     /* Mana bar */
-    v = $.hero.ma * this.mBar.w / $.hero.maxM;
+    v = $.hero.ma * _.mBar.w / $.hero.maxM;
     $.ctxfg.fillStyle = 'hsla(0, 0%, 30%, 1)';
-    $.ctxfg.fillRect(this.mBar.x, this.mBar.y, this.mBar.w, this.mBar.h);
+    $.ctxfg.fillRect(_.mBar.x, _.mBar.y, _.mBar.w, _.mBar.h);
     $.ctxfg.fillStyle = $.MCOLOR;
-    $.ctxfg.fillRect(this.mBar.x, this.mBar.y, v, this.mBar.h);
+    $.ctxfg.fillRect(_.mBar.x, _.mBar.y, v, _.mBar.h);
     $.ctxfg.restore();
   };
 };

@@ -1,66 +1,66 @@
 $.Camera = function(vw, vh, ww, wh) {
-  this.w = vw; // Viewport width
-  this.h = vh; // Viewport height
-  this.ww = ww; // World width
-  this.wh = wh; // World height
-  this.ofx = 0;
-  this.ofy = 0;
-  this.tg = null;
+  var _ = this;
+  _.w = vw; // Viewport width
+  _.h = vh; // Viewport height
+  _.ww = ww; // World width
+  _.wh = wh; // World height
+  _.ofx = 0;
+  _.ofy = 0;
+  _.tg = null;
 
-  this.setTarget = function(t) {
-    this.tg = t;
+  _.setTarget = function(t) {
+    _.tg = t;
   };
 
-  this.transCoord = function(o) {
+  _.transCoord = function(o) {
     return {
-      x: o.x - this.ofx,
-      y: o.y - this.ofy,
-      r: o.bounds.r - this.ofx,
-      b: o.bounds.b - this.ofy
+      x: o.x - _.ofx,
+      y: o.y - _.ofy,
+      r: o.bounds.r - _.ofx,
+      b: o.bounds.b - _.ofy
     };
   };
 
-  this.inView = function(o) {
-    var t = this.transCoord(o);
-    return ((t.r >= 0 && t.r <= this.w) || (t.x >= 0 && t.x <= this.w)) &&
-           ((t.b >= 0 && t.b <= this.h) || (t.y >= 0 && t.y <= this.h));
+  _.inView = function(o) {
+    var t = _.transCoord(o);
+    return ((t.r >= 0 && t.r <= _.w) || (t.x >= 0 && t.x <= _.w)) &&
+           ((t.b >= 0 && t.b <= _.h) || (t.y >= 0 && t.y <= _.h));
   };
 
-  this.update = function() {
-    if (this.tg === null) return;
+  _.update = function() {
+    if (_.tg === null) return;
     // Update offset according the target
     var tx, ty = 0;
-    var mw = this.w / 2;
-    var mh = this.h / 2;
-    if (this.ww <= this.w) {
-      tx = this.tg.x;
-    } else if (this.tg.x <= (mw)) {
-      tx = this.tg.x;
-    } else if ((this.tg.x > mw) && (this.tg.x + mw <= this.ww)) {
+    var mw = _.w / 2;
+    var mh = _.h / 2;
+    if (_.ww <= _.w) {
+      tx = _.tg.x;
+    } else if (_.tg.x <= (mw)) {
+      tx = _.tg.x;
+    } else if ((_.tg.x > mw) && (_.tg.x + mw <= _.ww)) {
       tx = mw;
-    } else if ((this.tg.x > mw) && (this.tg.x + mw > this.ww)) {
-      tx = this.w - (this.ww - this.tg.x);
+    } else if ((_.tg.x > mw) && (_.tg.x + mw > _.ww)) {
+      tx = _.w - (_.ww - _.tg.x);
     }
 
-    if (this.wh <= this.h) {
-      tx = this.tg.y;
-    } else if (this.tg.y <= (mh)) {
-      ty = this.tg.y;
-    } else if ((this.tg.y > mh) && (this.tg.y + mh <= this.wh)) {
+    if (_.wh <= _.h) {
+      tx = _.tg.y;
+    } else if (_.tg.y <= (mh)) {
+      ty = _.tg.y;
+    } else if ((_.tg.y > mh) && (_.tg.y + mh <= _.wh)) {
       ty = mh;
-    } else if ((this.tg.y > mh) && (this.tg.y + mh > this.wh)) {
-      ty = this.h - (this.wh - this.tg.y);
+    } else if ((_.tg.y > mh) && (_.tg.y + mh > _.wh)) {
+      ty = _.h - (_.wh - _.tg.y);
     }
-    this.ofx = this.tg.x - tx;
-    this.ofy = this.tg.y - ty;
+    _.ofx = _.tg.x - tx;
+    _.ofy = _.tg.y - ty;
   };
 
-  this.render = function(objs) {
+  _.render = function(objs) {
     if (objs === null) return;
-    var self = this;
     objs.forEach(function(o) {
-      if (self.inView(o)) {
-        var t = self.transCoord(o);
+      if (_.inView(o)) {
+        var t = _.transCoord(o);
         o.render(t.x, t.y);
       }
     });

@@ -1,5 +1,6 @@
 $.Collide = function() {
-  this.rect = function(o1, o2) {
+  var _ = this;
+  _.rect = function(o1, o2) {
     if (Object.keys(o1.bounds).length === 0 || Object.keys(o2.bounds).length === 0) return false;
     return !((o1.bounds.b < o2.bounds.t) ||
         (o1.bounds.t > o2.bounds.b) ||
@@ -7,7 +8,7 @@ $.Collide = function() {
         (o1.bounds.r < o2.bounds.l));
   };
 
-  this.faces = function(o1, o2) {
+  _.faces = function(o1, o2) {
     return {
       top: Math.abs(o1.bounds.b - o2.bounds.t),
       bottom: Math.abs(o1.bounds.t - o2.bounds.b),
@@ -16,23 +17,23 @@ $.Collide = function() {
     };
   };
 
-  this.isTop = function(o1, o2) {
-    var f = this.faces(o1, o2);
+  _.isTop = function(o1, o2) {
+    var f = _.faces(o1, o2);
     return (f.top < f.bottom && f.top < f.left && f.top < f.right);
   };
 
-  this.isBottom = function(o1, o2) {
-    var f = this.faces(o1, o2);
+  _.isBottom = function(o1, o2) {
+    var f = _.faces(o1, o2);
     return (f.bottom < f.top && f.bottom < f.left && f.bottom < f.right);
   };
 
-  this.isLeft = function(o1, o2) {
-    var f = this.faces(o1, o2);
+  _.isLeft = function(o1, o2) {
+    var f = _.faces(o1, o2);
     return (f.left < f.bottom && f.left < f.top && f.left < f.right);
   };
 
-  this.isRight = function(o1, o2) {
-    var f = this.faces(o1, o2);
+  _.isRight = function(o1, o2) {
+    var f = _.faces(o1, o2);
     return (f.right < f.bottom && f.right < f.left && f.right < f.top);
   };
 };

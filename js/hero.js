@@ -12,7 +12,7 @@ $.Hero = function(_x, _y, o) {
   _.maxM = 100;
   _.maxCD = 380;
   _.mRegen = 1.75; /* Per millisecond */
-  _.ts = $.util.ts();
+  _.ts = $.u.ts();
 
   _.s = 0.13; // Speed
   _.dx = _.dy = 0;
@@ -56,7 +56,7 @@ $.Hero = function(_x, _y, o) {
 
   this.damage = function(e) {
     if (_.hurt || _.dead) return;
-    var attack = Math.floor(e.attack - (e.attack * $.util.rand(_.rs * 100, 0) / 100));
+    var attack = Math.floor(e.attack - (e.attack * $.u.rand(_.rs * 100, 0) / 100));
     _.he -= attack;
     _.hurt = true;
     _.htime = Date.now();
@@ -71,14 +71,14 @@ $.Hero = function(_x, _y, o) {
   this.heal = function(v) {
     _.he += v;
     var m = (_.he > _.maxH) ? 'full' : '+' + v;
-    _.he = $.util.range(_.he, 0, _.maxH);
+    _.he = $.u.range(_.he, 0, _.maxH);
     $.textPops.push(new $.TextPop(m, _.x + 7, _.y - 5, 'green'));
   };
 
   this.charge = function(v) {
     _.ma += v;
     var m = (_.ma > _.maxM) ? 'full' : '+' + v;
-    _.ma = $.util.range(_.ma, 0, _.maxM);
+    _.ma = $.u.range(_.ma, 0, _.maxM);
     $.textPops.push(new $.TextPop(m, _.x + 7, _.y - 5, 'blue'));
   };
 
@@ -88,11 +88,11 @@ $.Hero = function(_x, _y, o) {
       if (t.t.v === $.PW.F.v) $.fow.radius = 6;
       _.pows.push(t.t.v);
       $.epow.push(t.t.v);
-      $.util.instruction(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
+      $.u.instruction(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
       if (t.t === 'k') {
         _.key = true;
-        $.util.instruction('You got the key of this dungeon');
+        $.u.instruction('You got the key of this dungeon');
       } else if (t.t === 'h') {
         _.heal(10);
       } else if (t.t === 'm') {
@@ -144,8 +144,8 @@ $.Hero = function(_x, _y, o) {
       _.dy += _.s;
     }
 
-    _.dx = $.util.range(_.dx, -_.maxS, _.maxS);
-    _.dy = $.util.range(_.dy, -_.maxS, _.maxS);
+    _.dx = $.u.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.u.range(_.dy, -_.maxS, _.maxS);
 
     if (!$.input.p(37) && !$.input.p(39)) {
       _.dx = 0;
@@ -186,8 +186,8 @@ $.Hero = function(_x, _y, o) {
     } else {
       _.ma += elapsed * _.mRegen / 1000;
     }
-    _.ma = $.util.range(_.ma, 0, _.maxM);
-    _.he = $.util.range(_.he, 0, _.maxH);
+    _.ma = $.u.range(_.ma, 0, _.maxM);
+    _.he = $.u.range(_.he, 0, _.maxH);
 
     /* Summon elements */
     var cp = null;
@@ -217,7 +217,7 @@ $.Hero = function(_x, _y, o) {
           $.powers.push(new $.Air(_.x, _.y, _.o));
         }
       } else if (_.ma < cp.m) {
-        $.util.instruction('You do not have enough mana to cast the ' + cp.n + ' element');
+        $.u.instruction('You do not have enough mana to cast the ' + cp.n + ' element');
       }
     }
 
