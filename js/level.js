@@ -74,8 +74,8 @@ $.Level = function(n, w, h, en, it, ls) {
     }
 
     l.halls.forEach(function(h) {
-      for (var i=h.l; i<h.r; i++) {
-        for (var j=h.t; j<h.b; j++) {
+      for (var i=h.l; i<=h.r; i++) {
+        for (var j=h.t; j<=h.b; j++) {
           self.map[i][j] = '.';
         }
       }
