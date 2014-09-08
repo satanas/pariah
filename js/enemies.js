@@ -21,7 +21,8 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   this.minD = 300; // Min distance to start chasing hero
   this.hasRoute = false; // Has a valid route returned by AI
   this.route = []; // Points of route
-  this.speed = 0.001;
+  this.nextPoint = [];
+  this.speed = 0.7;
 
   this.getb = function() {
     return {
@@ -136,40 +137,34 @@ $.Zombie = function(x, y) {
     if (this.he <= 0)
       this.die(i);
 
-    var distance = $.ai.getDistance({x:this.x, y:this.y}, {x:$.hero.x, y:$.hero.y});
-    if((distance <= this.minD) && (Math.round(distance) > 0)) {
-      if(!this.hasRoute) {
-        this.route = $.ai.calculatePath([Math.round(this.x / 32), Math.round(this.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
-        this.hasRoute = true;
-      }
-      if(this.route.length > 0) {
-        var nextPoint = this.route.shift();
-        if(Math.round(this.x / 32) < nextPoint[0]) {
-          while(this.x <= nextPoint[0] * 32) {
-            this.x += this.speed;
-          }
-        } else if(Math.round(this.x / 32) > nextPoint[0]) {
-          while(this.x >= nextPoint[0] * 32) {
-            this.x -= this.speed;
-          }
-        }
-        if(Math.round(this.y / 32) < nextPoint[1]) {
-          while(this.y <= nextPoint[1] * 32) {
-            this.y += this.speed;
-          }
-        } else if(Math.round(this.y) > nextPoint[1]) {
-          while(this.y >= nextPoint[1] * 32) {
-            this.y -= this.speed;
-          }
-        }
-        console.log('Speed: ' + this.speed);
-      } else {
-        this.hasRoute = false;
-        this.route = [];
-      }
+    if(!this.hasRoute) {
+       var distance = $.ai.getDistance({x:this.x, y:this.y}, {x:$.hero.x, y:$.hero.y});
+       if((distance <= this.minD) && (Math.round(distance) > 0)) {
+          console.log('Get route');
+          this.route = $.ai.calculatePath([Math.round(this.x / 32), Math.round(this.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
+          this.hasRoute = true;
+          this.nextPoint = this.route.shift();
+       }
     } else {
-      this.hasRoute = false;
-      this.route = [];
+      if((Math.round(this.x / 32) == this.nextPoint[0]) && (Math.round(this.y / 32) == this.nextPoint[1])) {
+        if(this.route.length > 0) {
+          this.nextPoint = this.route.shift();
+        } else {
+          this.hasRoute = false;
+          this.route = [];
+        }
+      } else {
+        if(Math.round(this.x / 32) < this.nextPoint[0]) {
+          this.x += this.speed;
+        } else if(Math.round(this.x / 32) > this.nextPoint[0]) {
+          this.x -= this.speed;
+        }
+        if(Math.round(this.y / 32) < this.nextPoint[1]) {
+          this.y += this.speed;
+        } else if(Math.round(this.y / 32) > this.nextPoint[1]) {
+          this.y -= this.speed;
+        }
+      }
     }
 
   };
