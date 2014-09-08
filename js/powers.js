@@ -146,7 +146,7 @@ $.Earth = function(x, y, o, n) {
     $.enemies.forEach(function(e) {
       if ($.collide.rect(_, e)) {
         e.damage(_);
-        _.die(i);
+        //_.die(i);
       }
     });
 

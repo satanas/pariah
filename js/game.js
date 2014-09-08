@@ -77,6 +77,7 @@ $.showEnd = function() {
   $.quitScenes();
   $.scene = new $.Scene();
   $.util.show('e0');
+  $.util.visible('e', true);
   $.input.u();
 
   $.animId = requestAnimationFrame($.endLoop);
