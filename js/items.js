@@ -70,7 +70,7 @@ $.AirItem = function(x, y) {
 
 $.Key = function(x, y) {
   $.Item.call(this, x, y, 'k', true);
-  this.anim = {x:71, y:10};
+  this.anim = {x:0, y:17};
   this.ts = $.util.byId('tileset');
   this.w = 6;
   this.h = 20;
@@ -80,7 +80,7 @@ $.Key = function(x, y) {
     //$.ctxfg.fillStyle = 'rgb(255,255,0)';
     //$.ctxfg.fillRect(tx, ty, this.w, this.h);
     $.ctxfg.scale(2.0, 2.0);
-    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 3, 10, tx/2, ty/2, 3, 10);
+    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 5, 10, tx/2, ty/2, 5, 10);
     $.ctxfg.restore();
   };
 };
