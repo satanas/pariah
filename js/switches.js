@@ -21,7 +21,7 @@ $.Switch= function(x, y, t) {
         var s = $.switches;
         if (s[0].filled && s[1].filled && s[2].filled && s[3].filled && s.length === 4) {
           $.switches.push(new $.LifeSwitch(304,100));
-          $.util.showInstructions('You can only create life from life, now go and make the ultimate offer', 7000);
+          $.util.instruction('You can only create life from life, now go and make the ultimate offer', 7000);
         }
       }
     }

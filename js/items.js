@@ -1,86 +1,92 @@
 $.Item = function(x, y, t, c) {
-  this.x = x;
-  this.y = y;
-  this.w = 16;
-  this.h = 16;
-  this.t = t; // Type
-  this.c = c || false; // Consumible?
-  this.bounds = {
-    b: this.y + this.h,
-    t: this.y,
-    l: this.x,
-    r: this.x + this.w
+  var _ = this;
+  _.x = x;
+  _.y = y;
+  _.w = 16;
+  _.h = 16;
+  _.t = t; // Type
+  _.c = c || false; // Consumible?
+  _.bounds = {
+    b: _.y + _.h,
+    t: _.y,
+    l: _.x,
+    r: _.x + _.w
   };
 
-  this.update = function(i) {
-    if ($.collide.rect(this, $.hero)) {
-      $.hero.gain(this);
-      this.die(i);
+  _.update = function(i) {
+    if ($.collide.rect(_, $.hero)) {
+      $.hero.gain(_);
+      _.die(i);
     }
   };
 
-  this.die = function(i) {
+  _.die = function(i) {
     $.items.splice(i, 1);
   };
 };
 
 $.FireItem = function(x, y) {
-  $.Item.call(this, x, y, $.PW.F);
+  var _ = this;
+  $.Item.call(_, x, y, $.PW.F);
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'hsla(28, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.fillRect(tx, ty, _.w, _.h);
     $.ctxfg.restore();
   };
 };
 
 $.WaterItem = function(x, y) {
-  $.Item.call(this, x, y, $.PW.W);
+  var _ = this;
+  $.Item.call(_, x, y, $.PW.W);
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'hsla(196, 90%, 76%, 1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.fillRect(tx, ty, _.w, _.h);
     $.ctxfg.restore();
   };
 };
 
 $.EarthItem = function(x, y) {
-  $.Item.call(this, x, y, $.PW.E);
+  var _ = this;
+  $.Item.call(_, x, y, $.PW.E);
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'hsla(28, 65%, 42%, 1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.fillRect(tx, ty, _.w, _.h);
     $.ctxfg.restore();
   };
 };
 
 $.AirItem = function(x, y) {
-  $.Item.call(this, x, y, $.PW.A);
+  var _ = this;
+  $.Item.call(_, x, y, $.PW.A);
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.fillStyle = 'hsla(78, 100%, 92%, 1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.fillRect(tx, ty, _.w, _.h);
     $.ctxfg.restore();
   };
 };
 
 $.Key = function(x, y) {
-  $.Item.call(this, x, y, 'k', true);
-  this.anim = {x:0, y:17};
-  this.ts = $.util.byId('tileset');
-  this.w = 6;
-  this.h = 20;
+  var _ = this;
+  $.Item.call(_, x, y, 'k', true);
+  _.anim = {x:0, y:17};
+  _.ts = $.util.byId('tileset');
+  _.w = 6;
+  _.h = 20;
 
-  this.render = function(tx, ty) {
+  _.render = function(tx, ty) {
     $.ctxfg.save();
     //$.ctxfg.fillStyle = 'rgb(255,255,0)';
-    //$.ctxfg.fillRect(tx, ty, this.w, this.h);
+    //$.ctxfg.fillRect(tx, ty, _.w, _.h);
     $.ctxfg.scale(2.0, 2.0);
-    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 5, 10, tx/2, ty/2, 5, 10);
+    $.ctxfg.drawImage(_.ts, _.anim.x, _.anim.y, 5, 10, tx/2, ty/2, 5, 10);
     $.ctxfg.restore();
   };
 };
@@ -111,7 +117,7 @@ $.DrawBottle = function(tx, ty, color) {
     $.ctxfg.globalAlpha = 0.7;
 
     $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
+    $.ctxfg.fillRect(tx, ty, _.w, _.h);
 
     $.ctxfg.fillStyle = 'hsl(36, 43%, 59%)';
     $.ctxfg.fillRect(tx + 3, ty + 1, 3, 3);

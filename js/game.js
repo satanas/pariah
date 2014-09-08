@@ -1,6 +1,4 @@
 $.init = function() {
-  $.raf = requestAnimationFrame;
-  $.caf = cancelAnimationFrame;
   $.input = $.Input;
   $.input.bind([13, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
   $.cfg = $.util.byId('fg');
@@ -38,40 +36,40 @@ $.init = function() {
 };
 
 $.showWelcome = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.quitScenes();
-  $.util.visible('s', true);
+  $.util.v('s', true);
   $.scene = new $.Scene();
   $.input.u();
 
-  $.animId = $.raf($.welcomeLoop);
+  $.animId = raf($.welcomeLoop);
 };
 
 $.showIntro = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.quitScenes();
-  $.util.visible('i', true);
+  $.util.v('i', true);
   $.scene = new $.Scene();
   $.util.show('i0');
   $.input.u();
 
-  $.animId = $.raf($.introLoop);
+  $.animId = raf($.introLoop);
 };
 
 $.showGameOver = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.lv = 1;
   $.epow = [];
   $.quitScenes();
-  $.util.byId('g1').innerHTML = $.goMsg[$.util.randInt(0, $.goMsg.length)];
-  $.util.visible('g', true);
+  $.util.byId('g1').innerHTML = $.goMsg[$.util.rand(0, $.goMsg.length)];
+  $.util.v('g', true);
   $.input.u();
 
-  $.animId = $.raf($.gameOverLoop);
+  $.animId = raf($.gameOverLoop);
 };
 
 $.showEnd = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.lv = 1;
   $.ended = false;
   $.epow = [];
@@ -79,21 +77,21 @@ $.showEnd = function() {
   $.quitScenes();
   $.scene = new $.Scene();
   $.util.show('e0');
-  $.util.visible('e', true);
+  $.util.v('e', true);
   $.input.u();
 
-  $.animId = $.raf($.endLoop);
+  $.animId = raf($.endLoop);
 };
 
 $.showCredits = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.quitScenes();
   $.scene = new $.Scene();
-  $.util.visible('c', true);
+  $.util.v('c', true);
   $.util.hide('e2');
   $.input.u();
 
-  $.animId = $.raf($.creditsLoop);
+  $.animId = raf($.creditsLoop);
 };
 
 $.welcomeLoop = function() {
@@ -106,14 +104,14 @@ $.welcomeLoop = function() {
     $.scene.e = 0;
     if ($.scene.s === 0) {
       $.scene.s = 1;
-      $.util.visible('s1', false);
+      $.util.v('s1', false);
     } else {
       $.scene.s = 0;
-      $.util.visible('s1', true);
+      $.util.v('s1', true);
     }
   }
   $.input.u();
-  $.raf($.welcomeLoop);
+  raf($.welcomeLoop);
 };
 
 $.introLoop = function() {
@@ -134,14 +132,14 @@ $.introLoop = function() {
   }
 
   $.input.u();
-  $.raf($.introLoop);
+  raf($.introLoop);
 };
 
 $.gameOverLoop = function() {
   $.clearFg();
   if ($.input.r(13)) return $.startGame();
   $.input.u();
-  $.raf($.gameOverLoop);
+  raf($.gameOverLoop);
 };
 
 $.endLoop = function() {
@@ -162,7 +160,7 @@ $.endLoop = function() {
   }
 
   $.input.u();
-  $.raf($.endLoop);
+  raf($.endLoop);
 };
 
 $.creditsLoop = function() {
@@ -176,12 +174,12 @@ $.creditsLoop = function() {
   }
 
   $.input.u();
-  $.raf($.creditsLoop);
+  raf($.creditsLoop);
 };
 
 $.quitScenes = function() {
   ['s', 's1', 'i', 'g', 'e', 'c'].forEach(function(e) {
-      $.util.visible(e, false);
+      $.util.v(e, false);
   });
   $.util.hide('m1');
 };
@@ -204,11 +202,11 @@ $.startGame = function() {
       en = 0,
       a = 0,
       b = 0;
-    a = $.util.randInt(15 + (6 * $.lv), 20 + (6 * $.lv));
-    b = $.util.randInt(15 + (6 * $.lv), 20 + (6 * $.lv));
+    a = $.util.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
+    b = $.util.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
     //lf = 10 + (7 * $.lv);
   if ($.lv === 1) {
-    $.util.showInstructions('Use the arrow keys to move and escape the dungeon', 4500);
+    $.util.instruction('Use the arrow keys to move and escape the dungeon', 4500);
   } else {
     en = $.lv * 3;
   }
@@ -237,7 +235,7 @@ $.startGame = function() {
   }
 
   $.fadeIn.start(1000);
-  $.animId = $.raf($.loop);
+  $.animId = raf($.loop);
 };
 
 $.finalRoom = function() {
@@ -299,12 +297,12 @@ $.finalRoom = function() {
   $.switches.push(new $.AirSwitch(496, 256));
 
   $.fadeIn.start(1000);
-  $.util.showInstructions('Offer each element on its altar to start the ritual', 4500);
-  $.animId = $.raf($.loop);
+  $.util.instruction('Offer each element on its altar to start the ritual', 4500);
+  $.animId = raf($.loop);
 };
 
 $.nextLevel = function() {
-  $.caf($.animId);
+  caf($.animId);
   $.lv += 1;
   if ($.lv < 5) {
     $.startGame();
@@ -365,7 +363,7 @@ $.loop = function() {
       }
       if (!$.msg[k].s) {
         $.msg[k].s = true;
-        $.util.showInstructions($.msg[k].t);
+        $.util.instruction($.msg[k].t);
       }
     }
   }
@@ -398,7 +396,7 @@ $.loop = function() {
   $.fadeIn.render();
   $.fadeOut.render();
 
-  $.raf($.loop);
+  raf($.loop);
 };
 
 /* Start game on load */

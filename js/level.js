@@ -21,8 +21,8 @@ $.Level = function(n, w, h, en, it, ls) {
   this.rPoint = function(r, p) {
     var pad = p || 0; // Padding
     return {
-      x: $.util.randInt(r.l + pad, r.r - pad),
-      y: $.util.randInt(r.t + pad, r.b - pad)
+      x: $.util.rand(r.l + pad, r.r - pad),
+      y: $.util.rand(r.t + pad, r.b - pad)
     };
   };
 
@@ -39,7 +39,7 @@ $.Level = function(n, w, h, en, it, ls) {
   function makeLeafs(l) {
     if (l.lc === null && l.rc === null) {
       // Split if the leaf is too big or 75% chance
-      if (l.w > _.maxLeafSize || l.height > _.maxLeafSize || $.util.randInt(0, 101) > 25) {
+      if (l.w > _.maxLeafSize || l.height > _.maxLeafSize || $.util.rand(0, 101) > 25) {
         if (l.split()) {
           _.leafs.push(l.lc);
           _.leafs.push(l.rc);
@@ -95,12 +95,12 @@ $.Level = function(n, w, h, en, it, ls) {
   var epr = (en / ar.length);
   var t = 0;
   while (ec > 0) {
-    var rr = ar[$.util.randInt(0, ar.length)];
+    var rr = ar[$.util.rand(0, ar.length)];
     p = _.rPoint(rr);
     while (_.map[p.x][p.y] === 'e') {
       t++;
       if (t > 4) {
-        rr = ar[$.util.randInt(0, ar.length)];
+        rr = ar[$.util.rand(0, ar.length)];
         t = 0;
       }
       p = _.rPoint(rr);
@@ -115,7 +115,7 @@ $.Level = function(n, w, h, en, it, ls) {
   var b = null;
   while (true) {
     b = {x: p.x, y: p.y};
-    var rw = $.util.randInt(0, 4);
+    var rw = $.util.rand(0, 4);
     if (rw === 0) { // North wall
       p.y = lr.t - 1;
       b.y = p.y + 2;
@@ -142,10 +142,10 @@ $.Level = function(n, w, h, en, it, ls) {
 
   // Place exit
   // We select a random room and place the exit in one of its walls
-  var xr = ar[$.util.randInt(0, ar.length)];
+  var xr = ar[$.util.rand(0, ar.length)];
   p = _.rPoint(xr);
   while (true) {
-    var xw = $.util.randInt(0, 4);
+    var xw = $.util.rand(0, 4);
     if (xw === 0) { // North wall
       p.y = xr.t - 1;
     } else if (xw === 1) { // East wall
@@ -166,7 +166,7 @@ $.Level = function(n, w, h, en, it, ls) {
 
   // Place items
   for (i=it.length; i--;) {
-    var ir = ar[$.util.randInt(0, ar.length)];
+    var ir = ar[$.util.rand(0, ar.length)];
     p = _.rPoint(ir);
     $.items.push(new it[i](p.x * 32 + 8, p.y * 32 + 8));
     _.map[p.x][p.y] = 'i';
@@ -205,7 +205,7 @@ $.Leaf = function(x, y, w, h) {
     // If the width is >25% larger than the height, we split vertically
     // If the height is >25% larger than the width, we split horizontally
     // Else we split randomly
-    var splith = !!$.util.randInt(0, 2);
+    var splith = !!$.util.rand(0, 2);
     if (_.w > _.h && _.w / _.h >= 0.25)
       splith = false;
     else if (_.h > _.w && _.h / _.w >= 0.25)
@@ -216,7 +216,7 @@ $.Leaf = function(x, y, w, h) {
     if (max <= _.min)
       return false;
 
-    var split = $.util.randInt(_.min, max);
+    var split = $.util.rand(_.min, max);
 
     // Create the left and right children
     if (splith) {
@@ -240,12 +240,12 @@ $.Leaf = function(x, y, w, h) {
         _.makeHall(_.lc.getRoom(), _.rc.getRoom());
     } else {
       var size = {
-        w: $.util.randInt(3, _.w - 2),
-        h: $.util.randInt(3, _.h - 2)
+        w: $.util.rand(3, _.w - 2),
+        h: $.util.rand(3, _.h - 2)
       };
       var pos = {
-        x: $.util.randInt(1, _.w - size.w - 1),
-        y: $.util.randInt(1, _.h - size.h - 1),
+        x: $.util.rand(1, _.w - size.w - 1),
+        y: $.util.rand(1, _.h - size.h - 1),
       };
       _.room = new $.Rect(_.x + pos.x, _.y + pos.y, size.w, size.h);
     }
@@ -269,7 +269,7 @@ $.Leaf = function(x, y, w, h) {
         return lRoom;
       } else if (lRoom === null) {
         return rRoom;
-      } else if ($.util.randInt(1, 11) > 5) {
+      } else if ($.util.rand(1, 11) > 5) {
         return lRoom;
       } else {
         return rRoom;
@@ -280,12 +280,12 @@ $.Leaf = function(x, y, w, h) {
   // This method connects the two rooms together (l and r) with hallways
   this.makeHall = function(lRoom, rRoom) {
     var p1 = {
-      x: $.util.randInt(lRoom.l + 1, lRoom.r - 2),
-      y: $.util.randInt(lRoom.t + 1, lRoom.b -2)
+      x: $.util.rand(lRoom.l + 1, lRoom.r - 2),
+      y: $.util.rand(lRoom.t + 1, lRoom.b -2)
     };
     var p2 = {
-      x: $.util.randInt(rRoom.l + 1, rRoom.r - 2),
-      y: $.util.randInt(rRoom.t + 1, rRoom.b -2)
+      x: $.util.rand(rRoom.l + 1, rRoom.r - 2),
+      y: $.util.rand(rRoom.t + 1, rRoom.b -2)
     };
 
     var width = p2.x - p1.x;
@@ -293,7 +293,7 @@ $.Leaf = function(x, y, w, h) {
 
     if (width < 0) {
       if (height < 0) {
-        if ($.util.randInt(0, 10) > 4) {
+        if ($.util.rand(0, 10) > 4) {
           _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
           _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
         } else {
@@ -301,7 +301,7 @@ $.Leaf = function(x, y, w, h) {
           _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
         }
       } else if (height > 0) {
-        if ($.util.randInt(0, 10) > 4) {
+        if ($.util.rand(0, 10) > 4) {
           _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
           _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
         } else {
@@ -314,7 +314,7 @@ $.Leaf = function(x, y, w, h) {
       }
     } else if (width > 0){
       if (height < 0) {
-        if ($.util.randInt(0, 10) > 4) {
+        if ($.util.rand(0, 10) > 4) {
           _.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
           _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
         } else {
@@ -322,7 +322,7 @@ $.Leaf = function(x, y, w, h) {
           _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
         }
       } else if (height > 0) {
-        if ($.util.randInt(0, 10) > 4) {
+        if ($.util.rand(0, 10) > 4) {
           _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
           _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
         } else {

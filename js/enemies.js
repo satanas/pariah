@@ -101,9 +101,9 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     if ($.enemies.length === 0) {
       $.items.push(new $.Key(this.x + (this.w)/2, this.y + 4));
     } else {
-      if ($.util.randInt(0, 10) > 4) {
+      if ($.util.rand(0, 10) > 4) {
         var items = [$.HealthPack, $.ManaPack];
-        var k = $.util.randInt(0, 2);
+        var k = $.util.rand(0, 2);
         $.items.push(new items[k](this.x + (this.w)/2, this.y + 4));
       }
     }
@@ -124,7 +124,7 @@ $.Zombie = function(x, y) {
   $.Enemy.call(this, x, y, 32, 32, 30, 0.05, {t: $.PW.F.v, v:0.45});
 
   this.bounds = this.getb();
-  this.attack = $.util.randInt(12, 16);
+  this.attack = $.util.rand(12, 16);
 
   this.update = function(i) {
     this.bounds = this.getb();

@@ -63,7 +63,7 @@ $.Fire = function(x, y, o) {
   _.anim = {x:18, y:17};
   _.ts = $.util.byId('tileset');
   _.angle = 0;
-  _.attack = $.util.randInt(8, 12);
+  _.attack = $.util.rand(8, 12);
 
   this.update = function(i) {
     _.angle = (_.angle + 15) % 360;
@@ -177,7 +177,7 @@ $.Water = function(x ,y, a) {
   _.lifetime = 6000; /* Milliseconds */
   _.ctime = Date.now();
   _.bounds = _.getb();
-  _.attack = $.util.randInt(3, 6);
+  _.attack = $.util.rand(3, 6);
 
   this.update = function(i) {
     var elapsed = Date.now() - _.ctime;
@@ -245,7 +245,7 @@ $.Air = function(x, y, o) {
   _.maxS = 7.00; /* Max speed */
   _.dx = _.dy = 0;
   _.bounds = _.getb();
-  _.attack = $.util.randInt(7, 10);
+  _.attack = $.util.rand(7, 10);
   _.anim = {x:11, y:17};
   _.ts = $.util.byId('tileset');
   _.blink = false;

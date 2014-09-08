@@ -56,7 +56,7 @@ $.Hero = function(_x, _y, o) {
 
   this.damage = function(e) {
     if (_.hurt || _.dead) return;
-    var attack = Math.floor(e.attack - (e.attack * $.util.randInt(_.rs * 100, 0) / 100));
+    var attack = Math.floor(e.attack - (e.attack * $.util.rand(_.rs * 100, 0) / 100));
     _.he -= attack;
     _.hurt = true;
     _.htime = Date.now();
@@ -88,11 +88,11 @@ $.Hero = function(_x, _y, o) {
       if (t.t.v === $.PW.F.v) $.fow.radius = 6;
       _.pows.push(t.t.v);
       $.epow.push(t.t.v);
-      $.util.showInstructions(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
+      $.util.instruction(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
       if (t.t === 'k') {
         _.key = true;
-        $.util.showInstructions('You got the key of this dungeon');
+        $.util.instruction('You got the key of this dungeon');
       } else if (t.t === 'h') {
         _.heal(10);
       } else if (t.t === 'm') {
@@ -217,7 +217,7 @@ $.Hero = function(_x, _y, o) {
           $.powers.push(new $.Air(_.x, _.y, _.o));
         }
       } else if (_.ma < cp.m) {
-        $.util.showInstructions('You do not have enough mana to cast the ' + cp.n + ' element');
+        $.util.instruction('You do not have enough mana to cast the ' + cp.n + ' element');
       }
     }
 

@@ -11,10 +11,11 @@ $.util.range = function(v, ll, lu) {
 };
 
 $.util.fadeOut = function(i, cb) {
-  $.util.fading[i] = setInterval($.util._fadeOutStep, 50, i, cb);
+  $.util.fading[i] = setInterval($.util._fade, 50, i, cb);
 };
 
-$.util._fadeOutStep = function(i, cb) {
+// Fade out step
+$.util._fade = function(i, cb) {
   var e = $.util.byId(i);
   e.style.opacity -= 0.03;
   if (e.style.opacity <= 0) {
@@ -24,27 +25,30 @@ $.util._fadeOutStep = function(i, cb) {
   }
 };
 
+// Shows a DOM object putting its opacity in one
 $.util.show = function(i) {
   $.util.byId(i).style.opacity = 1.0;
 };
 
+// Hides a DOM object putting its opacity in zero
 $.util.hide = function(i) {
   $.util.byId(i).style.opacity = 0.0;
 };
 
-$.util.visible = function(i, v) {
+// Makes a DOM object visible or invisible
+$.util.v = function(i, v) {
   $.util.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
 };
 
 /* Generate random integer in a (min, max) range */
-$.util.randInt = function(a, b) {
+$.util.rand = function(a, b) {
   return Math.floor(Math.random() * (b - a)) + a;
 };
 
 // Returns true if there is chance to miss one attack
 // Receives p (number between 0 and 1) representing the probability of success
 $.util.canMiss = function(p) {
-  var x = $.util.randInt(1, 100);
+  var x = $.util.rand(1, 100);
   return (x <= Math.floor(p * 100));
 };
 
@@ -52,7 +56,7 @@ $.util.byId = function(i) {
   return document.getElementById(i);
 };
 
-$.util.showInstructions = function(t, d) {
+$.util.instruction = function(t, d) {
   var dx = d || 3000;
   if ($.util.instID) {
     clearTimeout($.util.instID);
@@ -80,3 +84,11 @@ window.setInterval = function (vCb, nDelay /*, argumentToPass1, argumentToPass2,
     vCb.apply(oThis, aArgs);
   } : vCb, nDelay);
 };
+
+window.raf = window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  function(a){ window.setTimeout(a,1E3/60); };
+
+window.caf = window.cancelAnimationFrame ||
+  window.mozCancelAnimationFrame;
