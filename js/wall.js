@@ -16,11 +16,7 @@ $.Wall = function(x, y, hf) {
   this.render = function(tx, ty) {
     $.ctxfg.save();
     $.ctxfg.scale(2.0, 2.0);
-    if (this.half) {
-      $.ctxfg.drawImage(this.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
-    } else {
-      $.ctxfg.drawImage(this.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
-    }
+    $.ctxfg.drawImage(this.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
     $.ctxfg.restore();
   };
 };

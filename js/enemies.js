@@ -99,12 +99,13 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     // If this is the last enemy, drop the key, otherwise drop
     // something according probability
     if ($.enemies.length === 0) {
-      $.items.push(new $.Key(this.x, this.y));
+      $.items.push(new $.Key(this.x + (this.w)/2, this.y + 4));
     } else {
-      if ($.util.randInt(0, 10) > 4) {
+      //if ($.util.randInt(0, 10) > 4) {
+      if (1) {
         var items = [$.HealthPack, $.ManaPack];
         var k = $.util.randInt(0, 2);
-        $.items.push(new items[k](this.x, this.y));
+        $.items.push(new items[k](this.x + (this.w)/2, this.y + 4));
       }
     }
   };

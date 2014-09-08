@@ -27,6 +27,7 @@ $.Camera = function(vw, vh, ww, wh) {
   };
 
   this.update = function() {
+    if (this.tg === null) return;
     // Update offset according the target
     var tx, ty = 0;
     var mw = this.w / 2;
@@ -55,6 +56,7 @@ $.Camera = function(vw, vh, ww, wh) {
   };
 
   this.render = function(objs) {
+    if (objs === null) return;
     var self = this;
     objs.forEach(function(o) {
       if (self.inView(o)) {
