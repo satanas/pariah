@@ -393,8 +393,8 @@ $.loop = function() {
   $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //if ($.lv < 5)
-  //  $.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
