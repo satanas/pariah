@@ -24,7 +24,7 @@ p {
   margin: 0 auto;
   position: relative;
 }
-#tileset {
+#ts {
   display: none;
 }
 #i, #g, #s {

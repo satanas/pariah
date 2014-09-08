@@ -61,7 +61,7 @@ $.Fire = function(x, y, o) {
   _.dx = _.dy = 0;
   _.bounds = _.getb();
   _.anim = {x:18, y:17};
-  _.ts = $.util.byId('tileset');
+  _.ts = $.util.ts();
   _.angle = 0;
   _.attack = $.util.rand(8, 12);
 
@@ -128,7 +128,7 @@ $.Earth = function(x, y, o, n) {
   _.ctime = Date.now(); // Creation time
   _.attack = 0;
   _.anim = {x:5, y:17};
-  _.ts = $.util.byId('tileset');
+  _.ts = $.util.ts();
   _.summon = false;
 
   this.update = function(i) {
@@ -247,7 +247,7 @@ $.Air = function(x, y, o) {
   _.bounds = _.getb();
   _.attack = $.util.rand(7, 10);
   _.anim = {x:11, y:17};
-  _.ts = $.util.byId('tileset');
+  _.ts = $.util.ts();
   _.blink = false;
   _.bcount = 0;
   _.ctime = Date.now();

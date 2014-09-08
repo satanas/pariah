@@ -3,7 +3,7 @@ $.Entrance = function(x, y) {
   this.y = y;
   this.w = 32;
   this.h = 32;
-  this.t = $.util.byId('tileset');
+  this.t = $.util.byId('ts');
 
   this.bounds = {
     b: this.y + (this.h / 2),
@@ -26,7 +26,7 @@ $.Exit = function(x, y) {
   this.y = y;
   this.w = 32;
   this.h = 32;
-  this.t = $.util.byId('tileset');
+  this.t = $.util.byId('ts');
 
   this.bounds = {
     b: this.y + (this.h / 4),

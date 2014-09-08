@@ -12,7 +12,7 @@ $.Hero = function(_x, _y, o) {
   _.maxM = 100;
   _.maxCD = 380;
   _.mRegen = 1.75; /* Per millisecond */
-  _.ts = $.util.byId('tileset');
+  _.ts = $.util.ts();
 
   _.s = 0.13; // Speed
   _.dx = _.dy = 0;

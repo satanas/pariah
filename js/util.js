@@ -67,6 +67,10 @@ $.util.instruction = function(t, d) {
   $.util.instID = setTimeout(function() { $.util.fadeOut('m1', $.cleanMsg); }, dx);
 };
 
+$.util.ts = function() {
+  return $.util.byId('ts');
+};
+
 // Enable the passage of the 'this' object through the JavaScript timers
 
 var __nativeST__ = window.setTimeout, __nativeSI__ = window.setInterval;

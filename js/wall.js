@@ -4,7 +4,7 @@ $.Wall = function(x, y, hf) {
   this.w = 32;
   this.h = 32;
   this.half = hf;
-  this.t = $.util.byId('tileset');
+  this.ts = $.util.ts();
 
   this.bounds = {
     b: (this.half === 0) ? this.y + this.h : this.y + (this.h / 2),

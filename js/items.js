@@ -77,7 +77,7 @@ $.Key = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, 'k', true);
   _.anim = {x:0, y:17};
-  _.ts = $.util.byId('tileset');
+  _.ts = $.util.ts();
   _.w = 6;
   _.h = 20;
 
