@@ -89,24 +89,23 @@ $.Fire = function(x, y, o) {
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
-    //$.ctxfg.translate(tx + (_.w/2), ty + (_.h/2));
-    //$.ctxfg.rotate(_.angle / 180 * Math.PI);
-    $.ctxfg.scale(2.0, 2.0);
-    //$.ctxfg.fillStyle = 'rgb(255,159,7)';
-    //$.ctxfg.fillRect(tx/2 + 2, ty/2 + 1, 6, 6);
-    $.ctxfg.drawImage(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
-    //$.ctxfg.drawImage(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
-    $.ctxfg.restore();
+    $.x.s();
+    //$.x.translate(tx + (_.w/2), ty + (_.h/2));
+    //$.x.rotate(_.angle / 180 * Math.PI);
+    $.x.sc(2.0, 2.0);
+    //$.x.fillStyle = 'rgb(255,159,7)';
+    //$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
+    $.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
+    //$.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
+    $.x.r();
   };
 };
 
 
 $.Earth = function(x, y, o, n) {
   $.Power.call(this, x, y, 15, 25, o, $.PW.E.v);
-  var _ = this;
-
-  var d = 30;
+  var _ = this,
+      d = 30;
   if (o === 'u') {
     _.y -= d;
     if (n === 1) _.x += 2;
@@ -155,13 +154,13 @@ $.Earth = function(x, y, o, n) {
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
+    $.x.s();
     // Test rect
-    //$.ctxfg.fillStyle = 'hsla(28, 65%, 42%, 1)';
-    //$.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.scale(3.0, 3.0);
-    $.ctxfg.drawImage(_.ts, _.anim.x, _.anim.y, 5, 10, tx/3, ty/3, 5, 10);
-    $.ctxfg.restore();
+    //$.x.fillStyle = 'hsla(28, 65%, 42%, 1)';
+    //$.x.fr(tx, ty, _.w, _.h);
+    $.x.sc(3.0, 3.0);
+    $.x.d(_.ts, _.anim.x, _.anim.y, 5, 10, tx/3, ty/3, 5, 10);
+    $.x.r();
   };
 };
 
@@ -189,8 +188,8 @@ $.Water = function(x ,y, a) {
     _.cx = $.hero.x + ($.hero.w / 2);
     _.cy = $.hero.y + ($.hero.h / 2);
     _.a += _.vw * elapsed / 1000;
-    _.x = _.cx + (_.d * Math.cos(_.a));
-    _.y = _.cy + (_.d * Math.sin(_.a));
+    _.x = _.cx + (_.d * cos(_.a));
+    _.y = _.cy + (_.d * sin(_.a));
 
     _.bounds = _.getb();
 
@@ -204,28 +203,28 @@ $.Water = function(x ,y, a) {
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
+    $.x.s();
     // Test arc
-    //$.ctxfg.fillStyle = 'rgba(0, 115, 255, 0.3)';
-    //$.ctxfg.beginPath();
-    //$.ctxfg.arc(tx, ty, _.r, 0, (2 * Math.PI), false);
-    //$.ctxfg.fill();
-    var x_ = tx - 11;
-    var y_ = ty - 11;
-    $.ctxfg.fillStyle = 'hsla(190, 90%, 76%, 0.59)';
-    $.ctxfg.fillRect(x_ + 7, y_ + 7, 8, 8);
-    $.ctxfg.fillStyle = 'hsl(190, 90%, 76%)';
-    $.ctxfg.fillRect(x_ + 4, y_ + 10, 14, 2);
-    $.ctxfg.fillRect(x_ + 10, y_ + 4, 2, 14);
-    $.ctxfg.fillRect(x_ + 10, y_, 2, 2);
-    $.ctxfg.fillRect(x_ + 3, y_ + 3, 2, 2);
-    $.ctxfg.fillRect(x_ + 17, y_ + 3, 2, 2);
-    $.ctxfg.fillRect(x_, y_ + 10, 2, 2);
-    $.ctxfg.fillRect(x_ + 20, y_ + 10, 2, 2);
-    $.ctxfg.fillRect(x_ + 3, y_ + 17, 2, 2);
-    $.ctxfg.fillRect(x_ + 17, y_ + 17, 2, 2);
-    $.ctxfg.fillRect(x_ + 10, y_ + 20, 2, 2);
-    $.ctxfg.restore();
+    //$.x.fillStyle = 'rgba(0, 115, 255, 0.3)';
+    //$.x.beginPath();
+    //$.x.arc(tx, ty, _.r, 0, (2 * Math.PI), false);
+    //$.x.fill();
+    var x_ = tx - 11,
+        y_ = ty - 11;
+    $.x.fillStyle = 'hsla(190, 90%, 76%, 0.59)';
+    $.x.fr(x_ + 7, y_ + 7, 8, 8);
+    $.x.fillStyle = 'hsl(190, 90%, 76%)';
+    $.x.fr(x_ + 4, y_ + 10, 14, 2);
+    $.x.fr(x_ + 10, y_ + 4, 2, 14);
+    $.x.fr(x_ + 10, y_, 2, 2);
+    $.x.fr(x_ + 3, y_ + 3, 2, 2);
+    $.x.fr(x_ + 17, y_ + 3, 2, 2);
+    $.x.fr(x_, y_ + 10, 2, 2);
+    $.x.fr(x_ + 20, y_ + 10, 2, 2);
+    $.x.fr(x_ + 3, y_ + 17, 2, 2);
+    $.x.fr(x_ + 17, y_ + 17, 2, 2);
+    $.x.fr(x_ + 10, y_ + 20, 2, 2);
+    $.x.r();
   };
 
   this.die = function(i) {
@@ -262,8 +261,8 @@ $.Air = function(x, y, o) {
     _.y += _.dy;
     _.bounds = _.getb();
 
-    var elapsed = Date.now() - _.ctime;
-    var c = Math.floor(elapsed / 100);
+    var elapsed = Date.now() - _.ctime,
+        c = floor(elapsed / 100);
     if (c > _.bcount) {
       _.bcount = c;
       _.blink = !_.blink;
@@ -282,18 +281,18 @@ $.Air = function(x, y, o) {
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(207, 100%, 83%, 0.1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.globalAlpha = 0.7;
+    $.x.s();
+    $.x.fillStyle = 'hsla(207, 100%, 83%, 0.1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.globalAlpha = 0.7;
     if (_.blink) {
-      $.ctxfg.translate(tx + (_.w/2) - 6, ty + _.h/2);
-      $.ctxfg.scale(-2.0, 2.0);
+      $.x.translate(tx + (_.w/2) - 6, ty + _.h/2);
+      $.x.sc(-2.0, 2.0);
     } else {
-      $.ctxfg.translate(tx + (_.w/2) + 6, ty + _.h/2);
-      $.ctxfg.scale(2.0, 2.0);
+      $.x.translate(tx + (_.w/2) + 6, ty + _.h/2);
+      $.x.sc(2.0, 2.0);
     }
-    $.ctxfg.drawImage(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, 6, 12);
-    $.ctxfg.restore();
+    $.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, 6, 12);
+    $.x.r();
   };
 };

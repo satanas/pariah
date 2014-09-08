@@ -56,7 +56,7 @@ $.Hero = function(_x, _y, o) {
 
   this.damage = function(e) {
     if (_.hurt || _.dead) return;
-    var attack = Math.floor(e.attack - (e.attack * $.u.rand(_.rs * 100, 0) / 100));
+    var attack = floor(e.attack - (e.attack * $.u.rand(_.rs * 100, 0) / 100));
     _.he -= attack;
     _.hurt = true;
     _.htime = Date.now();
@@ -109,13 +109,13 @@ $.Hero = function(_x, _y, o) {
   this.update = function() {
     _.exit = false;
     var now = Date.now();
-    var elapsed = now - _.ctime;
+        elapsed = now - _.ctime;
     _.ctime = now;
 
     if (_.hurt) {
       _.etimeH = Date.now() - _.htime;
 
-      var c = Math.floor(_.etimeH / 100);
+      var c = floor(_.etimeH / 100);
       if (c > _.bcount) {
         _.bcount = c;
         _.blink = !_.blink;
@@ -261,11 +261,11 @@ $.Hero = function(_x, _y, o) {
   this.render = function(tx, ty) {
     var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
 
-    $.ctxfg.save();
-    $.ctxfg.scale(2.0, 2.0);
+    $.x.s();
+    $.x.sc(2.0, 2.0);
     if (_.blink)
-      $.ctxfg.globalAlpha = 0.3;
-    $.ctxfg.drawImage(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
-    $.ctxfg.restore();
+      $.x.globalAlpha = 0.3;
+    $.x.d(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
+    $.x.r();
   };
 };

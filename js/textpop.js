@@ -31,10 +31,10 @@ $.TextPop = function(text, x, y, color) {
   };
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = _.c;
-    $.ctxfg.fillText(_.text, tx, ty);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = _.c;
+    $.x.fillText(_.text, tx, ty);
+    $.x.r();
   };
 
   _.die = function(i) {

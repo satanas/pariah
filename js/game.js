@@ -4,7 +4,12 @@ $.init = function() {
   $.cfg = $.u.byId('fg');
   $.cv1 = document.createElement("canvas");
   $.cv2 = document.createElement("canvas");
-  $.ctxfg = $.cfg.getContext('2d');
+  $.x = $.cfg.getContext('2d');
+  $.x.s = $.x.save;
+  $.x.r = $.x.restore;
+  $.x.fr = $.x.fillRect;
+  $.x.d = $.x.drawImage;
+  $.x.sc = $.x.scale;
   $.ctx1 = $.cv1.getContext('2d');
   $.ctx2 = $.cv2.getContext('2d');
   $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
@@ -318,9 +323,9 @@ $.cleanMsg = function() {
 
 $.clearFg = function(c) {
   c = c || $.C.b;
-  $.ctxfg.clearRect(0, 0, $.vw, $.vh);
-  $.ctxfg.fillStyle = c;
-  $.ctxfg.fillRect(0, 0, $.vw, $.vh);
+  $.x.clearRect(0, 0, $.vw, $.vh);
+  $.x.fillStyle = c;
+  $.x.fr(0, 0, $.vw, $.vh);
 };
 
 $.loop = function() {

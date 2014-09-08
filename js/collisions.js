@@ -10,10 +10,10 @@ $.Collide = function() {
 
   _.faces = function(o1, o2) {
     return {
-      top: Math.abs(o1.bounds.b - o2.bounds.t),
-      bottom: Math.abs(o1.bounds.t - o2.bounds.b),
-      left: Math.abs(o1.bounds.r - o2.bounds.l),
-      right: Math.abs(o1.bounds.l - o2.bounds.r)
+      top: abs(o1.bounds.b - o2.bounds.t),
+      bottom: abs(o1.bounds.t - o2.bounds.b),
+      left: abs(o1.bounds.r - o2.bounds.l),
+      right: abs(o1.bounds.l - o2.bounds.r)
     };
   };
 

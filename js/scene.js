@@ -30,8 +30,8 @@ $.FadeIn = function() {
       _.done = true;
     }
     var a = (1 - _.e / _.d).toString().substr(0, 3);
-    $.ctxfg.fillStyle = "rgba(0,0,0," + a +")";
-    $.ctxfg.fillRect(0, 0, $.cam.w, $.cam.h);
+    $.x.fillStyle = "rgba(0,0,0," + a +")";
+    $.x.fr(0, 0, $.cam.w, $.cam.h);
   };
 };
 
@@ -58,7 +58,7 @@ $.FadeOut = function() {
       _.done = true;
     }
     var a = (_.e / _.d).toString().substr(0, 3);
-    $.ctxfg.fillStyle = "rgba(" + _.color + "," + a +")";
-    $.ctxfg.fillRect(0, 0, $.cam.w, $.cam.h);
+    $.x.fillStyle = "rgba(" + _.color + "," + a +")";
+    $.x.fr(0, 0, $.cam.w, $.cam.h);
   };
 };

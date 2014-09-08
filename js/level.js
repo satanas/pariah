@@ -1,8 +1,8 @@
 // Based on http://gamedevelopment.tutsplus.com/tutorials/how-to-use-bsp-trees-to-generate-game-maps--gamedev-12268
 // Arguments: level number, width, height, number of enemies, item to be placed, leaf size
 $.Level = function(n, w, h, en, it, ls) {
-  var _ = this;
-  var root = new $.Leaf(0, 0, w, h);
+  var _ = this,
+      root = new $.Leaf(0, 0, w, h);
   _.n = n;
   // Randomize w and h if they are undefined
   _.w = w;
@@ -13,12 +13,12 @@ $.Level = function(n, w, h, en, it, ls) {
 
   _.leafs.push(root);
 
-  this.isWall = function(x, y) {
+  _.isWall = function(x, y) {
     return (_.map[x][y] === '#') ? true : false;
   };
 
   // Return a random point inside a room
-  this.rPoint = function(r, p) {
+  _.rPoint = function(r, p) {
     var pad = p || 0; // Padding
     return {
       x: $.u.rand(r.l + pad, r.r - pad),
@@ -27,7 +27,7 @@ $.Level = function(n, w, h, en, it, ls) {
   };
 
   // Checks if the point (x,y) is a corner of the room r
-  this.isCorner = function(x, y, r) {
+  _.isCorner = function(x, y, r) {
     return ((x === r.t && y === r.l) ||
             (x === r.t && y === r.r) ||
             (x === r.b && y === r.l) ||
@@ -54,9 +54,10 @@ $.Level = function(n, w, h, en, it, ls) {
   root.makeRooms();
 
   // Make map
-  for (var i=0; i<w; i++) {
+  var i = 0, j = 0;
+  for (i=0; i<w; i++) {
     _.map[i] = [];
-    for (var j=0; j<h; j++){
+    for (j=0; j<h; j++){
       _.map[i][j] = '#';
     }
   }
@@ -66,16 +67,16 @@ $.Level = function(n, w, h, en, it, ls) {
     var r = l.room;
     if (r !== null) {
       ar.push(r);
-      for (var i=r.l; i<=r.r; i++) {
-        for (var j=r.t; j<=r.b; j++) {
+      for (i=r.l; i<=r.r; i++) {
+        for (j=r.t; j<=r.b; j++) {
           _.map[i][j] = '.';
         }
       }
     }
 
     l.halls.forEach(function(h) {
-      for (var i=h.l; i<=h.r; i++) {
-        for (var j=h.t; j<=h.b; j++) {
+      for (i=h.l; i<=h.r; i++) {
+        for (j=h.t; j<=h.b; j++) {
           _.map[i][j] = '.';
         }
       }
@@ -90,10 +91,10 @@ $.Level = function(n, w, h, en, it, ls) {
   // enemy. If there is an enemy in that position another point will
   // be selected inside the same room. If after 5 tries the algorithm
   // can't find a spot for the enemy, another room is selected.
-  var ec = en;
-  var p = null;
-  var epr = (en / ar.length);
-  var t = 0;
+  var ec = en,
+      p = null,
+      epr = (en / ar.length),
+      t = 0;
   while (ec > 0) {
     var rr = ar[$.u.rand(0, ar.length)];
     p = _.rPoint(rr);
@@ -174,13 +175,13 @@ $.Level = function(n, w, h, en, it, ls) {
 
 
   // Showing off
-  for (var v=0; v<_.h; v++) {
-    var row = [];
-    for (var u=0; u<_.w; u++) {
-      row.push(_.map[u][v]);
-    }
-    console.log(v, row.join(''));
-  }
+  //for (var v=0; v<_.h; v++) {
+  //  var row = [];
+  //  for (var u=0; u<_.w; u++) {
+  //    row.push(_.map[u][v]);
+  //  }
+  //  console.log(v, row.join(''));
+  //}
 
 };
 
@@ -196,7 +197,7 @@ $.Leaf = function(x, y, w, h) {
   _.room = null;
   _.halls = [];
 
-  this.split = function() {
+  _.split = function() {
     // Abort if the leaf is already splitted
     if (_.lc !== null || _.rc !== null)
       return false;
@@ -230,7 +231,7 @@ $.Leaf = function(x, y, w, h) {
     return true;
   };
 
-  this.makeRooms = function() {
+  _.makeRooms = function() {
     if (_.lc !== null || _.rc !== null) {
       if (_.lc !== null)
         _.lc.makeRooms();
@@ -240,23 +241,23 @@ $.Leaf = function(x, y, w, h) {
         _.makeHall(_.lc.getRoom(), _.rc.getRoom());
     } else {
       var size = {
-        w: $.u.rand(3, _.w - 2),
-        h: $.u.rand(3, _.h - 2)
-      };
-      var pos = {
-        x: $.u.rand(1, _.w - size.w - 1),
-        y: $.u.rand(1, _.h - size.h - 1),
-      };
+            w: $.u.rand(3, _.w - 2),
+            h: $.u.rand(3, _.h - 2)
+          },
+          pos = {
+            x: $.u.rand(1, _.w - size.w - 1),
+            y: $.u.rand(1, _.h - size.h - 1),
+          };
       _.room = new $.Rect(_.x + pos.x, _.y + pos.y, size.w, size.h);
     }
   };
 
-  this.getRoom = function() {
+  _.getRoom = function() {
     if (_.room !== null) {
       return _.room;
     } else {
-      var lRoom = null;
-      var rRoom = null;
+      var lRoom = null,
+          rRoom = null;
 
       if (_.lc !== null)
         lRoom = _.lc.getRoom();
@@ -278,67 +279,67 @@ $.Leaf = function(x, y, w, h) {
   };
 
   // This method connects the two rooms together (l and r) with hallways
-  this.makeHall = function(lRoom, rRoom) {
-    var p1 = {
-      x: $.u.rand(lRoom.l + 1, lRoom.r - 2),
-      y: $.u.rand(lRoom.t + 1, lRoom.b -2)
-    };
-    var p2 = {
-      x: $.u.rand(rRoom.l + 1, rRoom.r - 2),
-      y: $.u.rand(rRoom.t + 1, rRoom.b -2)
-    };
-
-    var width = p2.x - p1.x;
-    var height = p2.y - p1.y;
+  _.makeHall = function(lRoom, rRoom) {
+    var r = $.Rect,
+        p1 = {
+          x: $.u.rand(lRoom.l + 1, lRoom.r - 2),
+          y: $.u.rand(lRoom.t + 1, lRoom.b -2)
+        },
+        p2 = {
+          x: $.u.rand(rRoom.l + 1, rRoom.r - 2),
+          y: $.u.rand(rRoom.t + 1, rRoom.b -2)
+        },
+        width = p2.x - p1.x,
+        height = p2.y - p1.y;
 
     if (width < 0) {
       if (height < 0) {
         if ($.u.rand(0, 10) > 4) {
-          _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new r(p2.x, p1.y, abs(width), 1));
+          _.halls.push(new r(p2.x, p2.y, 1, abs(height)));
         } else {
-          _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new r(p2.x, p2.y, abs(width), 1));
+          _.halls.push(new r(p1.x, p2.y, 1, abs(height)));
         }
       } else if (height > 0) {
         if ($.u.rand(0, 10) > 4) {
-          _.halls.push(new $.Rect(p2.x, p1.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new r(p2.x, p1.y, abs(width), 1));
+          _.halls.push(new r(p2.x, p1.y, 1, abs(height)));
         } else {
-          _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new r(p2.x, p2.y, abs(width), 1));
+          _.halls.push(new r(p1.x, p1.y, 1, abs(height)));
         }
       // if (height === 0)
       } else {
-        _.halls.push(new $.Rect(p2.x, p2.y, Math.abs(width), 1));
+        _.halls.push(new r(p2.x, p2.y, abs(width), 1));
       }
     } else if (width > 0){
       if (height < 0) {
         if ($.u.rand(0, 10) > 4) {
-          _.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p1.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new r(p1.x, p2.y, abs(width), 1));
+          _.halls.push(new r(p1.x, p2.y, 1, abs(height)));
         } else {
-          _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+          _.halls.push(new r(p1.x, p1.y, abs(width), 1));
+          _.halls.push(new r(p2.x, p2.y, 1, abs(height)));
         }
       } else if (height > 0) {
         if ($.u.rand(0, 10) > 4) {
-          _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p2.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new r(p1.x, p1.y, abs(width), 1));
+          _.halls.push(new r(p2.x, p1.y, 1, abs(height)));
         } else {
-          _.halls.push(new $.Rect(p1.x, p2.y, Math.abs(width), 1));
-          _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+          _.halls.push(new r(p1.x, p2.y, abs(width), 1));
+          _.halls.push(new r(p1.x, p1.y, 1, abs(height)));
         }
       // if (height === 0)
       } else {
-        _.halls.push(new $.Rect(p1.x, p1.y, Math.abs(width), 1));
+        _.halls.push(new r(p1.x, p1.y, abs(width), 1));
       }
     // if (width === 0)
     } else {
       if (height < 0) {
-        _.halls.push(new $.Rect(p2.x, p2.y, 1, Math.abs(height)));
+        _.halls.push(new r(p2.x, p2.y, 1, abs(height)));
       } else {
-        _.halls.push(new $.Rect(p1.x, p1.y, 1, Math.abs(height)));
+        _.halls.push(new r(p1.x, p1.y, 1, abs(height)));
       }
     }
   };

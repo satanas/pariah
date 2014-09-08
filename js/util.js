@@ -1,3 +1,14 @@
+var abs = Math.abs,
+    cos = Math.cos,
+    sin = Math.sin,
+    ceil = Math.ceil,
+    floor = Math.floor,
+    max = Math.max,
+    pow = Math.pow,
+    sqrt = Math.sqrt,
+    round = Math.round,
+    rand = Math.random;
+
 $.u = {
   'fading': [],
   'instID': null,
@@ -42,14 +53,14 @@ $.u.v = function(i, v) {
 
 /* Generate random integer in a (min, max) range */
 $.u.rand = function(a, b) {
-  return Math.floor(Math.random() * (b - a)) + a;
+  return floor(Math.random() * (b - a)) + a;
 };
 
 // Returns true if there is chance to miss one attack
 // Receives p (number between 0 and 1) representing the probability of success
 $.u.canMiss = function(p) {
   var x = $.u.rand(1, 100);
-  return (x <= Math.floor(p * 100));
+  return (x <= floor(p * 100));
 };
 
 $.u.byId = function(i) {

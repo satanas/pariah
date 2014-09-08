@@ -15,9 +15,9 @@ $.Wall = function(x, y, hf) {
   };
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.scale(2.0, 2.0);
-    $.ctxfg.drawImage(_.ts, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.sc(2.0, 2.0);
+    $.x.d(_.ts, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
+    $.x.r();
   };
 };

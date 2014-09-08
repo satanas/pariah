@@ -38,10 +38,10 @@ $.FireSwitch = function(x, y) {
   $.Switch.call(_, x, y, $.PW.F);
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(28, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'hsla(28, 100%, 51%, 1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.r();
   };
 };
 
@@ -50,10 +50,10 @@ $.EarthSwitch = function(x, y) {
   $.Switch.call(_, x, y, $.PW.E);
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(65, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'hsla(65, 100%, 51%, 1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.r();
   };
 };
 
@@ -62,10 +62,10 @@ $.WaterSwitch = function(x, y) {
   $.Switch.call(_, x, y, $.PW.W);
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(44, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'hsla(44, 100%, 51%, 1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.r();
   };
 };
 
@@ -74,10 +74,10 @@ $.AirSwitch = function(x, y) {
   $.Switch.call(_, x, y, $.PW.A);
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(32, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'hsla(32, 100%, 51%, 1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.r();
   };
 };
 
@@ -94,7 +94,6 @@ $.LifeSwitch = function(x, y) {
   _.update = function(i) {
     if (!_.filled) {
       if ($.collide.rect(_, $.hero)) {
-        console.log('ended');
         _.filled = true;
         $.ended = true;
         $.fadeOut.start(4000, '255,255,255');
@@ -103,11 +102,11 @@ $.LifeSwitch = function(x, y) {
   };
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(20, 100%, 51%, 1)';
-    $.ctxfg.fillRect(tx, ty, _.w, _.h);
-    $.ctxfg.fillStyle = 'rgb(255,255,255)';
-    $.ctxfg.fillRect(tx + 12 , ty, 8, 8);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'hsla(20, 100%, 51%, 1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.fillStyle = 'rgb(255,255,255)';
+    $.x.fr(tx + 12 , ty, 8, 8);
+    $.x.r();
   };
 };

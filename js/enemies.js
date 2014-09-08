@@ -56,7 +56,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     }
 
     if (p.t === _.vul.t) {
-      attack = Math.floor(p.attack + (p.attack * _.vul.v));
+      attack = floor(p.attack + (p.attack * _.vul.v));
       color = 'red';
     }
     _.he -= attack;
@@ -81,7 +81,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     if (_.hurt) {
       _.etimeH = Date.now() - _.ctimeH;
 
-      var c = Math.floor(_.etimeH / 100);
+      var c = floor(_.etimeH / 100);
       if (c > _.bcount) {
         _.bcount = c;
         _.blink = !_.blink;
@@ -112,12 +112,12 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
 
   // Render health bar
   _.renderBar = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'rgb(0,0,0)';
-    $.ctxfg.fillRect(tx, ty - 10, 32, 5);
-    $.ctxfg.fillStyle = 'rgb(255,0,0)';
-    $.ctxfg.fillRect(tx, ty - 10, (_.he * 32) / _.maxH, 5);
-    $.ctxfg.restore();
+    $.x.s();
+    $.x.fillStyle = 'rgb(0,0,0)';
+    $.x.fr(tx, ty - 10, 32, 5);
+    $.x.fillStyle = 'rgb(255,0,0)';
+    $.x.fr(tx, ty - 10, (_.he * 32) / _.maxH, 5);
+    $.x.r();
   };
 };
 
@@ -140,15 +140,15 @@ $.Zombie = function(x, y) {
       _.die(i);
 
     if(!_.hasRoute) {
-       var distance = $.ai.getDistance({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
-       if((distance <= _.minD) && (Math.round(distance) > 0)) {
+       var distance = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
+       if((distance <= _.minD) && (round(distance) > 0)) {
           console.log('Get route');
-          _.route = $.ai.calculatePath([Math.round(_.x / 32), Math.round(_.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
+          _.route = $.ai.calculatePath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32)]);
           _.hasRoute = true;
           _.nextPoint = _.route.shift();
        }
     } else {
-      if((Math.round(_.x / 32) == _.nextPoint[0]) && (Math.round(_.y / 32) == _.nextPoint[1])) {
+      if((round(_.x / 32) == _.nextPoint[0]) && (round(_.y / 32) == _.nextPoint[1])) {
         if(_.route.length > 0) {
           _.nextPoint = _.route.shift();
         } else {
@@ -156,14 +156,14 @@ $.Zombie = function(x, y) {
           _.route = [];
         }
       } else {
-        if(Math.round(_.x / 32) < _.nextPoint[0]) {
+        if(round(_.x / 32) < _.nextPoint[0]) {
           _.x += _.speed;
-        } else if(Math.round(_.x / 32) > _.nextPoint[0]) {
+        } else if(round(_.x / 32) > _.nextPoint[0]) {
           _.x -= _.speed;
         }
-        if(Math.round(_.y / 32) < _.nextPoint[1]) {
+        if(round(_.y / 32) < _.nextPoint[1]) {
           _.y += _.speed;
-        } else if(Math.round(_.y / 32) > _.nextPoint[1]) {
+        } else if(round(_.y / 32) > _.nextPoint[1]) {
           _.y -= _.speed;
         }
       }
@@ -172,13 +172,13 @@ $.Zombie = function(x, y) {
   };
 
   _.render = function(tx, ty) {
-    $.ctxfg.save();
+    $.x.s();
     if (!_.blink)
-      $.ctxfg.fillStyle = 'rgb(0,150,0)';
+      $.x.fillStyle = 'rgb(0,150,0)';
     else
-      $.ctxfg.fillStyle = 'rgba(0,150,0,0.3)';
-    $.ctxfg.fillRect(tx, ty, 32, 32);
-    $.ctxfg.restore();
+      $.x.fillStyle = 'rgba(0,150,0,0.3)';
+    $.x.fr(tx, ty, 32, 32);
+    $.x.r();
 
     _.renderBar(tx, ty);
   };
