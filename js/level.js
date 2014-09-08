@@ -61,7 +61,6 @@ $.Level = function(n, w, h, en, it, ls) {
     }
   }
 
-  var self = this;
   var ar = []; // Available rooms
   _.leafs.forEach(function(l) {
     var r = l.room;
@@ -69,7 +68,7 @@ $.Level = function(n, w, h, en, it, ls) {
       ar.push(r);
       for (var i=r.l; i<=r.r; i++) {
         for (var j=r.t; j<=r.b; j++) {
-          self.map[i][j] = '.';
+          _.map[i][j] = '.';
         }
       }
     }
@@ -77,7 +76,7 @@ $.Level = function(n, w, h, en, it, ls) {
     l.halls.forEach(function(h) {
       for (var i=h.l; i<=h.r; i++) {
         for (var j=h.t; j<=h.b; j++) {
-          self.map[i][j] = '.';
+          _.map[i][j] = '.';
         }
       }
     });
@@ -175,13 +174,13 @@ $.Level = function(n, w, h, en, it, ls) {
 
 
   // Showing off
-  //for (var v=0; v<_.h; v++) {
-  //  var row = [];
-  //  for (var u=0; u<_.w; u++) {
-  //    row.push(self.map[u][v]);
-  //  }
-  //  console.log(v, row.join(''));
-  //}
+  for (var v=0; v<_.h; v++) {
+    var row = [];
+    for (var u=0; u<_.w; u++) {
+      row.push(_.map[u][v]);
+    }
+    console.log(v, row.join(''));
+  }
 
 };
 
