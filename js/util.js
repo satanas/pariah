@@ -9,6 +9,7 @@ var abs = Math.abs,
     round = Math.round,
     rand = Math.random;
 
+$.n = Date.now;
 $.u = {
   'fading': [],
   'instID': null,

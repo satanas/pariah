@@ -5,7 +5,7 @@ $.Scene= function() {
   // Elapsed
   _.e = 0;
   // Current time
-  _.t = Date.now();
+  _.t = $.n();
   // Fading
   _.f = 0;
 };
@@ -18,13 +18,13 @@ $.FadeIn = function() {
     _.done = false;
     _.d = d; // Fade duration
     _.e = 0; // Elapsed time
-    _.c = Date.now(); // Activation time
+    _.c = $.n(); // Activation time
   };
 
   _.render = function() {
     if (_.done) return;
 
-    _.e = Date.now() - _.c;
+    _.e = $.n() - _.c;
     if (_.e > _.d) {
       _.e = _.d;
       _.done = true;
@@ -46,13 +46,13 @@ $.FadeOut = function() {
     _.quit = false;
     _.d = d; // Fade duration
     _.e = 0; // Elapsed time
-    _.c = Date.now(); // Activation time
+    _.c = $.n(); // Activation time
   };
 
   _.render = function() {
     if (_.quit) return;
 
-    _.e = Date.now() - _.c;
+    _.e = $.n() - _.c;
     if (_.e > _.d) {
       _.e = _.d;
       _.done = true;

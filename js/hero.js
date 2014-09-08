@@ -22,8 +22,8 @@ $.Hero = function(_x, _y, o) {
   _.he = _.maxH; // Health
   _.ma = _.maxM; // Mana
   _.shield = false;
-  _.ctime = Date.now(); // Current time (for update)
-  _.htime = Date.now(); // Hurt time
+  _.ctime = $.n(); // Current time (for update)
+  _.htime = $.n(); // Hurt time
   _.etimeH = 0; // Elapsed time for hurt
   _.itime = 1000; // Invincibility time (ms)
   _.blink = false;
@@ -59,7 +59,7 @@ $.Hero = function(_x, _y, o) {
     var attack = floor(e.attack - (e.attack * $.u.rand(_.rs * 100, 0) / 100));
     _.he -= attack;
     _.hurt = true;
-    _.htime = Date.now();
+    _.htime = $.n();
     _.etimeH = 0;
     $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, 'red'));
     if (_.he <= 0) {
@@ -108,12 +108,12 @@ $.Hero = function(_x, _y, o) {
 
   this.update = function() {
     _.exit = false;
-    var now = Date.now();
+    var now = $.n();
         elapsed = now - _.ctime;
     _.ctime = now;
 
     if (_.hurt) {
-      _.etimeH = Date.now() - _.htime;
+      _.etimeH = $.n() - _.htime;
 
       var c = floor(_.etimeH / 100);
       if (c > _.bcount) {

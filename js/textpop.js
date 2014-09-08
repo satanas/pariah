@@ -5,7 +5,7 @@ $.TextPop = function(text, x, y, color) {
   _.oy = y - 45;
   _.dy = 0.65;
   _.elapsed = 0;
-  _.ctime = Date.now();
+  _.ctime = $.n();
   _.text = text;
   _.bounds = {r:0, b:0};
   _.colors = {
@@ -25,7 +25,7 @@ $.TextPop = function(text, x, y, color) {
   _.update = function(i) {
     if (_.y > _.oy)
       _.y -= _.dy;
-    _.elapsed = Date.now() - _.ctime;
+    _.elapsed = $.n() - _.ctime;
     if (_.elapsed >= 800)
       _.die(i);
   };

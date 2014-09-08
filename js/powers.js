@@ -124,14 +124,14 @@ $.Earth = function(x, y, o, n) {
   _.bounds = _.getb();
   _.lifetime = 400; // Lifetime
   _.summontime = 350;
-  _.ctime = Date.now(); // Creation time
+  _.ctime = $.n(); // Creation time
   _.attack = 0;
   _.anim = {x:5, y:17};
   _.ts = $.u.ts();
   _.summon = false;
 
   this.update = function(i) {
-    var elapsed = Date.now() - _.ctime;
+    var elapsed = $.n() - _.ctime;
 
     if (elapsed > _.lifetime) _.die(i);
     if (elapsed > _.summontime && !_.summon && _.n < 3) {
@@ -174,13 +174,13 @@ $.Water = function(x ,y, a) {
   _.d = 35;
   _.r = 10; /* Radius */
   _.lifetime = 6000; /* Milliseconds */
-  _.ctime = Date.now();
+  _.ctime = $.n();
   _.bounds = _.getb();
   _.attack = $.u.rand(3, 6);
 
   this.update = function(i) {
-    var elapsed = Date.now() - _.ctime;
-    _.ctime = Date.now();
+    var elapsed = $.n() - _.ctime;
+    _.ctime = $.n();
     _.lifetime -= elapsed;
 
     if (_.lifetime <= 0) _.die(i);
@@ -249,7 +249,7 @@ $.Air = function(x, y, o) {
   _.ts = $.u.ts();
   _.blink = false;
   _.bcount = 0;
-  _.ctime = Date.now();
+  _.ctime = $.n();
 
   this.update = function(i) {
     _.dx += _.a * _.dirX;
@@ -261,7 +261,7 @@ $.Air = function(x, y, o) {
     _.y += _.dy;
     _.bounds = _.getb();
 
-    var elapsed = Date.now() - _.ctime,
+    var elapsed = $.n() - _.ctime,
         c = floor(elapsed / 100);
     if (c > _.bcount) {
       _.bcount = c;

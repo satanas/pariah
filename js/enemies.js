@@ -48,20 +48,20 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     if (p.t === $.PW.E.v) {
       if (!_.planted) {
         _.planted = true;
-        _.ctimeP = Date.now();
+        _.ctimeP = $.n();
         _.etimeP = 0;
-        $.textPops.push(new $.TextPop('planted', _.x + 2, _.y - 5, color));
+        $.textPops.push(new $.TextPop('bounded', _.x + 2, _.y - 5, color));
       }
       return;
     }
 
-    if (p.t === _.vul.t) {
-      attack = floor(p.attack + (p.attack * _.vul.v));
-      color = 'red';
-    }
+    //if (p.t === _.vul.t) {
+    //  attack = floor(p.attack + (p.attack * _.vul.v));
+    //  color = 'red';
+    //}
     _.he -= attack;
     _.hurt = true;
-    _.ctimeH = Date.now();
+    _.ctimeH = $.n();
     _.etimeH = 0;
     $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, color));
     return attack;
@@ -69,7 +69,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
 
   _.planting = function() {
     if (_.planted) {
-      _.etimeP = Date.now() - _.ctimeP;
+      _.etimeP = $.n() - _.ctimeP;
 
       if (_.etimeP >= _.ptime) {
         _.planted = false;
@@ -79,7 +79,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
 
   _.blinking = function() {
     if (_.hurt) {
-      _.etimeH = Date.now() - _.ctimeH;
+      _.etimeH = $.n() - _.ctimeH;
 
       var c = floor(_.etimeH / 100);
       if (c > _.bcount) {
@@ -126,7 +126,7 @@ $.Zombie = function(x, y) {
   $.Enemy.call(_, x, y, 32, 32, 30, 0.05, {t: $.PW.F.v, v:0.45});
 
   _.bounds = _.getb();
-  _.attack = $.u.rand(12, 16);
+  _.attack = $.u.rand(16, 20);
 
   _.update = function(i) {
     _.bounds = _.getb();

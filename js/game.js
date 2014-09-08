@@ -18,7 +18,9 @@ $.init = function() {
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
-  $.lv =1;
+  $.lv = 1;
+  $.he = 0;
+  $.ma = 0;
   $.ended = false;
   $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
@@ -103,9 +105,9 @@ $.welcomeLoop = function() {
   $.clearFg();
   if ($.input.r(13)) return $.showIntro();
 
-  $.scene.e = Date.now() - $.scene.t;
+  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e > 400) {
-    $.scene.t = Date.now();
+    $.scene.t = $.n();
     $.scene.e = 0;
     if ($.scene.s === 0) {
       $.scene.s = 1;
@@ -124,12 +126,12 @@ $.introLoop = function() {
   if ($.input.r(13)) return $.startGame();
   if ($.scene.s > 6) return $.startGame();
 
-  $.scene.e = Date.now() - $.scene.t;
+  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 1800 && !$.scene.f) {
     $.scene.f = 1;
     $.u.fadeOut('i' + $.scene.s, function() {
       $.scene.s += 1;
-      $.scene.t = Date.now();
+      $.scene.t = $.n();
       $.scene.e = 0;
       $.scene.f = 0;
       $.u.show('i' + $.scene.s);
@@ -150,12 +152,12 @@ $.gameOverLoop = function() {
 $.endLoop = function() {
   $.clearFg();
 
-  $.scene.e = Date.now() - $.scene.t;
+  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
     $.scene.f = 1;
     $.u.fadeOut('e' + $.scene.s, function() {
       $.scene.s += 1;
-      $.scene.t = Date.now();
+      $.scene.t = $.n();
       $.scene.e = 0;
       $.scene.f = 0;
       $.u.show('e' + $.scene.s);
@@ -172,7 +174,7 @@ $.creditsLoop = function() {
   $.clearFg();
   if ($.input.r(13) && $.scene.f === 1) return $.showWelcome();
 
-  $.scene.e = Date.now() - $.scene.t;
+  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 5000 && !$.scene.f) {
     $.scene.f = 1;
     $.u.show('ci');
@@ -225,8 +227,11 @@ $.startGame = function() {
   $.collide = new $.Collide();
   $.hud = new $.Hud();
 
-  if ($.lv > 1)
+  if ($.lv > 1) {
     $.fow.radius = 6;
+    $.hero.he = $.he;
+    $.hero.ma = $.ma;
+  }
   $.hero.pows = $.epow;
 
   // Load the walls
@@ -302,7 +307,7 @@ $.finalRoom = function() {
   $.switches.push(new $.AirSwitch(496, 256));
 
   $.fadeIn.start(1000);
-  $.u.instruction('Offer each element on its altar to start the ritual', 4500);
+  $.u.instruction('Step on the altars and offer each element to start the ritual', 4500);
   $.animId = raf($.loop);
 };
 
@@ -310,6 +315,8 @@ $.nextLevel = function() {
   caf($.animId);
   $.lv += 1;
   if ($.lv < 5) {
+    $.he = $.hero.he;
+    $.ma = $.hero.ma;
     $.startGame();
   } else {
     $.finalRoom();
