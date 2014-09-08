@@ -14,8 +14,6 @@ $.init = function() {
   $.ctx2 = $.cv2.getContext('2d');
   $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
-  // Game over messages
-  $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
   $.lv = 1;
@@ -39,10 +37,10 @@ $.init = function() {
       s: false
     }
   };
-  $.showWelcome();
+  $.welcome();
 };
 
-$.showWelcome = function() {
+$.welcome = function() {
   caf($.animId);
   $.quitScenes();
   $.u.v('s', true);
@@ -52,7 +50,7 @@ $.showWelcome = function() {
   $.animId = raf($.welcomeLoop);
 };
 
-$.showIntro = function() {
+$.intro = function() {
   caf($.animId);
   $.quitScenes();
   $.u.v('i', true);
@@ -63,19 +61,18 @@ $.showIntro = function() {
   $.animId = raf($.introLoop);
 };
 
-$.showGameOver = function() {
+$.gameover = function() {
   caf($.animId);
   $.lv = 1;
   $.epow = [];
   $.quitScenes();
-  $.u.byId('g1').innerHTML = $.goMsg[$.u.rand(0, $.goMsg.length)];
   $.u.v('g', true);
   $.input.u();
 
   $.animId = raf($.gameOverLoop);
 };
 
-$.showEnd = function() {
+$.end = function() {
   caf($.animId);
   $.lv = 1;
   $.ended = false;
@@ -90,20 +87,9 @@ $.showEnd = function() {
   $.animId = raf($.endLoop);
 };
 
-$.showCredits = function() {
-  caf($.animId);
-  $.quitScenes();
-  $.scene = new $.Scene();
-  $.u.v('c', true);
-  $.u.hide('e2');
-  $.input.u();
-
-  $.animId = raf($.creditsLoop);
-};
-
 $.welcomeLoop = function() {
   $.clearFg();
-  if ($.input.r(13)) return $.showIntro();
+  if ($.input.r(13)) return $.intro();
 
   $.scene.e = $.n() - $.scene.t;
   if ($.scene.e > 400) {
@@ -124,10 +110,9 @@ $.welcomeLoop = function() {
 $.introLoop = function() {
   $.clearFg();
   if ($.input.r(13)) return $.startGame();
-  if ($.scene.s > 6) return $.startGame();
 
   $.scene.e = $.n() - $.scene.t;
-  if ($.scene.e >= 1800 && !$.scene.f) {
+  if ($.scene.e >= 1800 && !$.scene.f && $.scene.s < 5) {
     $.scene.f = 1;
     $.u.fadeOut('i' + $.scene.s, function() {
       $.scene.s += 1;
@@ -136,6 +121,8 @@ $.introLoop = function() {
       $.scene.f = 0;
       $.u.show('i' + $.scene.s);
     });
+  } else if ($.scene.e >= 5000 && $.scene.s === 5) {
+    return $.finalRoom();
   }
 
   $.input.u();
@@ -151,6 +138,7 @@ $.gameOverLoop = function() {
 
 $.endLoop = function() {
   $.clearFg();
+  if ($.input.r(13) && $.scene.e > 5000) return $.welcome();
 
   $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
@@ -162,30 +150,17 @@ $.endLoop = function() {
       $.scene.f = 0;
       $.u.show('e' + $.scene.s);
     });
-  } else if ($.scene.s === 2) {
-    setTimeout($.showCredits, 6000);
+  } else if ($.scene.e >= 5000 && !$.scene.f) {
+    $.scene.f = 1;
+    $.u.show('ci');
   }
 
   $.input.u();
   raf($.endLoop);
 };
 
-$.creditsLoop = function() {
-  $.clearFg();
-  if ($.input.r(13) && $.scene.f === 1) return $.showWelcome();
-
-  $.scene.e = $.n() - $.scene.t;
-  if ($.scene.e >= 5000 && !$.scene.f) {
-    $.scene.f = 1;
-    $.u.show('ci');
-  }
-
-  $.input.u();
-  raf($.creditsLoop);
-};
-
 $.quitScenes = function() {
-  ['s', 's1', 'i', 'g', 'e', 'c'].forEach(function(e) {
+  ['s', 's1', 'i', 'g', 'e'].forEach(function(e) {
       $.u.v(e, false);
   });
   $.u.hide('m1');
@@ -382,13 +357,13 @@ $.loop = function() {
 
   // Check conditions to win the game
   if ($.ended && $.fadeOut.done) {
-    $.showEnd();
+    $.end();
     return;
   }
 
   // Check if hero is dead
   if ($.hero.dead) {
-    $.showGameOver();
+    $.gameover();
     return;
   }
 
