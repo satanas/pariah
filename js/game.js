@@ -194,6 +194,7 @@ $.startGame = function() {
   $.exit = [];
   $.textPops = [];
   $.powers = [];
+  $.ai = new $.Ai();
   $.switches = [];
 
   // Load level

@@ -18,6 +18,11 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   this.etimeH = 0; // Elapsed time for hurt
   this.etimeP = 0; // Elapsed time for planted
   this.bcount = 0;
+  this.minD = 300; // Min distance to start chasing hero
+  this.hasRoute = false; // Has a valid route returned by AI
+  this.route = []; // Points of route
+  this.nextPoint = [];
+  this.speed = 0.7;
 
   this.getb = function() {
     return {
@@ -131,6 +136,37 @@ $.Zombie = function(x, y) {
 
     if (this.he <= 0)
       this.die(i);
+
+    if(!this.hasRoute) {
+       var distance = $.ai.getDistance({x:this.x, y:this.y}, {x:$.hero.x, y:$.hero.y});
+       if((distance <= this.minD) && (Math.round(distance) > 0)) {
+          console.log('Get route');
+          this.route = $.ai.calculatePath([Math.round(this.x / 32), Math.round(this.y / 32)], [Math.round($.hero.x / 32), Math.round($.hero.y / 32)]);
+          this.hasRoute = true;
+          this.nextPoint = this.route.shift();
+       }
+    } else {
+      if((Math.round(this.x / 32) == this.nextPoint[0]) && (Math.round(this.y / 32) == this.nextPoint[1])) {
+        if(this.route.length > 0) {
+          this.nextPoint = this.route.shift();
+        } else {
+          this.hasRoute = false;
+          this.route = [];
+        }
+      } else {
+        if(Math.round(this.x / 32) < this.nextPoint[0]) {
+          this.x += this.speed;
+        } else if(Math.round(this.x / 32) > this.nextPoint[0]) {
+          this.x -= this.speed;
+        }
+        if(Math.round(this.y / 32) < this.nextPoint[1]) {
+          this.y += this.speed;
+        } else if(Math.round(this.y / 32) > this.nextPoint[1]) {
+          this.y -= this.speed;
+        }
+      }
+    }
+
   };
 
   this.render = function(tx, ty) {
