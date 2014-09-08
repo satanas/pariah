@@ -13,7 +13,7 @@ $.init = function() {
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
-  $.lv = 1;
+  $.lv =1;
   $.ended = false;
   $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
@@ -234,7 +234,6 @@ $.startGame = function() {
 
   $.fadeIn.start(1000);
   $.animId = requestAnimationFrame($.loop);
-  console.log('walls', $.walls.length);
 };
 
 $.finalRoom = function() {
@@ -298,14 +297,12 @@ $.finalRoom = function() {
   $.fadeIn.start(1000);
   $.util.showInstructions('Offer each element on its altar to start the ritual', 4500);
   $.animId = requestAnimationFrame($.loop);
-  console.log('walls', $.walls.length);
 };
 
 $.nextLevel = function() {
   cancelAnimationFrame($.animId);
   $.lv += 1;
-  console.log('next level');
-  if ($.lv < 6) {
+  if ($.lv < 5) {
     $.startGame();
   } else {
     $.finalRoom();
@@ -389,8 +386,8 @@ $.loop = function() {
   $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  if ($.lv < 5)
-    $.fow.render();
+  //if ($.lv < 5)
+  //  $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
