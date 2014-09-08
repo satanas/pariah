@@ -1,4 +1,6 @@
 $.init = function() {
+  $.raf = requestAnimationFrame;
+  $.caf = cancelAnimationFrame;
   $.input = $.Input;
   $.input.bind([13, 65, 37, 38, 39, 40, 49, 50, 51, 52]);
   $.cfg = $.util.byId('fg');
@@ -36,28 +38,28 @@ $.init = function() {
 };
 
 $.showWelcome = function() {
-  cancelAnimationFrame($.animId);
+  $.caf($.animId);
   $.quitScenes();
   $.util.visible('s', true);
   $.scene = new $.Scene();
   $.input.u();
 
-  $.animId = requestAnimationFrame($.welcomeLoop);
+  $.animId = $.raf($.welcomeLoop);
 };
 
 $.showIntro = function() {
-  cancelAnimationFrame($.animId);
+  $.caf($.animId);
   $.quitScenes();
   $.util.visible('i', true);
   $.scene = new $.Scene();
   $.util.show('i0');
   $.input.u();
 
-  $.animId = requestAnimationFrame($.introLoop);
+  $.animId = $.raf($.introLoop);
 };
 
 $.showGameOver = function() {
-  cancelAnimationFrame($.animId);
+  $.caf($.animId);
   $.lv = 1;
   $.epow = [];
   $.quitScenes();
@@ -65,14 +67,14 @@ $.showGameOver = function() {
   $.util.visible('g', true);
   $.input.u();
 
-  $.animId = requestAnimationFrame($.gameOverLoop);
+  $.animId = $.raf($.gameOverLoop);
 };
 
 $.showEnd = function() {
+  $.caf($.animId);
   $.lv = 1;
   $.ended = false;
   $.epow = [];
-  cancelAnimationFrame($.animId);
   $.fadeOut.quit = true;
   $.quitScenes();
   $.scene = new $.Scene();
@@ -80,18 +82,18 @@ $.showEnd = function() {
   $.util.visible('e', true);
   $.input.u();
 
-  $.animId = requestAnimationFrame($.endLoop);
+  $.animId = $.raf($.endLoop);
 };
 
 $.showCredits = function() {
-  cancelAnimationFrame($.animId);
+  $.caf($.animId);
   $.quitScenes();
   $.scene = new $.Scene();
   $.util.visible('c', true);
   $.util.hide('e2');
   $.input.u();
 
-  $.animId = requestAnimationFrame($.creditsLoop);
+  $.animId = $.raf($.creditsLoop);
 };
 
 $.welcomeLoop = function() {
@@ -111,7 +113,7 @@ $.welcomeLoop = function() {
     }
   }
   $.input.u();
-  requestAnimationFrame($.welcomeLoop);
+  $.raf($.welcomeLoop);
 };
 
 $.introLoop = function() {
@@ -132,14 +134,14 @@ $.introLoop = function() {
   }
 
   $.input.u();
-  requestAnimationFrame($.introLoop);
+  $.raf($.introLoop);
 };
 
 $.gameOverLoop = function() {
   $.clearFg();
   if ($.input.r(13)) return $.startGame();
   $.input.u();
-  requestAnimationFrame($.gameOverLoop);
+  $.raf($.gameOverLoop);
 };
 
 $.endLoop = function() {
@@ -160,7 +162,7 @@ $.endLoop = function() {
   }
 
   $.input.u();
-  requestAnimationFrame($.endLoop);
+  $.raf($.endLoop);
 };
 
 $.creditsLoop = function() {
@@ -174,7 +176,7 @@ $.creditsLoop = function() {
   }
 
   $.input.u();
-  requestAnimationFrame($.creditsLoop);
+  $.raf($.creditsLoop);
 };
 
 $.quitScenes = function() {
@@ -235,7 +237,7 @@ $.startGame = function() {
   }
 
   $.fadeIn.start(1000);
-  $.animId = requestAnimationFrame($.loop);
+  $.animId = $.raf($.loop);
 };
 
 $.finalRoom = function() {
@@ -298,11 +300,11 @@ $.finalRoom = function() {
 
   $.fadeIn.start(1000);
   $.util.showInstructions('Offer each element on its altar to start the ritual', 4500);
-  $.animId = requestAnimationFrame($.loop);
+  $.animId = $.raf($.loop);
 };
 
 $.nextLevel = function() {
-  cancelAnimationFrame($.animId);
+  $.caf($.animId);
   $.lv += 1;
   if ($.lv < 5) {
     $.startGame();
@@ -396,7 +398,7 @@ $.loop = function() {
   $.fadeIn.render();
   $.fadeOut.render();
 
-  requestAnimationFrame($.loop);
+  $.raf($.loop);
 };
 
 /* Start game on load */
