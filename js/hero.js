@@ -1,4 +1,4 @@
-$.Hero = function(_x, _y) {
+$.Hero = function(_x, _y, o) {
   var _ = this;
   _.x = _x;
   _.y = _y;
@@ -16,7 +16,7 @@ $.Hero = function(_x, _y) {
 
   _.s = 0.13; // Speed
   _.dx = this.dy = 0;
-  _.o = 'd'; // Orientation
+  _.o = o || 'd'; // Orientation
   _.pows = []; // Available powers
   _.hurt = false;
   _.he = this.maxH; // Health
@@ -97,6 +97,12 @@ $.Hero = function(_x, _y) {
         this.charge(10);
       }
     }
+  };
+
+  this.lose = function(e) {
+    var i = this.pows.indexOf(e.v);
+    this.pows.splice(i, 1);
+    console.log(this.pows);
   };
 
   this.update = function() {
@@ -239,8 +245,10 @@ $.Hero = function(_x, _y) {
     });
 
     // Exit the level
-    if ($.collide.rect(this, $.exit[0])) {
-      _.exit = true;
+    if ($.exit !== null) {
+      if ($.collide.rect(this, $.exit[0])) {
+        _.exit = true;
+      }
     }
 
     /* Calculate animation frame */

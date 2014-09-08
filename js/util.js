@@ -28,6 +28,10 @@ $.util.show = function(i) {
   $.util.byId(i).style.opacity = 1.0;
 };
 
+$.util.hide = function(i) {
+  $.util.byId(i).style.opacity = 0.0;
+};
+
 $.util.visible = function(i, v) {
   $.util.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
 };

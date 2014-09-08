@@ -4,13 +4,20 @@ $.init = function() {
   $.cfg = $.util.byId('fg');
   $.cv1 = document.createElement("canvas");
   $.cv2 = document.createElement("canvas");
+  $.ctxfg = $.cfg.getContext('2d');
+  $.ctx1 = $.cv1.getContext('2d');
+  $.ctx2 = $.cv2.getContext('2d');
+  $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
+  $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
   // Game over messages
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
-  $.lv = 2;
-  $.epow = [1, 2, 3, 4]; // Earned powers
+  $.lv = 1;
+  $.ended = false;
+  $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
+  $.fadeOut = new $.FadeOut();
   // Array of items to be placed on each level
   $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
   // Array of in-game messages
@@ -30,21 +37,21 @@ $.init = function() {
 
 $.showWelcome = function() {
   cancelAnimationFrame($.animId);
-  $.input.u();
   $.quitScenes();
   $.util.visible('s', true);
   $.scene = new $.Scene();
+  $.input.u();
 
   $.animId = requestAnimationFrame($.welcomeLoop);
 };
 
 $.showIntro = function() {
   cancelAnimationFrame($.animId);
-  $.input.u();
   $.quitScenes();
   $.util.visible('i', true);
   $.scene = new $.Scene();
   $.util.show('i0');
+  $.input.u();
 
   $.animId = requestAnimationFrame($.introLoop);
 };
@@ -53,15 +60,41 @@ $.showGameOver = function() {
   cancelAnimationFrame($.animId);
   $.lv = 1;
   $.epow = [];
-  $.input.u();
   $.quitScenes();
   $.util.byId('g1').innerHTML = $.goMsg[$.util.randInt(0, $.goMsg.length)];
   $.util.visible('g', true);
+  $.input.u();
 
   $.animId = requestAnimationFrame($.gameOverLoop);
 };
 
+$.showEnd = function() {
+  $.lv = 1;
+  $.ended = false;
+  $.epow = [];
+  cancelAnimationFrame($.animId);
+  $.fadeOut.quit = true;
+  $.quitScenes();
+  $.scene = new $.Scene();
+  $.util.show('e0');
+  $.input.u();
+
+  $.animId = requestAnimationFrame($.endLoop);
+};
+
+$.showCredits = function() {
+  cancelAnimationFrame($.animId);
+  $.quitScenes();
+  $.scene = new $.Scene();
+  $.util.visible('c', true);
+  $.util.hide('e2');
+  $.input.u();
+
+  $.animId = requestAnimationFrame($.creditsLoop);
+};
+
 $.welcomeLoop = function() {
+  $.clearFg();
   if ($.input.r(13)) return $.showIntro();
 
   $.scene.e = Date.now() - $.scene.t;
@@ -81,6 +114,7 @@ $.welcomeLoop = function() {
 };
 
 $.introLoop = function() {
+  $.clearFg();
   if ($.input.r(13)) return $.startGame();
   if ($.scene.s > 6) return $.startGame();
 
@@ -101,25 +135,57 @@ $.introLoop = function() {
 };
 
 $.gameOverLoop = function() {
+  $.clearFg();
   if ($.input.r(13)) return $.startGame();
   $.input.u();
   requestAnimationFrame($.gameOverLoop);
 };
 
+$.endLoop = function() {
+  $.clearFg();
+
+  $.scene.e = Date.now() - $.scene.t;
+  if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
+    $.scene.f = 1;
+    $.util.fadeOut('e' + $.scene.s, function() {
+      $.scene.s += 1;
+      $.scene.t = Date.now();
+      $.scene.e = 0;
+      $.scene.f = 0;
+      $.util.show('e' + $.scene.s);
+    });
+  } else if ($.scene.s === 2) {
+    setTimeout($.showCredits, 6000);
+  }
+
+  $.input.u();
+  requestAnimationFrame($.endLoop);
+};
+
+$.creditsLoop = function() {
+  $.clearFg();
+  if ($.input.r(13) && $.scene.f === 1) return $.showWelcome();
+
+  $.scene.e = Date.now() - $.scene.t;
+  if ($.scene.e >= 5000 && !$.scene.f) {
+    $.scene.f = 1;
+    $.util.show('ci');
+  }
+
+  $.input.u();
+  requestAnimationFrame($.creditsLoop);
+};
+
 $.quitScenes = function() {
-  ['s', 's1', 'i', 'g'].forEach(function(e) {
+  ['s', 's1', 'i', 'g', 'e', 'c'].forEach(function(e) {
       $.util.visible(e, false);
   });
+  $.util.hide('m1');
 };
 
 
 $.startGame = function() {
   $.quitScenes();
-  $.ctxfg = $.cfg.getContext('2d');
-  $.ctx1 = $.cv1.getContext('2d');
-  $.ctx2 = $.cv2.getContext('2d');
-  $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
-  $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
 
   $.walls = [];
   $.enemies = [];
@@ -127,15 +193,16 @@ $.startGame = function() {
   $.exit = [];
   $.textPops = [];
   $.powers = [];
+  $.switches = [];
 
   // Load level
-  var lf = 10,
+  var lf = 20,
       en = 0,
       a = 0,
       b = 0;
     a = $.util.randInt(15 + (6 * $.lv), 20 + (6 * $.lv));
     b = $.util.randInt(15 + (6 * $.lv), 20 + (6 * $.lv));
-    lf = 10 + (7 * $.lv);
+    //lf = 10 + (7 * $.lv);
   if ($.lv === 1) {
     $.util.showInstructions('Use the arrow keys to move and escape the dungeon', 4500);
   } else {
@@ -170,6 +237,70 @@ $.startGame = function() {
   console.log('walls', $.walls.length);
 };
 
+$.finalRoom = function() {
+  $.quitScenes();
+
+  $.walls = [];
+  $.enemies = [];
+  $.items = [];
+  $.exit = [];
+  $.textPops = [];
+  $.powers = [];
+  $.switches = [];
+
+  // Load custom level
+  $.ww = 640;
+  $.wh = 480;
+  // Make map
+  var map = [];
+  for (var i=0; i<$.ww/32; i++) {
+    map[i] = [];
+    for (var j=0; j<$.wh/32; j++){
+      if (j === 0 || i === 0 || j === ($.wh / 32 - 1) || i === ($.ww / 32 - 1))
+        map[i][j] = '#';
+      else
+        map[i][j] = '.';
+    }
+  }
+  lvl = function(){
+    this.w = $.ww / 32;
+    this.h = $.wh / 32;
+    this.map = map;
+    this.isWall = function(x, y) {
+      return (this.map[x][y] === '#') ? true : false;
+    };
+  };
+  $.lvl = new lvl();
+
+  $.hero = new $.Hero(310, 360, 'u');
+  $.exit = null;
+  $.fow = new $.FoW(8);
+  $.cam = new $.Camera(640, 480, $.ww, $.wh);
+  $.collide = new $.Collide();
+  $.hud = new $.Hud();
+
+  $.hero.pows = $.epow;
+
+  // Load the walls
+  for (var v=0; v<$.lvl.h; v++) {
+    for (i=0; i<$.lvl.w; i++) {
+      if ($.lvl.isWall(i, v)) {
+        var hf = ($.lvl.isWall(i, v + 1)) ? 0 : 1;
+        $.walls.push(new $.Wall(i*32, v*32, hf));
+      }
+    }
+  }
+  $.switches.push(new $.FireSwitch(112, 256));
+  $.switches.push(new $.EarthSwitch(240, 256));
+  $.switches.push(new $.WaterSwitch(368, 256));
+  $.switches.push(new $.AirSwitch(496, 256));
+
+  $.fadeIn.start(1000);
+  $.util.showInstructions('Offer each element on its altar to start the ritual', 4500);
+  $.animId = requestAnimationFrame($.loop);
+  console.log('walls', $.walls.length);
+};
+
 $.nextLevel = function() {
   cancelAnimationFrame($.animId);
   $.lv += 1;
@@ -177,9 +308,7 @@ $.nextLevel = function() {
   if ($.lv < 6) {
     $.startGame();
   } else {
-    $.lv = 1;
-    // Mostrar la pantalla de final
-    $.showGameOver();
+    $.finalRoom();
   }
 };
 
@@ -188,17 +317,18 @@ $.cleanMsg = function() {
   $.msg.noelem.s = false;
 };
 
-$.clearFg = function() {
+$.clearFg = function(c) {
+  c = c || $.C.b;
   $.ctxfg.clearRect(0, 0, $.vw, $.vh);
-  $.ctxfg.fillStyle = 'hsl(326, 18%, 25%)';
+  $.ctxfg.fillStyle = c;
   $.ctxfg.fillRect(0, 0, $.vw, $.vh);
 };
 
 $.loop = function() {
-  $.clearFg();
+  $.clearFg($.C.f);
 
   // Update only when not fading
-  if ($.fadeIn.done) {
+  if ($.fadeIn.done && $.fadeOut.done && !$.ended) {
     $.hero.update();
     $.powers.forEach(function(p, i) {
       p.update(i);
@@ -210,6 +340,9 @@ $.loop = function() {
       t.update(i);
     });
     $.items.forEach(function(t, i) {
+      t.update(i);
+    });
+    $.switches.forEach(function(t, i) {
       t.update(i);
     });
   }
@@ -236,6 +369,12 @@ $.loop = function() {
     }
   }
 
+  // Check conditions to win the game
+  if ($.ended && $.fadeOut.done) {
+    $.showEnd();
+    return;
+  }
+
   // Check if hero is dead
   if ($.hero.dead) {
     $.showGameOver();
@@ -247,13 +386,16 @@ $.loop = function() {
   $.cam.render($.exit);
   $.cam.render($.enemies);
   $.cam.render($.items);
+  $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //$.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
   $.fadeIn.render();
+  $.fadeOut.render();
 
   requestAnimationFrame($.loop);
 };
