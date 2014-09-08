@@ -8,7 +8,7 @@ $.init = function() {
   $.goMsg = ['Oh, the humanity!', 'That\'s all folks', 'We\'re doomed!', 'And there goes the humanity'];
   $.scene = new $.Scene();
   $.animId = 0;
-  $.lv = 2;
+  $.lv = 1;
   $.epow = []; // Earned powers
   // Array of items to be placed on each level
   $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
@@ -24,8 +24,7 @@ $.init = function() {
       s: false
     }
   };
-  //$.showWelcome();
-  $.startGame();
+  $.showWelcome();
 };
 
 $.showWelcome = function() {
