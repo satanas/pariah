@@ -1,34 +1,35 @@
 $.FoW = function(r) {
-  this.radius = r;
-  this.shadowOffset = Math.ceil(r / 2) + 1;
-  this.fow =[];
-  this.mult = [
+  var _ = this;
+  _.radius = r;
+  _.shadowOffset = ceil(r / 2) + 1;
+  _.fow =[];
+  _.mult = [
     [1,  0,  0, -1, -1,  0,  0,  1],
     [0,  1, -1,  0,  0, -1,  1,  0],
     [0,  1,  1,  0,  0, -1, -1,  0],
     [1,  0,  0,  1, -1,  0,  0, -1]
   ];
 
-  this.cast = function(cx, cy, row, start, end, xx, xy, yx, yy) {
-    var radius2 = this.radius * this.radius;
-    var newStart = 0;
+  _.cast = function(cx, cy, row, start, end, xx, xy, yx, yy) {
+    var radius2 = _.radius * _.radius,
+        newStart = 0;
 
     if (start < end) return;
 
-    for (var i = row; i <= this.radius; i++) {
-      var dx = -i - 1;
-      var dy = -i;
-      var blocked = false;
+    for (var i = row; i <= _.radius; i++) {
+      var dx = -i - 1,
+          dy = -i,
+          blocked = false;
 
       while (dx <= 0) {
         dx += 1;
 
-        var x = cx + dx * xx + dy * xy;
-        var y = cy + dx * yx + dy * yy;
+        var x = cx + dx * xx + dy * xy,
+            y = cy + dx * yx + dy * yy;
 
         if (x < $.ww / 32 && x >= 0 && y < $.wh / 32 && y >=0) {
-          var lSlope = (dx - 0.5) / (dy + 0.5);
-          var rSlope = (dx + 0.5) / (dy - 0.5);
+          var lSlope = (dx - 0.5) / (dy + 0.5),
+              rSlope = (dx + 0.5) / (dy - 0.5);
 
           if (start < rSlope) {
             continue;
@@ -37,7 +38,7 @@ $.FoW = function(r) {
           //} else if (rSlope < start) {
           } else {
             if (dx*dx + dy*dy < radius2)
-              this.fow[x][y] = i;
+              _.fow[x][y] = i;
 
             if (blocked) {
               if ($.lvl.isWall(x, y)) {
@@ -48,9 +49,9 @@ $.FoW = function(r) {
                 start = newStart;
               }
             } else {
-              if ($.lvl.isWall(x, y) && i < this.radius) {
+              if ($.lvl.isWall(x, y) && i < _.radius) {
                 blocked = true;
-                this.cast(cx, cy, i + 1, start, lSlope, xx, xy, yx, yy);
+                _.cast(cx, cy, i + 1, start, lSlope, xx, xy, yx, yy);
                 newStart = rSlope;
               }
             }
@@ -63,25 +64,25 @@ $.FoW = function(r) {
     }
   };
 
-  this.update = function() {
-    var x = $.hero.x;
-    var y = $.hero.y;
-    var xx = (x % 32 <= 16) ? Math.floor(x / 32) : Math.floor(x / 32) + 1;
-    var yy = (y % 32 <= 16) ? Math.floor(y / 32) : Math.floor(y / 32) + 1;
-    var i, j = 0;
+  _.update = function() {
+    var x = $.hero.x,
+        y = $.hero.y,
+        xx = (x % 32 <= 16) ? floor(x / 32) : floor(x / 32) + 1,
+        yy = (y % 32 <= 16) ? floor(y / 32) : floor(y / 32) + 1,
+        i, j = 0;
     for (i = 0; i <= $.ww / 32; i++) {
-      this.fow[i] = [];
+      _.fow[i] = [];
       for (j = 0; j <= $.wh / 32; j++) {
-        this.fow[i].push(0);
+        _.fow[i].push(0);
       }
     }
-    this.fow[xx][yy] = 1;
+    _.fow[xx][yy] = 1;
     for (i=8; i--;) {
-      this.cast(xx, yy, 1, 1.0, 0.0, this.mult[0][i], this.mult[1][i], this.mult[2][i], this.mult[3][i]);
+      _.cast(xx, yy, 1, 1.0, 0.0, _.mult[0][i], _.mult[1][i], _.mult[2][i], _.mult[3][i]);
     }
   };
 
-  this.render = function() {
+  _.render = function() {
     $.ctx1.clearRect(0, 0, $.vw, $.vh);
     $.ctx1.fillStyle = "rgba(0,0,0,1)";
     $.ctx1.fillRect(0, 0, $.vw, $.vh);
@@ -89,11 +90,11 @@ $.FoW = function(r) {
 
     for (var i = 0; i < $.ww / 32; i++) {
       for (var j = 0; j < $.wh / 32; j++) {
-        var f = this.fow[i][j];
+        var f = _.fow[i][j];
         if (f >= 1) {
-          var a = '1.0';
-          var o = f - this.shadowOffset;
-          var max = this.radius + this.shadowOffset;
+          var a = '1.0',
+              o = f - _.shadowOffset,
+              max = _.radius + _.shadowOffset;
           if (o >= 0)
             a = 1 - (o/max).toString().substr(0,3);
 
@@ -107,6 +108,6 @@ $.FoW = function(r) {
     $.ctx1.globalCompositeOperation = 'destination-out';
     $.ctx1.drawImage($.cv2, 0, 0, $.vw, $.vh);
     $.ctx1.restore();
-    $.ctxfg.drawImage($.cv1,0, 0, $.vw, $.vh);
+    $.x.d($.cv1,0, 0, $.vw, $.vh);
   };
 };

@@ -1,6 +1,6 @@
 * {
   padding: 0px;
-  margin: 0px;
+  margin: 0 auto;
   color: #fff;
   font-family: verdana;
 }
@@ -14,17 +14,15 @@ canvas {
 p {
   display: block;
   text-align: center;
-  margin: auto;
   position: absolute;
   width: 100%;
 }
-#wrapper {
+#w {
   width: 640px;
   height: 480px;
-  margin: 0 auto;
   position: relative;
 }
-#tileset {
+#ts {
   display: none;
 }
 #i, #g, #s {
@@ -47,25 +45,18 @@ p {
   top: 50%;
   height: 20px;
   margin-top: -30px;
-  opacity: 0;
 }
 #i #i0, #i #i1, #i #i6 {
   top: 45%;
 }
-#i #i3 {
-  font-size: 50px;
+#i #i3, #g0 {
+  font-size: 52px;
   top: 45%;
 }
 #g0 {
-  font-size: 56px;
   top: 35%;
 }
-#g1 {
-  font-size: 16px;
-  top: 50%;
-  color: #ccc;
-}
-#i .ii, .ii {
+#i .ii, .ii, #ci {
   color: #888;
   font-size: 11px;
   top: 95%;
@@ -73,54 +64,16 @@ p {
 }
 #m #m1 {
   bottom: 10px;
-  opacity: 0;
 }
-#e #e0, #e #e1 {
+#e #e0, #e #e1, #e #e2 {
   top: 45%;
   font-size: 20px;
   opacity: 0;
 }
-
 #e #e2 {
   top: 37%;
   font-size: 80px;
-  opacity: 0;
 }
-#c {
-  position: absolute;
-  top: 0;
-  visibility: 'hidden';
-}
-
-#c p {
-  width: 640px;
-  position: relative;
-}
-
-#c #c0 {
-  margin-top: 40px;
-  font-size: 32px;
-}
-
-#c #c1 {
-  color: #bbb;
-  font-size: 12px;
-  margin-bottom: 25px;
-}
-
-#c #c11 {
-  line-height: 60px;
-  font-size: 25px;
-}
-
-#c #c3, #c #c5, #c #c7 {
-  margin-bottom: 15px;
-}
-#c #c9 {
-  margin-bottom: 45px;
-}
-#ci {
-  color: #888;
-  font-size: 11px;
+#ci, #i p, #m #m1 {
   opacity: 0;
 }

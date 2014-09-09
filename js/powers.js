@@ -1,50 +1,50 @@
 $.Power = function(x, y, w, h, o, t) {
-  this.x = x;
-  this.y = y;
-  this.w = w;
-  this.h = h;
-  this.t = t;
+  var _ = this;
+  _.x = x;
+  _.y = y;
+  _.w = w;
+  _.h = h;
+  _.t = t;
 
   /* Determine direction */
   if (o === 'l') {
-    this.dirX = -1;
-    this.dirY = 0;
+    _.dirX = -1;
+    _.dirY = 0;
   } else if (o === 'r') {
-    this.dirX = 1;
-    this.dirY = 0;
+    _.dirX = 1;
+    _.dirY = 0;
   } else if (o === 'd') {
-    this.dirX = 0;
-    this.dirY = 1;
+    _.dirX = 0;
+    _.dirY = 1;
   } else if (o === 'u') {
-    this.dirX = 0;
-    this.dirY = -1;
+    _.dirX = 0;
+    _.dirY = -1;
   }
 
   this.getb = function() {
     return {
-      b: this.y + this.h,
-      t: this.y,
-      l: this.x,
-      r: this.x + this.w
+      b: _.y + _.h,
+      t: _.y,
+      l: _.x,
+      r: _.x + _.w
     };
   };
 
   // Check wall collisions
   this.walls = function(i) {
-    var self = this;
     $.walls.forEach(function(w) {
-      if ($.collide.rect(self, w)) {
-        self.die(i);
+      if ($.collide.rect(_, w)) {
+        _.die(i);
       }
     });
   };
 
   // Check world boundaries
   this.boundaries = function(i) {
-    if ((this.x + this.w) > $.ww || this.x < 0)
-      this.die(i);
-    if ((this.y + this.h) > $.wh || this.y < 0)
-      this.die(i);
+    if ((_.x + _.w) > $.ww || _.x < 0)
+      _.die(i);
+    if ((_.y + _.h) > $.wh || _.y < 0)
+      _.die(i);
   };
 
   this.die = function(i) {
@@ -54,177 +54,177 @@ $.Power = function(x, y, w, h, o, t) {
 
 $.Fire = function(x, y, o) {
   $.Power.call(this, x, y, 24, 24, o, $.PW.F.v);
+  var _ = this;
 
-  this.a = 0.55; /* Acceleration */
-  this.maxS = 6.00; /* Max speed */
-  this.dx = this.dy = 0;
-  this.bounds = this.getb();
-  this.anim = {x:70, y:21};
-  this.ts = $.util.byId('tileset');
-  this.angle = 0;
-  this.attack = $.util.randInt(8, 12);
+  _.a = 0.55; /* Acceleration */
+  _.maxS = 6.00; /* Max speed */
+  _.dx = _.dy = 0;
+  _.bounds = _.getb();
+  _.anim = {x:18, y:17};
+  _.ts = $.u.ts();
+  _.angle = 0;
+  _.attack = $.u.rand(8, 12);
 
   this.update = function(i) {
-    var self = this;
-    this.angle = (this.angle + 15) % 360;
-    this.dx += this.a * this.dirX;
-    this.dy += this.a * this.dirY;
-    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
-    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
+    _.angle = (_.angle + 15) % 360;
+    _.dx += _.a * _.dirX;
+    _.dy += _.a * _.dirY;
+    _.dx = $.u.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.u.range(_.dy, -_.maxS, _.maxS);
 
-    this.x += this.dx;
-    this.y += this.dy;
-    this.bounds = this.getb();
+    _.x += _.dx;
+    _.y += _.dy;
+    _.bounds = _.getb();
 
     // Check collision with enemies
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(self, e)) {
-        e.damage(self);
-        self.die(i);
+      if ($.collide.rect(_, e)) {
+        e.damage(_);
+        _.die(i);
       }
     });
 
-    this.walls(i);
-    this.boundaries(i);
+    _.walls(i);
+    _.boundaries(i);
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
-    //$.ctxfg.translate(tx + (this.w/2), ty + (this.h/2));
-    //$.ctxfg.rotate(this.angle / 180 * Math.PI);
-    $.ctxfg.scale(2.0, 2.0);
-    //$.ctxfg.fillStyle = 'rgb(255,159,7)';
-    //$.ctxfg.fillRect(tx/2 + 2, ty/2 + 1, 6, 6);
-    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 10, 9, tx/2, ty/2, 10, 9);
-    //$.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, this.w/2, this.h/2);
-    $.ctxfg.restore();
+    $.x.s();
+    //$.x.translate(tx + (_.w/2), ty + (_.h/2));
+    //$.x.rotate(_.angle / 180 * Math.PI);
+    $.x.sc(2.0, 2.0);
+    //$.x.fillStyle = 'rgb(255,159,7)';
+    //$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
+    $.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
+    //$.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
+    $.x.r();
   };
 };
 
 
 $.Earth = function(x, y, o, n) {
   $.Power.call(this, x, y, 15, 25, o, $.PW.E.v);
-  var d = 30;
+  var _ = this,
+      d = 30;
   if (o === 'u') {
-    this.y -= d;
-    if (n === 1) this.x += 2;
+    _.y -= d;
+    if (n === 1) _.x += 2;
   } else if (o === 'r') {
-    this.x += d;
-    if (n === 1) this.y += 6;
+    _.x += d;
+    if (n === 1) _.y += 6;
   } else if (o === 'd') {
-    this.y += d;
-    if (n === 1) this.x += 2;
+    _.y += d;
+    if (n === 1) _.x += 2;
   } else if (o === 'l') {
-    this.x -= d;
-    if (n === 1) this.y += 6;
+    _.x -= d;
+    if (n === 1) _.y += 6;
   }
-  this.n = n;
-  this.o = o;
-  this.bounds = this.getb();
-  this.lifetime = 400; // Lifetime
-  this.summontime = 350;
-  this.ctime = Date.now(); // Creation time
-  this.attack = 0;
-  this.anim = {x:74, y:55};
-  this.ts = $.util.byId('tileset');
-  this.summon = false;
+  _.n = n;
+  _.o = o;
+  _.bounds = _.getb();
+  _.lifetime = 400; // Lifetime
+  _.summontime = 350;
+  _.ctime = $.n(); // Creation time
+  _.attack = 0;
+  _.anim = {x:5, y:17};
+  _.ts = $.u.ts();
+  _.summon = false;
 
   this.update = function(i) {
-    var self = this;
-    var elapsed = Date.now() - this.ctime;
+    var elapsed = $.n() - _.ctime;
 
-    if (elapsed > this.lifetime) this.die(i);
-    if (elapsed > this.summontime && !this.summon && this.n < 3) {
-      this.summon = true;
-      $.powers.push(new $.Earth(this.x, this.y, this.o, this.n + 1));
+    if (elapsed > _.lifetime) _.die(i);
+    if (elapsed > _.summontime && !_.summon && _.n < 3) {
+      _.summon = true;
+      $.powers.push(new $.Earth(_.x, _.y, _.o, _.n + 1));
     }
 
-    this.bounds = this.getb();
+    _.bounds = _.getb();
 
     // Check collision with enemies
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(self, e)) {
-        e.damage(self);
-        self.die(i);
+      if ($.collide.rect(_, e)) {
+        e.damage(_);
+        //_.die(i);
       }
     });
 
-    this.walls(i);
-    this.boundaries(i);
+    _.walls(i);
+    _.boundaries(i);
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
+    $.x.s();
     // Test rect
-    //$.ctxfg.fillStyle = 'hsla(28, 65%, 42%, 1)';
-    //$.ctxfg.fillRect(tx, ty, this.w, this.h);
-    $.ctxfg.scale(3.0, 3.0);
-    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, 5, 10, tx/3, ty/3, 5, 10);
-    $.ctxfg.restore();
+    //$.x.fillStyle = 'hsla(28, 65%, 42%, 1)';
+    //$.x.fr(tx, ty, _.w, _.h);
+    $.x.sc(3.0, 3.0);
+    $.x.d(_.ts, _.anim.x, _.anim.y, 5, 10, tx/3, ty/3, 5, 10);
+    $.x.r();
   };
 };
 
 
 $.Water = function(x ,y, a) {
   $.Power.call(this, x, y, 20, 20, null, $.PW.W.v);
+  var _ = this;
 
-  this.vw = 2 * Math.PI;
-  this.a = a * Math.PI / 180;
-  this.d = 35;
-  this.r = 10; /* Radius */
-  this.lifetime = 6000; /* Milliseconds */
-  this.ctime = Date.now();
-  this.bounds = this.getb();
-  this.attack = $.util.randInt(3, 6);
+  _.vw = 2 * Math.PI;
+  _.a = a * Math.PI / 180;
+  _.d = 35;
+  _.r = 10; /* Radius */
+  _.lifetime = 6000; /* Milliseconds */
+  _.ctime = $.n();
+  _.bounds = _.getb();
+  _.attack = $.u.rand(3, 6);
 
   this.update = function(i) {
-    var elapsed = Date.now() - this.ctime;
-    this.ctime = Date.now();
-    this.lifetime -= elapsed;
+    var elapsed = $.n() - _.ctime;
+    _.ctime = $.n();
+    _.lifetime -= elapsed;
 
-    if (this.lifetime <= 0) this.die(i);
+    if (_.lifetime <= 0) _.die(i);
 
-    this.cx = $.hero.x + ($.hero.w / 2);
-    this.cy = $.hero.y + ($.hero.h / 2);
-    this.a += this.vw * elapsed / 1000;
-    this.x = this.cx + (this.d * Math.cos(this.a));
-    this.y = this.cy + (this.d * Math.sin(this.a));
+    _.cx = $.hero.x + ($.hero.w / 2);
+    _.cy = $.hero.y + ($.hero.h / 2);
+    _.a += _.vw * elapsed / 1000;
+    _.x = _.cx + (_.d * cos(_.a));
+    _.y = _.cy + (_.d * sin(_.a));
 
-    this.bounds = this.getb();
+    _.bounds = _.getb();
 
     // Check collision with enemies
-    var self = this;
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(self, e)) {
-        var a = e.damage(self);
+      if ($.collide.rect(_, e)) {
+        var a = e.damage(_);
         if (a !== null && a !== 0) $.hero.heal(a);
       }
     });
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
+    $.x.s();
     // Test arc
-    //$.ctxfg.fillStyle = 'rgba(0, 115, 255, 0.3)';
-    //$.ctxfg.beginPath();
-    //$.ctxfg.arc(tx, ty, this.r, 0, (2 * Math.PI), false);
-    //$.ctxfg.fill();
-    var x_ = tx - 11;
-    var y_ = ty - 11;
-    $.ctxfg.fillStyle = 'hsla(190, 90%, 76%, 0.59)';
-    $.ctxfg.fillRect(x_ + 7, y_ + 7, 8, 8);
-    $.ctxfg.fillStyle = 'hsl(190, 90%, 76%)';
-    $.ctxfg.fillRect(x_ + 4, y_ + 10, 14, 2);
-    $.ctxfg.fillRect(x_ + 10, y_ + 4, 2, 14);
-    $.ctxfg.fillRect(x_ + 10, y_, 2, 2);
-    $.ctxfg.fillRect(x_ + 3, y_ + 3, 2, 2);
-    $.ctxfg.fillRect(x_ + 17, y_ + 3, 2, 2);
-    $.ctxfg.fillRect(x_, y_ + 10, 2, 2);
-    $.ctxfg.fillRect(x_ + 20, y_ + 10, 2, 2);
-    $.ctxfg.fillRect(x_ + 3, y_ + 17, 2, 2);
-    $.ctxfg.fillRect(x_ + 17, y_ + 17, 2, 2);
-    $.ctxfg.fillRect(x_ + 10, y_ + 20, 2, 2);
-    $.ctxfg.restore();
+    //$.x.fillStyle = 'rgba(0, 115, 255, 0.3)';
+    //$.x.beginPath();
+    //$.x.arc(tx, ty, _.r, 0, (2 * Math.PI), false);
+    //$.x.fill();
+    var x_ = tx - 11,
+        y_ = ty - 11;
+    $.x.fillStyle = 'hsla(190, 90%, 76%, 0.59)';
+    $.x.fr(x_ + 7, y_ + 7, 8, 8);
+    $.x.fillStyle = 'hsl(190, 90%, 76%)';
+    $.x.fr(x_ + 4, y_ + 10, 14, 2);
+    $.x.fr(x_ + 10, y_ + 4, 2, 14);
+    $.x.fr(x_ + 10, y_, 2, 2);
+    $.x.fr(x_ + 3, y_ + 3, 2, 2);
+    $.x.fr(x_ + 17, y_ + 3, 2, 2);
+    $.x.fr(x_, y_ + 10, 2, 2);
+    $.x.fr(x_ + 20, y_ + 10, 2, 2);
+    $.x.fr(x_ + 3, y_ + 17, 2, 2);
+    $.x.fr(x_ + 17, y_ + 17, 2, 2);
+    $.x.fr(x_ + 10, y_ + 20, 2, 2);
+    $.x.r();
   };
 
   this.die = function(i) {
@@ -235,64 +235,64 @@ $.Water = function(x ,y, a) {
 
 $.Air = function(x, y, o) {
   $.Power.call(this, x, y, 12, 24, o, $.PW.A.v);
+  var _ = this;
 
   if (o === 'u' || o === 'd')
-    this.x += 6;
+    _.x += 6;
 
-  this.a = 0.65; /* Acceleration */
-  this.maxS = 7.00; /* Max speed */
-  this.dx = this.dy = 0;
-  this.bounds = this.getb();
-  this.attack = $.util.randInt(7, 10);
-  this.anim = {x:74, y:42};
-  this.ts = $.util.byId('tileset');
-  this.blink = false;
-  this.bcount = 0;
-  this.ctime = Date.now();
+  _.a = 0.65; /* Acceleration */
+  _.maxS = 7.00; /* Max speed */
+  _.dx = _.dy = 0;
+  _.bounds = _.getb();
+  _.attack = $.u.rand(7, 10);
+  _.anim = {x:11, y:17};
+  _.ts = $.u.ts();
+  _.blink = false;
+  _.bcount = 0;
+  _.ctime = $.n();
 
   this.update = function(i) {
-    this.dx += this.a * this.dirX;
-    this.dy += this.a * this.dirY;
-    this.dx = $.util.range(this.dx, -this.maxS, this.maxS);
-    this.dy = $.util.range(this.dy, -this.maxS, this.maxS);
+    _.dx += _.a * _.dirX;
+    _.dy += _.a * _.dirY;
+    _.dx = $.u.range(_.dx, -_.maxS, _.maxS);
+    _.dy = $.u.range(_.dy, -_.maxS, _.maxS);
 
-    this.x += this.dx;
-    this.y += this.dy;
-    this.bounds = this.getb();
+    _.x += _.dx;
+    _.y += _.dy;
+    _.bounds = _.getb();
 
-    var elapsed = Date.now() - this.ctime;
-    var c = Math.floor(elapsed / 100);
-    if (c > this.bcount) {
-      this.bcount = c;
-      this.blink = !this.blink;
+    var elapsed = $.n() - _.ctime,
+        c = floor(elapsed / 100);
+    if (c > _.bcount) {
+      _.bcount = c;
+      _.blink = !_.blink;
     }
 
     // Check collision with enemies
-    var self = this;
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(self, e)) {
-        e.damage(self);
-        self.die(i);
+      if ($.collide.rect(_, e)) {
+        e.damage(_);
+        _.die(i);
       }
     });
 
-    this.walls(i);
-    this.boundaries(i);
+    _.walls(i);
+    _.boundaries(i);
   };
 
   this.render = function(tx, ty) {
-    $.ctxfg.save();
-    $.ctxfg.fillStyle = 'hsla(207, 100%, 83%, 0.1)';
-    $.ctxfg.fillRect(tx, ty, this.w, this.h);
-    $.ctxfg.globalAlpha = 0.7;
-    if (this.blink) {
-      $.ctxfg.translate(tx + (this.w/2) - 6, ty + this.h/2);
-      $.ctxfg.scale(-2.0, 2.0);
+    $.x.s();
+    $.x.fillStyle = 'hsla(207, 100%, 83%, 0.1)';
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.globalAlpha = 0.7;
+    if (_.blink) {
+      $.x.translate(tx + (_.w/2) - 6, ty + _.h/2);
+      $.x.sc(-2.0, 2.0);
     } else {
-      $.ctxfg.translate(tx + (this.w/2) + 6, ty + this.h/2);
-      $.ctxfg.scale(2.0, 2.0);
+      $.x.translate(tx + (_.w/2) + 6, ty + _.h/2);
+      $.x.sc(2.0, 2.0);
     }
-    $.ctxfg.drawImage(this.ts, this.anim.x, this.anim.y, this.w/2, this.h/2, -this.w/4, -this.h/4, 6, 12);
-    $.ctxfg.restore();
+    $.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, 6, 12);
+    $.x.r();
   };
 };

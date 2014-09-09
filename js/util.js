@@ -1,66 +1,86 @@
-$.util = {
+var abs = Math.abs,
+    cos = Math.cos,
+    sin = Math.sin,
+    ceil = Math.ceil,
+    floor = Math.floor,
+    max = Math.max,
+    pow = Math.pow,
+    sqrt = Math.sqrt,
+    round = Math.round,
+    rand = Math.random;
+
+$.n = Date.now;
+$.u = {
   'fading': [],
   'instID': null,
 };
 
 // Check that v is between ll and lu
-$.util.range = function(v, ll, lu) {
+$.u.range = function(v, ll, lu) {
   if (v < ll) return ll;
   if (v > lu) return lu;
   return v;
 };
 
-$.util.fadeOut = function(i, cb) {
-  $.util.fading[i] = setInterval($.util._fadeOutStep, 50, i, cb);
+$.u.fadeOut = function(i, cb) {
+  $.u.fading[i] = setInterval($.u._fade, 50, i, cb);
 };
 
-$.util._fadeOutStep = function(i, cb) {
-  var e = $.util.byId(i);
+// Fade out step
+$.u._fade = function(i, cb) {
+  var e = $.u.byId(i);
   e.style.opacity -= 0.03;
   if (e.style.opacity <= 0) {
-    clearInterval($.util.fading[i]);
-    $.util.fading.splice($.util.fading.indexOf(i), 1);
+    clearInterval($.u.fading[i]);
+    $.u.fading.splice($.u.fading.indexOf(i), 1);
     if (cb !== undefined) cb();
   }
 };
 
-$.util.show = function(i) {
-  $.util.byId(i).style.opacity = 1.0;
+// Shows a DOM object putting its opacity in one
+$.u.show = function(i) {
+  $.u.byId(i).style.opacity = 1.0;
 };
 
-$.util.hide = function(i) {
-  $.util.byId(i).style.opacity = 0.0;
+// Hides a DOM object putting its opacity in zero
+$.u.hide = function(i) {
+  $.u.byId(i).style.opacity = 0.0;
 };
 
-$.util.visible = function(i, v) {
-  $.util.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
+// Makes a DOM object visible or invisible
+$.u.v = function(i, v) {
+  $.u.byId(i).style.visibility = (v) ? 'visible' : 'hidden';
 };
 
 /* Generate random integer in a (min, max) range */
-$.util.randInt = function(a, b) {
-  return Math.floor(Math.random() * (b - a)) + a;
+$.u.rand = function(a, b) {
+  return floor(Math.random() * (b - a)) + a;
 };
 
 // Returns true if there is chance to miss one attack
 // Receives p (number between 0 and 1) representing the probability of success
-$.util.canMiss = function(p) {
-  var x = $.util.randInt(1, 100);
-  return (x <= Math.floor(p * 100));
+$.u.canMiss = function(p) {
+  var x = $.u.rand(1, 100);
+  return (x <= floor(p * 100));
 };
 
-$.util.byId = function(i) {
+$.u.byId = function(i) {
   return document.getElementById(i);
 };
 
-$.util.showInstructions = function(t, d) {
+$.u.instruction = function(t, d) {
   var dx = d || 3000;
-  if ($.util.instID) {
-    clearTimeout($.util.instID);
-    clearInterval($.util.fading.m1);
+  if ($.u.instID) {
+    clearTimeout($.u.instID);
+    clearInterval($.u.fading.m1);
   }
-  $.util.byId('m1').innerHTML = t;
-  $.util.show('m1');
-  $.util.instID = setTimeout(function() { $.util.fadeOut('m1', $.cleanMsg); }, dx);
+  $.u.byId('m1').innerHTML = t;
+  $.u.show('m1');
+  $.u.instID = setTimeout(function() { $.u.fadeOut('m1', $.cleanMsg); }, dx);
+};
+
+$.u.ts = function() {
+  return $.u.byId('ts');
 };
 
 // Enable the passage of the 'this' object through the JavaScript timers
@@ -80,3 +100,11 @@ window.setInterval = function (vCb, nDelay /*, argumentToPass1, argumentToPass2,
     vCb.apply(oThis, aArgs);
   } : vCb, nDelay);
 };
+
+window.raf = window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  function(a){ window.setTimeout(a,1E3/60); };
+
+window.caf = window.cancelAnimationFrame ||
+  window.mozCancelAnimationFrame;
