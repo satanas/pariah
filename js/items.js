@@ -31,7 +31,7 @@ $.FireItem = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.fillStyle = 'hsla(28, 100%, 51%, 1)';
+    $.x.fillStyle = 'hsla(28,100%,51%,1)';
     $.x.fr(tx, ty, _.w, _.h);
     $.x.r();
   };
@@ -43,7 +43,7 @@ $.WaterItem = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.fillStyle = 'hsla(196, 90%, 76%, 1)';
+    $.x.fillStyle = 'hsla(196,90%,76%,1)';
     $.x.fr(tx, ty, _.w, _.h);
     $.x.r();
   };
@@ -55,7 +55,7 @@ $.EarthItem = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.fillStyle = 'hsla(28, 65%, 42%, 1)';
+    $.x.fillStyle = 'hsla(28,65%,42%,1)';
     $.x.fr(tx, ty, _.w, _.h);
     $.x.r();
   };
@@ -67,7 +67,7 @@ $.AirItem = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.fillStyle = 'hsla(78, 100%, 92%, 1)';
+    $.x.fillStyle = 'hsla(78,100%,92%,1)';
     $.x.fr(tx, ty, _.w, _.h);
     $.x.r();
   };
@@ -119,7 +119,7 @@ $.DrawBottle = function(tx, ty, color) {
     $.x.fillStyle = 'rgb(255,0,0)';
     $.x.fr(tx, ty, this.w, this.h);
 
-    $.x.fillStyle = 'hsl(36, 43%, 59%)';
+    $.x.fillStyle = 'hsl(36,43%,59%)';
     $.x.fr(tx + 3, ty + 1, 3, 3);
     // Body of the bottle
     $.x.fillStyle = 'rgb(154,154,154)';
@@ -142,7 +142,7 @@ $.DrawBottle = function(tx, ty, color) {
     $.x.fr(tx + 7, ty + 7, 2, 1);
     $.x.fr(tx + 3, ty + 8, 6, 1);
     $.x.fr(tx + 1, ty + 9, 8, 8);
-    $.x.fillStyle = 'hsl(208, 50%, 48%)';
+    $.x.fillStyle = 'hsl(208,50%,48%)';
     $.x.fr(tx + 6, ty + 10, 2, 2);
     $.x.fr(tx + 3, ty + 14, 1, 1);
   };
