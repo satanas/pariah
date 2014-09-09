@@ -28,3 +28,9 @@ gulp.task('clean', function() {
   gulp.src('all.min.js')
   .pipe(clean());
 });
+
+gulp.task('uglify', function() {
+  gulp.src('js/*.js')
+  .pipe(uglify())
+  .pipe(gulp.dest('min'));
+});
