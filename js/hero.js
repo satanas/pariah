@@ -244,7 +244,7 @@ $.Hero = function(_x, _y, o) {
     });
 
     // Exit the level
-    if ($.exit !== null) {
+    if ($.exit) {
       if ($.collide.rect(_, $.exit[0])) {
         _.exit = true;
       }
