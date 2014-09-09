@@ -19,7 +19,7 @@ $.init = function() {
   $.lv = 1;
   $.he = 0;
   $.ma = 0;
-  $.ended = false;
+  $.ended = 1;
   $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
@@ -37,7 +37,7 @@ $.init = function() {
       s: 0
     }
   };
-  $.welcome();
+  $.finalRoom();
 };
 
 $.welcome = function() {
@@ -75,7 +75,7 @@ $.gameover = function() {
 $.end = function() {
   caf($.animId);
   $.lv = 1;
-  $.ended = false;
+  $.ended = 0;
   $.epow = [];
   $.fadeOut.quit = true;
   $.quitScenes();
@@ -375,8 +375,8 @@ $.loop = function() {
   $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  if ($.lv < 5)
-    $.fow.render();
+  //if ($.lv < 5)
+  //  $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 

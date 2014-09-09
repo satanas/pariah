@@ -6,6 +6,7 @@ $.Item = function(x, y, t, c) {
   _.h = 16;
   _.t = t; // Type
   _.c = c || false; // Consumible?
+  _.ts = $.u.ts();
   _.bounds = {
     b: _.y + _.h,
     t: _.y,
@@ -23,54 +24,39 @@ $.Item = function(x, y, t, c) {
   _.die = function(i) {
     $.items.splice(i, 1);
   };
+
+  _.render = function(tx, ty) {
+    $.x.s();
+    $.x.fillStyle = _.k;
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.sc(2, 2);
+    $.x.d(_.ts, 0, 28, 8, 8, tx/2, ty/2, 8, 8);
+    $.x.r();
+  };
 };
 
 $.FireItem = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, $.PW.F);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(28,100%,51%,1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.n;
 };
 
 $.WaterItem = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, $.PW.W);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(196,90%,76%,1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.u;
 };
 
 $.EarthItem = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, $.PW.E);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(28,65%,42%,1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.e;
 };
 
 $.AirItem = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, $.PW.A);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(78,100%,92%,1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.s;
 };
 
 $.Key = function(x, y) {
@@ -85,7 +71,7 @@ $.Key = function(x, y) {
     $.x.s();
     //$.x.fillStyle = 'rgb(255,255,0)';
     //$.x.fr(tx, ty, _.w, _.h);
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     $.x.d(_.ts, _.anim.x, _.anim.y, 5, 10, tx/2, ty/2, 5, 10);
     $.x.r();
   };
@@ -122,7 +108,7 @@ $.DrawBottle = function(tx, ty, color) {
     $.x.fillStyle = 'hsl(36,43%,59%)';
     $.x.fr(tx + 3, ty + 1, 3, 3);
     // Body of the bottle
-    $.x.fillStyle = 'rgb(154,154,154)';
+    $.x.fillStyle = $.C.g;
     var p = [[2,7], [3,6], [3,6], [2,7], [1,8]];
     for (var i=2; i<=6; i++) {
       $.x.fr(tx + p[i - 2][0], ty + i, 1, 1);

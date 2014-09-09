@@ -5,8 +5,8 @@ $.Switch= function(x, y, t) {
   _.w = 32;
   _.h = 32;
   _.t = t; // Type
-  _.filled = false;
-  _.merged = false;
+  _.filled = 0;
+  _.ts = $.u.ts();
   _.bounds = {
     b: _.y + _.h,
     t: _.y,
@@ -29,61 +29,50 @@ $.Switch= function(x, y, t) {
   };
 
   _.fill = function() {
-    _.filled = true;
+    _.filled = 1;
+  };
+
+  _.render = function(tx, ty) {
+    $.x.s();
+    if (_.filled)
+      $.x.fillStyle = $.C.g;
+    else
+      $.x.fillStyle = _.k;
+    $.x.fr(tx, ty, _.w, _.h);
+    $.x.sc(4, 4);
+    $.x.d(_.ts, 0, 28, 8, 8, tx/4, ty/4, 8, 8);
+    $.x.r();
   };
 };
 
 $.FireSwitch = function(x, y) {
   var _ = this;
   $.Switch.call(_, x, y, $.PW.F);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(28, 100%, 51%, 1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.o;
 };
 
 $.EarthSwitch = function(x, y) {
   var _ = this;
   $.Switch.call(_, x, y, $.PW.E);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(65, 100%, 51%, 1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.e;
 };
 
 $.WaterSwitch = function(x, y) {
   var _ = this;
   $.Switch.call(_, x, y, $.PW.W);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(44, 100%, 51%, 1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.u;
 };
 
 $.AirSwitch = function(x, y) {
   var _ = this;
   $.Switch.call(_, x, y, $.PW.A);
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(32, 100%, 51%, 1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.r();
-  };
+  _.k = $.C.s;
 };
 
 $.LifeSwitch = function(x, y) {
   var _ = this;
   $.Switch.call(_, x, y);
+  _.k = $.C.r;
   _.bounds = {
     b: _.y + 8,
     t: _.y,
@@ -94,19 +83,10 @@ $.LifeSwitch = function(x, y) {
   _.update = function(i) {
     if (!_.filled) {
       if ($.collide.rect(_, $.hero)) {
-        _.filled = true;
-        $.ended = true;
+        _.filled = 1;
+        $.ended = 1;
         $.fadeOut.start(4000, '255,255,255');
       }
     }
-  };
-
-  _.render = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'hsla(20, 100%, 51%, 1)';
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.fillStyle = 'rgb(255,255,255)';
-    $.x.fr(tx + 12 , ty, 8, 8);
-    $.x.r();
   };
 };

@@ -16,7 +16,7 @@ $.Wall = function(x, y, hf) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     $.x.d(_.ts, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
     $.x.r();
   };

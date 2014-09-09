@@ -261,7 +261,7 @@ $.Hero = function(_x, _y, o) {
     var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
 
     $.x.s();
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     if (_.blink)
       $.x.globalAlpha = 0.3;
     $.x.d(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);

@@ -90,7 +90,7 @@ $.Fire = function(x, y, o) {
     $.x.s();
     //$.x.translate(tx + (_.w/2), ty + (_.h/2));
     //$.x.rotate(_.angle / 180 * Math.PI);
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     //$.x.fillStyle = 'rgb(255,159,7)';
     //$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
     $.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
@@ -145,7 +145,7 @@ $.Earth = function(x, y, o, n) {
     // Test rect
     //$.x.fillStyle = 'hsla(28, 65%, 42%, 1)';
     //$.x.fr(tx, ty, _.w, _.h);
-    $.x.sc(3.0, 3.0);
+    $.x.sc(3, 3);
     $.x.d(_.ts, _.anim.x, _.anim.y, 5, 10, tx/3, ty/3, 5, 10);
     $.x.r();
   };
@@ -251,10 +251,10 @@ $.Air = function(x, y, o) {
     $.x.globalAlpha = 0.7;
     if (_.blink) {
       $.x.translate(tx + (_.w/2) - 6, ty + _.h/2);
-      $.x.sc(-2.0, 2.0);
+      $.x.sc(-2, 2);
     } else {
       $.x.translate(tx + (_.w/2) + 6, ty + _.h/2);
-      $.x.sc(2.0, 2.0);
+      $.x.sc(2, 2);
     }
     $.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, 6, 12);
     $.x.r();

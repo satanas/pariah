@@ -15,7 +15,7 @@ $.Entrance = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     $.x.d(_.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
     $.x.d(_.t, 0, 49, 16, 16, tx/2, ty/2 + 1, 16, 16);
     $.x.r();
@@ -39,7 +39,7 @@ $.Exit = function(x, y) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.sc(2.0, 2.0);
+    $.x.sc(2, 2);
     $.x.d(_.t, 0, 0, 16, 16, tx/2, ty/2, 16, 16);
     $.x.d(_.t, 16, 49, 16, 16, tx/2, ty/2 + 1, 16, 16);
     $.x.r();
