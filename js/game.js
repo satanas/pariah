@@ -19,7 +19,7 @@ $.init = function() {
   $.lv = 1;
   $.he = 0;
   $.ma = 0;
-  $.ended = 1;
+  $.ended = 0;
   $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
@@ -33,11 +33,11 @@ $.init = function() {
       s: 0,
     },
     'noelem': {
-      t: 'You need to find the element before leaving',
+      t: 'Find the element before leaving',
       s: 0
     }
   };
-  $.finalRoom();
+  $.welcome();
 };
 
 $.welcome = function() {
@@ -375,8 +375,8 @@ $.loop = function() {
   $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //if ($.lv < 5)
-  //  $.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
