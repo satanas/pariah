@@ -38,7 +38,7 @@ $.Item = function(x, y, t, c) {
 $.FireItem = function(x, y) {
   var _ = this;
   $.Item.call(_, x, y, $.PW.F);
-  _.k = $.C.n;
+  _.k = $.C.o;
 };
 
 $.WaterItem = function(x, y) {
