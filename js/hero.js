@@ -108,7 +108,7 @@ $.Hero = function(_x, _y, o) {
 
   this.update = function() {
     _.exit = false;
-    var now = $.n();
+    var now = $.n(),
         elapsed = now - _.ctime;
     _.ctime = now;
 
@@ -200,7 +200,7 @@ $.Hero = function(_x, _y, o) {
     } else if ($.input.p(52) && _.pows.indexOf($.PW.A.v) >= 0) {
       cp = $.PW.A;
     }
-    if (_.cd === 0 && cp !== null) {
+    if (_.cd === 0 && cp) {
       if (_.ma >= cp.m && !(cp.v === $.PW.W.v && _.shield)) {
         _.ma -= cp.m;
         _.cd = _.maxCD;
@@ -232,7 +232,6 @@ $.Hero = function(_x, _y, o) {
           _.x = w.bounds.l - _.w;
         } else if ($.collide.isRight(_, w)) {
           _.x = w.bounds.r;
-        } else {
         }
       }
     });

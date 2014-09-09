@@ -56,7 +56,7 @@ $.Power = function(x, y, w, h, o, t) {
 
   _.die = function(i) {
     $.powers.splice(i, 1);
-    if (_.t == $.PW.W) $.hero.shield = false;
+    if (_.t == $.PW.W.v) $.hero.shield = false;
   };
 };
 

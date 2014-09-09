@@ -12,8 +12,8 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   _.itime = 300; // Invincibility time
 
   _.hurt = false;
-  _.planted = false;
-  _.blink = false;
+  _.planted = 0;
+  _.blink = 0;
   _.ctimeH = 0; // Current time for hurt
   _.ctimeP = 0; // Current time for planted
   _.etimeH = 0; // Elapsed time for hurt
@@ -71,9 +71,8 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     if (_.planted) {
       _.etimeP = $.n() - _.ctimeP;
 
-      if (_.etimeP >= _.ptime) {
-        _.planted = false;
-      }
+      if (_.etimeP >= _.ptime)
+        _.planted = 0;
     }
   };
 
@@ -90,7 +89,7 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
       if (_.etimeH >= _.itime) {
         _.hurt = false;
         _.bcount = 0;
-        _.blink = false;
+        _.blink = 0;
       }
     }
   };
@@ -102,9 +101,9 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     if ($.enemies.length === 0) {
       $.items.push(new $.Key(_.x + (_.w)/2, _.y + 4));
     } else {
-      if ($.u.rand(0, 10) > 4) {
-        var items = [$.HealthPack, $.ManaPack];
-        var k = $.u.rand(0, 2);
+      if ($.u.rand(0, 10) > 6) {
+        var items = [$.HealthPack, $.ManaPack],
+            k = $.u.rand(0, 2);
         $.items.push(new items[k](_.x + (_.w)/2, _.y + 4));
       }
     }

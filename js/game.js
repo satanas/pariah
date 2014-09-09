@@ -24,17 +24,17 @@ $.init = function() {
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
   // Array of items to be placed on each level
-  $.aItems = [null, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
+  $.aItems = [0, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
   // Array of in-game messages
   // t: Text of message, s: showed
   $.msg = {
     'nokey': {
       t: 'You need the key to exit the dungeon',
-      s: false,
+      s: 0,
     },
     'noelem': {
       t: 'You need to find the element before leaving',
-      s: false
+      s: 0
     }
   };
   $.welcome();
@@ -253,13 +253,13 @@ $.finalRoom = function() {
     this.h = $.wh / 32;
     this.map = map;
     this.isWall = function(x, y) {
-      return (this.map[x][y] === '#') ? true : false;
+      return this.map[x][y] === '#';
     };
   };
   $.lvl = new lvl();
 
   $.hero = new $.Hero(310, 360, 'u');
-  $.exit = null;
+  $.exit = 0;
   $.fow = new $.FoW(8);
   $.cam = new $.Camera(640, 480, $.ww, $.wh);
   $.collide = new $.Collide();
@@ -299,8 +299,8 @@ $.nextLevel = function() {
 };
 
 $.cleanMsg = function() {
-  $.msg.nokey.s = false;
-  $.msg.noelem.s = false;
+  $.msg.nokey.s = 0;
+  $.msg.noelem.s = 0;
 };
 
 $.clearFg = function(c) {
@@ -349,7 +349,7 @@ $.loop = function() {
         k = 'noelem';
       }
       if (!$.msg[k].s) {
-        $.msg[k].s = true;
+        $.msg[k].s = 1;
         $.u.instruction($.msg[k].t);
       }
     }

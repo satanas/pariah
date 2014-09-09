@@ -6,7 +6,7 @@ $.Camera = function(vw, vh, ww, wh) {
   _.wh = wh; // World height
   _.ofx = 0;
   _.ofy = 0;
-  _.tg = null;
+  _.tg = 0;
 
   _.setTarget = function(t) {
     _.tg = t;
@@ -28,7 +28,7 @@ $.Camera = function(vw, vh, ww, wh) {
   };
 
   _.update = function() {
-    if (_.tg === null) return;
+    if (!_.tg) return;
     // Update offset according the target
     var tx, ty = 0;
     var mw = _.w / 2;
@@ -57,7 +57,7 @@ $.Camera = function(vw, vh, ww, wh) {
   };
 
   _.render = function(objs) {
-    if (objs === null) return;
+    if (!objs) return;
     objs.forEach(function(o) {
       if (_.inView(o)) {
         var t = _.transCoord(o);
