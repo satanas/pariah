@@ -37,14 +37,14 @@ $.Power = function(x, y, w, h, o, t) {
     $.enemies.forEach(function(e) {
       if ($.collide.rect(_, e)) {
         var g = e.damage(_);
-        if (g !== null && g !== 0 && _.t == $.PW.W) $.hero.heal(g);
-        if (_.t == $.PW.F) _.die(i);
+        if (g !== null && g !== 0 && _.t == $.PW.W.v) $.hero.heal(g);
+        if (_.t == $.PW.F.v) _.die(i);
       }
     });
 
     // Check wall collisions
     $.walls.forEach(function(w) {
-      if ($.collide.rect(_, w) && (_.t == $.PW.F || _.t == $.PW.A)) _.die(i);
+      if ($.collide.rect(_, w) && (_.t == $.PW.F.v || _.t == $.PW.A.v)) _.die(i);
     });
 
     // Check world boundaries
