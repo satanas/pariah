@@ -10,6 +10,18 @@ $.Hud = function() {
     $.x.fillStyle = $.C.w;
     $.x.fillText('HEALTH', 10, 15);
     $.x.fillText('MANA', 10, 30);
+    $.x.fillText('LEVEL ' + $.lv, 560, 15);
+    $.x.fillText('SCORE 9999', 560, 30);
+
+    var co = [$.C.o, $.C.e, $.C.u, $.C.s],
+        c = 0;
+    for (c in co) {
+      if ($.hero.pows.indexOf(c) < 0) continue;
+      $.x.fillStyle = co[c];
+      $.x.beginPath();
+      $.x.arc(150 + (15 * c), 10, 4, 0, (2 * Math.PI), 0);
+      $.x.fill();
+    }
 
     /* Health bar */
     var v = $.hero.he * 80 / $.hero.maxH;
@@ -24,8 +36,6 @@ $.Hud = function() {
     $.x.sc(2, 2);
     if ($.hero.key)
       $.x.d(_.ts, 0, 17, 5, 10, 72, 2.5, 5, 10);
-
-    //$.x.d(_.ts, 18, 17, 10, 9, 100, 10, 10, 9);
     $.x.r();
   };
 };

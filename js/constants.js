@@ -28,7 +28,7 @@ $.C = {
   f: 'hsl(326,10%,25%)', // Floor color
   b: 'rgb(0,0,0)',
   w: 'rgb(255,255,255)',
-  o: 'hsla(28,100%,51%,1)', // Orange fire
+  o: 'hsla(13,100%,51%,1)', // Orange fire
   u: 'hsla(196,90%,76%,1)', // Blue water
   e: 'hsla(28,65%,42%,1)', // Brown earth
   s: 'hsla(78,100%,92%,1)', // Blue sky
