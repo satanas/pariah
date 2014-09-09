@@ -27,8 +27,6 @@ gulp.task('clean', function() {
   .pipe(clean());
   gulp.src('all.min.js')
   .pipe(clean());
-  gulp.src('min')
-  .pipe(clean());
 });
 
 gulp.task('uglify', function() {
