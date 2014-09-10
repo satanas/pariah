@@ -15,7 +15,7 @@ $.init = function() {
   $.ctx2 = $.cv2.getContext('2d');
   $.vw = $.cfg.width = $.cv1.width = $.cv2.width = 640;
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
-  $.scene = new $.Scene();
+  $.s = new $.Scene();
   $.animId = 0;
   $.lv = 1;
   $.he = 0;
@@ -37,7 +37,7 @@ $.init = function() {
       s: 0
     }
   };
-  $.scene.load($.welcome, $.welcomeLoop);
+  $.s.l($.welcome, $.welcomeLoop);
 };
 
 $.welcome = function() {
@@ -65,17 +65,17 @@ $.end = function() {
 };
 
 $.welcomeLoop = function() {
-  $.scene.u();
-  if ($.input.r(13)) return $.scene.load($.intro, $.introLoop);
+  if ($.input.r(13)) return $.s.l($.intro, $.introLoop);
+  $.s.u();
 
-  if ($.scene.e > 400) {
-    $.scene.t = $.n();
-    $.scene.e = 0;
-    if ($.scene.s === 0) {
-      $.scene.s = 1;
+  if ($.s.e > 400) {
+    $.s.t = $.n();
+    $.s.e = 0;
+    if ($.s.s === 0) {
+      $.s.s = 1;
       $.u.v('s1', 0);
     } else {
-      $.scene.s = 0;
+      $.s.s = 0;
       $.u.v('s1', 1);
     }
   }
@@ -83,17 +83,17 @@ $.welcomeLoop = function() {
 };
 
 $.introLoop = function() {
-  $.scene.u();
   if ($.input.r(13)) return $.startGame();
+  $.s.u();
 
-  if ($.scene.e >= 1800 && !$.scene.f && $.scene.s < 5) {
-    $.scene.f = 1;
-    $.u.fadeOut('i' + $.scene.s, function() {
-      $.scene.reset();
-      $.scene.s += 1;
-      $.u.show('i' + $.scene.s);
+  if ($.s.e >= 1800 && !$.s.f && $.s.s < 5) {
+    $.s.f = 1;
+    $.u.fadeOut('i' + $.s.s, function() {
+      $.s.r();
+      $.s.s += 1;
+      $.u.show('i' + $.s.s);
     });
-  } else if ($.scene.e >= 5000 && $.scene.s === 5) {
+  } else if ($.s.e >= 5000 && $.s.s === 5) {
     return $.startGame();
   }
 
@@ -101,24 +101,24 @@ $.introLoop = function() {
 };
 
 $.gameOverLoop = function() {
-  $.scene.u();
   if ($.input.r(13)) return $.startGame();
+  $.s.u();
   raf($.gameOverLoop);
 };
 
 $.endLoop = function() {
-  $.scene.u();
-  if ($.input.r(13) && $.scene.e > 5000) return $.scene.load($.welcome, $.welcomeLoop);
+  if ($.input.r(13) && $.s.e > 5000) return $.s.l($.welcome, $.welcomeLoop);
+  $.s.u();
 
-  if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
-    $.scene.f = 1;
-    $.u.fadeOut('e' + $.scene.s, function() {
-      $.scene.reset();
-      $.scene.s += 1;
-      $.u.show('e' + $.scene.s);
+  if ($.s.e >= 2000 && !$.s.f && $.s.s < 2) {
+    $.s.f = 1;
+    $.u.fadeOut('e' + $.s.s, function() {
+      $.s.r();
+      $.s.s += 1;
+      $.u.show('e' + $.s.s);
     });
-  } else if ($.scene.e >= 5000 && !$.scene.f) {
-    $.scene.f = 1;
+  } else if ($.s.e >= 5000 && !$.s.f) {
+    $.s.f = 1;
     $.u.show('ei');
   }
 
@@ -273,7 +273,7 @@ $.cleanMsg = function() {
 
 $.clr = function(c) {
   c = c || $.C.b;
-  $.x.clrRect(0, 0, $.vw, $.vh);
+  $.x.clearRect(0, 0, $.vw, $.vh);
   $.x.fillStyle = c;
   $.x.fr(0, 0, $.vw, $.vh);
 };
@@ -307,8 +307,7 @@ $.loop = function() {
   // Check is conditions are ready for the next level
   if ($.hero.exit) {
     if ($.hero.key && $.hero.pows.indexOf($.lv) >= 0) {
-      $.nextLevel();
-      return;
+      return $.nextLevel();
     } else {
       var k = 0;
       if (!$.hero.key) {
@@ -325,14 +324,12 @@ $.loop = function() {
 
   // Check conditions to win the game
   if ($.ended && $.fadeOut.done) {
-    $.scene.load($.end, $.endLoop);
-    return;
+    return $.s.l($.end, $.endLoop);
   }
 
   // Check if hero is dead
   if ($.hero.dead) {
-    $.scene.load($.gameover, $.gameOverLoop);
-    return;
+    return $.s.l($.gameover, $.gameOverLoop);
   }
 
   /* Render */

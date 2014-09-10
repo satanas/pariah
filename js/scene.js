@@ -2,12 +2,11 @@ $.Scene= function() {
   var _ = this;
 
   // Reset values. If h is true then it hides the messages too
-  _.reset = function(h) {
+  _.r = function(h) {
     _.s = 0; // Step
     _.e = 0; // Elapsed
     _.t = $.n(); // Current time
     _.f = 0; // Fading
-    console.log('!h', !h);
     if (!h) return;
     ['s', 's1', 'i', 'g', 'e'].forEach(function(e) {
         $.u.v(e, 0);
@@ -16,9 +15,9 @@ $.Scene= function() {
   };
 
   // Load an scene, execute the method m and then call the loop callback c
-  _.load = function(m, c) {
+  _.l = function(m, c) {
     caf($.animId);
-    _.reset(1);
+    _.r(1);
     $.input.u();
     m();
     $.animId = raf(c);
@@ -31,7 +30,7 @@ $.Scene= function() {
     $.input.u();
   };
 
-  _.reset(1);
+  _.r(1);
 };
 
 $.FadeIn = function() {
