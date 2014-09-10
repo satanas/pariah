@@ -46,7 +46,7 @@ p {
   height: 20px;
   margin-top: -30px;
 }
-#i #i0, #i #i1, #i #i6 {
+#i #i0, #i #i1 {
   top: 45%;
 }
 #i #i3, #g0 {
@@ -56,7 +56,7 @@ p {
 #g0 {
   top: 35%;
 }
-#ii, #gi, #si, #ei, #ci {
+#ii, #gi, #si, #ei {
   color: #888;
   font-size: 11px;
   top: 95%;
@@ -74,6 +74,6 @@ p {
   top: 37%;
   font-size: 80px;
 }
-#ei, #i p, #m #m1, #ci {
+#ei, #i p, #m #m1 {
   opacity: 0;
 }

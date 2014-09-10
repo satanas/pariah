@@ -1,13 +1,27 @@
 $.Scene= function() {
   var _ = this;
-  // Step
-  _.s = 0;
-  // Elapsed
-  _.e = 0;
-  // Current time
-  _.t = $.n();
-  // Fading
-  _.f = 0;
+
+  _.reset = function() {
+    _.s = 0; // Step
+    _.e = 0; // Elapsed
+    _.t = $.n(); // Current time
+    _.f = 0; // Fading
+    ['s', 's1', 'i', 'g', 'e'].forEach(function(e) {
+        $.u.v(e, 0);
+    });
+    $.u.hide('m1');
+  };
+
+  // Load an scene, execute the method m and then call the loop callback c
+  _.load = function(m, c) {
+    caf($.animId);
+    _.reset();
+    $.input.u();
+    m();
+    $.animId = raf(c);
+  };
+
+  _.reset();
 };
 
 $.FadeIn = function() {

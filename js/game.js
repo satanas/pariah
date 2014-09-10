@@ -40,24 +40,19 @@ $.init = function() {
       s: 0
     }
   };
-  $.finalRoom();
+  //$.welcome();
+  $.scene.load($.welcome, $.welcomeLoop);
 };
 
 $.welcome = function() {
-  caf($.animId);
-  $.quitScenes();
   $.u.v('s', true);
-  $.scene = new $.Scene();
-  $.input.u();
-
-  $.animId = raf($.welcomeLoop);
 };
 
 $.intro = function() {
   caf($.animId);
   $.quitScenes();
-  $.u.v('i', true);
   $.scene = new $.Scene();
+  $.u.v('i', true);
   $.u.show('i0');
   $.input.u();
 
@@ -114,6 +109,7 @@ $.introLoop = function() {
   $.clearFg();
   if ($.input.r(13)) return $.startGame();
 
+  console.log($.scene);
   $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 1800 && !$.scene.f && $.scene.s < 5) {
     $.scene.f = 1;
