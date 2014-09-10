@@ -34,13 +34,13 @@ $.Switch= function(x, y, t) {
 
   _.render = function(tx, ty) {
     $.x.s();
+    $.x.fillStyle = $.C.gld;
+    $.x.fr(tx, ty, 32, 32);
     if (_.filled)
-      $.x.fillStyle = $.C.g;
+      $.x.fillStyle = $.C.gry;
     else
       $.x.fillStyle = _.k;
-    $.x.fr(tx, ty, _.w, _.h);
-    $.x.sc(4, 4);
-    $.x.d(_.ts, 0, 28, 8, 8, tx/4, ty/4, 8, 8);
+    $.x.fr(tx + 8, ty + 8, 16, 16);
     $.x.r();
   };
 };

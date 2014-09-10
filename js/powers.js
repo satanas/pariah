@@ -90,11 +90,21 @@ $.Fire = function(x, y, o) {
     $.x.s();
     //$.x.translate(tx + (_.w/2), ty + (_.h/2));
     //$.x.rotate(_.angle / 180 * Math.PI);
+    $.x.fillStyle = $.C.o;
+    ////$.x.fr(tx + 4, ty + 4, 16, 16);
+    ////$.x.sc(2, 2);
+    //////$.x.fillStyle = 'rgb(255,159,7)';
+    //////$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
+    ////$.x.d(_.ts, 0, 28, 8, 8, tx/2, ty/2, 8, 8);
+    ////$.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
+    //////$.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
+
+    //$.x.fr(tx, ty, 16, 16);
+    $.x.beginPath();
+    $.x.arc(tx + 8, ty + 8, 8, 0, (2 * Math.PI), false);
+    $.x.fill();
     $.x.sc(2, 2);
-    //$.x.fillStyle = 'rgb(255,159,7)';
-    //$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
-    $.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
-    //$.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
+    $.x.d(_.ts, 0, 28, 8, 8, tx/2, ty/2, 8, 8);
     $.x.r();
   };
 };
