@@ -17,7 +17,6 @@ $.init = function() {
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
   $.scene = new $.Scene();
   $.animId = 0;
-  $.pet = 'Press Enter to ';
   $.lv = 1;
   $.he = 0;
   $.ma = 0;
@@ -26,8 +25,6 @@ $.init = function() {
   $.epow = [1,2,3,4]; // Earned powers
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
-  // Array of items to be placed on each level
-  $.aItems = [0, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
   // Array of in-game messages
   // t: Text of message, s: showed
   $.msg = {
@@ -44,11 +41,11 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.u.v('s', true);
+  $.u.v('s', 1);
 };
 
 $.intro = function() {
-  $.u.v('i', true);
+  $.u.v('i', 1);
   $.u.show('i0');
 };
 
@@ -68,10 +65,9 @@ $.end = function() {
 };
 
 $.welcomeLoop = function() {
-  $.clearFg();
+  $.scene.u();
   if ($.input.r(13)) return $.scene.load($.intro, $.introLoop);
 
-  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e > 400) {
     $.scene.t = $.n();
     $.scene.e = 0;
@@ -83,52 +79,42 @@ $.welcomeLoop = function() {
       $.u.v('s1', 1);
     }
   }
-  $.input.u();
   raf($.welcomeLoop);
 };
 
 $.introLoop = function() {
-  $.clearFg();
+  $.scene.u();
   if ($.input.r(13)) return $.startGame();
 
-  console.log($.scene);
-  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 1800 && !$.scene.f && $.scene.s < 5) {
     $.scene.f = 1;
     $.u.fadeOut('i' + $.scene.s, function() {
+      $.scene.reset();
       $.scene.s += 1;
-      $.scene.t = $.n();
-      $.scene.e = 0;
-      $.scene.f = 0;
       $.u.show('i' + $.scene.s);
     });
   } else if ($.scene.e >= 5000 && $.scene.s === 5) {
     return $.startGame();
   }
 
-  $.input.u();
   raf($.introLoop);
 };
 
 $.gameOverLoop = function() {
-  $.clearFg();
+  $.scene.u();
   if ($.input.r(13)) return $.startGame();
-  $.input.u();
   raf($.gameOverLoop);
 };
 
 $.endLoop = function() {
-  $.clearFg();
+  $.scene.u();
   if ($.input.r(13) && $.scene.e > 5000) return $.scene.load($.welcome, $.welcomeLoop);
 
-  $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
     $.scene.f = 1;
     $.u.fadeOut('e' + $.scene.s, function() {
+      $.scene.reset();
       $.scene.s += 1;
-      $.scene.t = $.n();
-      $.scene.e = 0;
-      $.scene.f = 0;
       $.u.show('e' + $.scene.s);
     });
   } else if ($.scene.e >= 5000 && !$.scene.f) {
@@ -136,7 +122,6 @@ $.endLoop = function() {
     $.u.show('ei');
   }
 
-  $.input.u();
   raf($.endLoop);
 };
 
@@ -175,7 +160,9 @@ $.startGame = function() {
   }
   $.ww = a * 32;
   $.wh = b * 32;
-  $.lvl = new $.Level($.lv, $.ww / 32, $.wh / 32, en, $.aItems[$.lv], lf);
+  // Array of items to be placed on each level
+  var i = [0, [$.Key, $.FireItem], [$.EarthItem], [$.WaterItem], [$.AirItem], []];
+  $.lvl = new $.Level($.lv, $.ww / 32, $.wh / 32, en, i[$.lv], lf);
 
   $.fow = new $.FoW(3);
   $.cam = new $.Camera(640, 480, $.ww, $.wh);
@@ -188,7 +175,7 @@ $.startGame = function() {
     $.hero.he = $.he;
     $.hero.ma = $.ma;
   }
-  for (var i in $.epow) $.hero.pows[i] = $.epow[i];
+  for (i in $.epow) $.hero.pows[i] = $.epow[i];
 
   // Load the walls
   for (var v=0; v<$.lvl.h; v++) {
@@ -284,15 +271,15 @@ $.cleanMsg = function() {
   $.msg.noelem.s = 0;
 };
 
-$.clearFg = function(c) {
+$.clr = function(c) {
   c = c || $.C.b;
-  $.x.clearRect(0, 0, $.vw, $.vh);
+  $.x.clrRect(0, 0, $.vw, $.vh);
   $.x.fillStyle = c;
   $.x.fr(0, 0, $.vw, $.vh);
 };
 
 $.loop = function() {
-  $.clearFg($.C.f);
+  $.clr($.C.f);
 
   // Update only when not fading
   if ($.fadeIn.done && $.fadeOut.done && !$.ended) {
