@@ -25,7 +25,6 @@ $.Door = function(x, y) {
 
 $.Entrance = function(x, y) {
   $.Door.call(this, x, y);
-  var _ = this;
 };
 
 $.Exit = function(x, y) {

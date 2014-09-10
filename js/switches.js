@@ -1,4 +1,4 @@
-$.Switch= function(x, y, t) {
+$.Sw= function(x, y, t) {
   var _ = this;
   _.x = x;
   _.y = y;
@@ -21,7 +21,7 @@ $.Switch= function(x, y, t) {
         _.fill();
         var s = $.sws;
         if (s[0].filled && s[1].filled && s[2].filled && s[3].filled && s.length === 4) {
-          $.sws.push(new $.LifeSwitch(304,100));
+          $.sws.push(new $.LifeSw(304,100));
           $.u.i('You can only create life from life, now go and make the ultimate offer', 7000);
         }
       }
@@ -45,33 +45,33 @@ $.Switch= function(x, y, t) {
   };
 };
 
-$.FireSwitch = function(x, y) {
+$.FireSw = function(x, y) {
   var _ = this;
-  $.Switch.call(_, x, y, $.PW.F);
+  $.Sw.call(_, x, y, $.PW.F);
   _.k = $.C.o;
 };
 
-$.EarthSwitch = function(x, y) {
+$.EarthSw = function(x, y) {
   var _ = this;
-  $.Switch.call(_, x, y, $.PW.E);
+  $.Sw.call(_, x, y, $.PW.E);
   _.k = $.C.e;
 };
 
-$.WaterSwitch = function(x, y) {
+$.WaterSw = function(x, y) {
   var _ = this;
-  $.Switch.call(_, x, y, $.PW.W);
+  $.Sw.call(_, x, y, $.PW.W);
   _.k = $.C.u;
 };
 
-$.AirSwitch = function(x, y) {
+$.AirSw = function(x, y) {
   var _ = this;
-  $.Switch.call(_, x, y, $.PW.A);
+  $.Sw.call(_, x, y, $.PW.A);
   _.k = $.C.s;
 };
 
-$.LifeSwitch = function(x, y) {
+$.LifeSw = function(x, y) {
   var _ = this;
-  $.Switch.call(_, x, y);
+  $.Sw.call(_, x, y);
   _.k = $.C.r;
   _.bounds = {
     b: _.y + 8,

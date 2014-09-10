@@ -237,10 +237,10 @@ $.finalRoom = function() {
       }
     }
   }
-  $.sws.push(new $.FireSwitch(112, 256));
-  $.sws.push(new $.EarthSwitch(240, 256));
-  $.sws.push(new $.WaterSwitch(368, 256));
-  $.sws.push(new $.AirSwitch(496, 256));
+  $.sws.push(new $.FireSw(112, 256));
+  $.sws.push(new $.EarthSw(240, 256));
+  $.sws.push(new $.WaterSw(368, 256));
+  $.sws.push(new $.AirSw(496, 256));
 
   $.fadeIn.start(1000);
   $.u.i('Step on the altars and offer each element to start the ritual', 4500);
