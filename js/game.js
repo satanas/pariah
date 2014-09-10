@@ -83,7 +83,7 @@ $.welcomeLoop = function() {
 };
 
 $.introLoop = function() {
-  if ($.input.r(13)) return $.startGame();
+  if ($.input.r(13)) return $.start();
   $.s.u();
 
   if ($.s.e >= 1800 && !$.s.f && $.s.s < 5) {
@@ -94,14 +94,14 @@ $.introLoop = function() {
       $.u.show('i' + $.s.s);
     });
   } else if ($.s.e >= 5000 && $.s.s === 5) {
-    return $.startGame();
+    return $.start();
   }
 
   raf($.introLoop);
 };
 
 $.gameOverLoop = function() {
-  if ($.input.r(13)) return $.startGame();
+  if ($.input.r(13)) return $.start();
   $.s.u();
   raf($.gameOverLoop);
 };
@@ -125,16 +125,8 @@ $.endLoop = function() {
   raf($.endLoop);
 };
 
-$.quitScenes = function() {
-  ['s', 's1', 'i', 'g', 'e'].forEach(function(e) {
-      $.u.v(e, 0);
-  });
-  $.u.hide('m1');
-};
-
-
-$.startGame = function() {
-  $.quitScenes();
+$.start = function() {
+  $.s.r(1);
 
   $.walls = [];
   $.enemies = [];
@@ -192,7 +184,7 @@ $.startGame = function() {
 };
 
 $.finalRoom = function() {
-  $.quitScenes();
+  $.s.r(1);
 
   $.walls = [];
   $.enemies = [];
@@ -217,11 +209,12 @@ $.finalRoom = function() {
     }
   }
   lvl = function(){
-    this.w = $.ww / 32;
-    this.h = $.wh / 32;
-    this.map = map;
-    this.isWall = function(x, y) {
-      return this.map[x][y] === '#';
+    var _ = this;
+    _.w = $.ww / 32;
+    _.h = $.wh / 32;
+    _.map = map;
+    _.isWall = function(x, y) {
+      return _.map[x][y] === '#';
     };
   };
   $.lvl = new lvl();
@@ -260,7 +253,7 @@ $.nextLevel = function() {
   if ($.lv < 5) {
     $.he = $.hero.he;
     $.ma = $.hero.ma;
-    $.startGame();
+    $.start();
   } else {
     $.finalRoom();
   }
