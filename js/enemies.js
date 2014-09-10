@@ -1,14 +1,13 @@
-$.Enemy = function(x, y, w, h, he, mi, vu, pt) {
+$.Zombie = function(x, y) {
   var _ = this;
   _.x = x;
   _.y = y;
-  _.w = w;
-  _.h = h;
-  _.he = he;
-  _.maxH = he;
-  _.miss = mi;
-  _.vul = vu;
-  _.ptime = pt || 4000; // Planted time
+  _.w = 32;
+  _.h = 32;
+  _.he = 35;
+  _.maxH = 35;
+  _.miss = 0.05;
+  _.ptime = 4000; // Planted time
   _.itime = 300; // Invincibility time
 
   _.hurt = false;
@@ -20,11 +19,12 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
   _.etimeP = 0; // Elapsed time for planted
   _.bcount = 0;
   _.minD = 300; // Min distance to start chasing hero
-  _.hasRoute = false; // Has a valid route returned by AI
+  _.hasRoute = 0; // Has a valid route returned by AI
   _.route = []; // Points of route
-  _.nextPoint = [];
-  _.lastPoint = [];
+  _.nextPt = [];
+  _.lastPt = [];
   _.speed = 0.7;
+  _.attack = $.u.rand(22, 26);
 
   _.getb = function() {
     return {
@@ -35,65 +35,36 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     };
   };
 
+  _.bounds = _.getb();
+
   _.damage = function(p) {
     if (_.hurt) return null;
 
     if ($.u.canMiss(_.miss)) {
-      $.textPops.push(new $.TextPop('miss', _.x, _.y - 5, 'white'));
+      $.textPops.push(new $.TextPop('miss', _.x, _.y - 5, $.C.wh));
       return 0;
     }
 
-    var attack = p.attack;
-    var color = 'yellow';
+    var atk = p.attack;
 
     if (p.t === $.PW.E.v) {
       if (!_.planted) {
         _.planted = true;
         _.ctimeP = $.n();
         _.etimeP = 0;
-        $.textPops.push(new $.TextPop('bounded', _.x + 2, _.y - 5, color));
+        $.textPops.push(new $.TextPop('bounded', _.x + 2, _.y - 5, $.C.wh));
       }
       return;
     }
 
-    //if (p.t === _.vul.t) {
-    //  attack = floor(p.attack + (p.attack * _.vul.v));
-    //  color = 'red';
-    //}
-    _.he -= attack;
+    _.he -= atk;
     _.hurt = true;
     _.ctimeH = $.n();
     _.etimeH = 0;
-    $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, color));
-    return attack;
+    $.textPops.push(new $.TextPop('-' + atk, _.x + 7, _.y - 5, $.C.rd));
+    return atk;
   };
 
-  _.planting = function() {
-    if (_.planted) {
-      _.etimeP = $.n() - _.ctimeP;
-
-      if (_.etimeP >= _.ptime)
-        _.planted = 0;
-    }
-  };
-
-  _.blinking = function() {
-    if (_.hurt) {
-      _.etimeH = $.n() - _.ctimeH;
-
-      var c = floor(_.etimeH / 100);
-      if (c > _.bcount) {
-        _.bcount = c;
-        _.blink = !_.blink;
-      }
-
-      if (_.etimeH >= _.itime) {
-        _.hurt = false;
-        _.bcount = 0;
-        _.blink = 0;
-      }
-    }
-  };
 
   _.die = function(i) {
     $.enemies.splice(i, 1);
@@ -110,86 +81,86 @@ $.Enemy = function(x, y, w, h, he, mi, vu, pt) {
     }
   };
 
-  // Render health bar
-  _.renderBar = function(tx, ty) {
-    $.x.s();
-    $.x.fillStyle = 'rgb(0,0,0)';
-    $.x.fr(tx, ty - 10, 32, 5);
-    $.x.fillStyle = 'rgb(255,0,0)';
-    $.x.fr(tx, ty - 10, (_.he * 32) / _.maxH, 5);
-    $.x.r();
-  };
-};
-
-$.Zombie = function(x, y) {
-  var _ = this;
-  $.Enemy.call(_, x, y, 32, 32, 30, 0.05, {t: $.PW.F.v, v:0.45});
-
-  _.bounds = _.getb();
-  _.attack = $.u.rand(16, 20);
-
   _.update = function(i) {
     _.bounds = _.getb();
+    console.log(_.bounds);
 
-    _.blinking();
-    _.planting();
-    if (_.planted)
-      console.log('planted');
+    // Planting
+    if (_.planted) {
+      _.etimeP = $.n() - _.ctimeP;
+
+      if (_.etimeP >= _.ptime)
+        _.planted = 0;
+    }
+
+    // Blinking
+    if (_.hurt) {
+      _.etimeH = $.n() - _.ctimeH;
+
+      var c = floor(_.etimeH / 100);
+      if (c > _.bcount) {
+        _.bcount = c;
+        _.blink = !_.blink;
+      }
+
+      if (_.etimeH >= _.itime) {
+        _.hurt = false;
+        _.bcount = 0;
+        _.blink = 0;
+      }
+    }
 
     if (_.he <= 0)
       _.die(i);
 
     if(!_.hasRoute) {
-       var distance = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
-       if((distance <= _.minD) && (round(distance) > 0)) {
-          console.log('Get route');
-          _.route = $.ai.calculatePath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32)]);
+       var d = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
+       if((d <= _.minD) && (round(d) > 0)) {
+          _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32)]);
           if(_.route.length > 0) {
-            _.hasRoute = true;
-            _.lastPoint = _.route[_.route.length - 1];
-            _.nextPoint = _.route.shift(); 
+            _.hasRoute = 1;
+            _.lastPt = _.route[_.route.length - 1];
+            _.nextPt = _.route.shift();
           } else {
-            _.route = $.ai.calculatePath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32) - round($.hero.bounds.r / 32), round($.hero.y / 32)]);
+            _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32) - round($.hero.bounds.r / 32), round($.hero.y / 32)]);
             if(_.route.length > 0) {
-              _.hasRoute = true;
-              _.lastPoint = _.route[_.route.length - 1];
-              _.nextPoint = _.route.shift();
+              _.hasRoute = 1;
+              _.lastPt = _.route[_.route.length - 1];
+              _.nextPt = _.route.shift();
             } else {
-              _.route = $.ai.calculatePath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32) - round($.hero.bounds.b / 32)]);
+              _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32) - round($.hero.bounds.b / 32)]);
               if(_.route.length > 0) {
-                _.hasRoute = true;
-                _.lastPoint = _.route[_.route.length - 1];
-                _.nextPoint = _.route.shift();
+                _.hasRoute = 1;
+                _.lastPt = _.route[_.route.length - 1];
+                _.nextPt = _.route.shift();
               }
             }
           }
        }
     } else {
-      if((round(_.x / 32) == _.nextPoint[0]) && (round(_.y / 32) == _.nextPoint[1])) {
+      if((round(_.x / 32) == _.nextPt[0]) && (round(_.y / 32) == _.nextPt[1])) {
         if(_.route.length > 0) {
-          _.nextPoint = _.route.shift();
+          _.nextPt = _.route.shift();
         } else {
-          _.hasRoute = false;
+          _.hasRoute = 0;
           _.route = [];
-          _.nextPoint = [];
-          _.lastPoint = [];
+          _.nextPt = [];
+          _.lastPt = [];
         }
       } else {
-        if((round(_.x / 32) < _.nextPoint[0]) && !_.planted) {
+        if ((round(_.x / 32) < _.nextPt[0]) && !_.planted)
           _.x += _.speed;
-        } else if((round(_.x / 32) > _.nextPoint[0]) && !_.planted) {
+        else if((round(_.x / 32) > _.nextPt[0]) && !_.planted)
           _.x -= _.speed;
-        }
-        if((round(_.y / 32) < _.nextPoint[1]) && !_.planted) {
+        if((round(_.y / 32) < _.nextPt[1]) && !_.planted)
           _.y += _.speed;
-        } else if((round(_.y / 32) > _.nextPoint[1]) && !_.planted) {
+        else if((round(_.y / 32) > _.nextPt[1]) && !_.planted)
           _.y -= _.speed;
-        }
-        if((Math.round($.hero.x / 32) != _.lastPoint[0]) || (Math.round($.hero.y / 32) != _.lastPoint[1])) {
-          _.hasRoute = false;
+        if((round($.hero.x / 32) != _.lastPt[0]) || (round($.hero.y / 32) != _.lastPt[1])) {
+          _.hasRoute = 0;
           _.route = [];
-          _.nextPoint = [];
-          _.lastPoint = [];
+          _.nextPt = [];
+          _.lastPt = [];
         }
       }
     }
@@ -205,6 +176,12 @@ $.Zombie = function(x, y) {
     $.x.fr(tx, ty, 32, 32);
     $.x.r();
 
-    _.renderBar(tx, ty);
+    // Render health bar
+    $.x.s();
+    $.x.fillStyle = 'rgb(0,0,0)';
+    $.x.fr(tx, ty - 10, 32, 5);
+    $.x.fillStyle = 'rgb(255,0,0)';
+    $.x.fr(tx, ty - 10, (_.he * 32) / _.maxH, 5);
+    $.x.r();
   };
 };

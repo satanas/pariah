@@ -1,11 +1,12 @@
 $.Ai = function() {
-  var findNeighbours = function(){};
+  var _ = this;
+  var findNeigh = function(){};
 
-  this.getd = function(Point, Goal) {
-    return abs(Point.x - Goal.x) + abs(Point.y - Goal.y);
+  _.getd = function(p, g) {
+    return abs(p.x - g.x) + abs(p.y - g.y);
   };
 
-  this.Neighbours = function(x, y, mW, mH) {
+  _.neigh = function(x, y, mW, mH) {
     var  N = y - 1,
          S = y + 1,
          E = x + 1,
@@ -23,31 +24,31 @@ $.Ai = function() {
     r.push({x:x, y:S});
     if(myW)
     r.push({x:W, y:y});
-    findNeighbours(myN, myS, myE, myW, N, S, E, W, r);
+    findNeigh(myN, myS, myE, myW, N, S, E, W, r);
     return r;
   };
 
-  this.DiagonalNeighbours = function(myN, myS, myE, myW, N, S, E, W, r) {
-    if(myN) {
-      if(myE && !$.lvl.isWall(E, N))
-      r.push({x:E, y:N});
-      if(myW && !$.lvl.isWall(W, N))
-      r.push({x:W, y:N});
-    }
-    if(myS) {
-      if(myE && !$.lvl.isWall(E, S))
-      r.push({x:E, y:S});
-      if(myW && !$.lvl.isWall(W, S))
-      r.push({x:W, y:S});
-    }
-  };
+  //_.diagNeigh = function(myN, myS, myE, myW, N, S, E, W, r) {
+  //  if(myN) {
+  //    if(myE && !$.lvl.isWall(E, N))
+  //    r.push({x:E, y:N});
+  //    if(myW && !$.lvl.isWall(W, N))
+  //    r.push({x:W, y:N});
+  //  }
+  //  if(myS) {
+  //    if(myE && !$.lvl.isWall(E, S))
+  //    r.push({x:E, y:S});
+  //    if(myW && !$.lvl.isWall(W, S))
+  //    r.push({x:W, y:S});
+  //  }
+  //};
 
-  this.Node = function(Parent, Point, mW) {
+  _.Node = function(Parent, p, mW) {
     var newNode = {
       Parent:Parent,
-      value:Point.x + (Point.y * mW),
-      x:Point.x,
-      y:Point.y,
+      value:p.x + (p.y * mW),
+      x:p.x,
+      y:p.y,
       f:0,
       g:0
     };
@@ -55,17 +56,18 @@ $.Ai = function() {
     return newNode;
   };
 
-  this.calculatePath = function(pstart, pend){
+  // Calculate path
+  _.cPath = function(pstart, pend){
     var mapW = $.lvl.map[0].length,
         mapH = $.lvl.map.length,
         mapS = mapW * mapH,
-        myPs = this.Node(null, {x:pstart[0], y:pstart[1]}, mapW),
-        myPe = this.Node(null, {x:pend[0], y:pend[1]}, mapW),
+        myPs = _.Node(null, {x:pstart[0], y:pstart[1]}, mapW),
+        myPe = _.Node(null, {x:pend[0], y:pend[1]}, mapW),
         AStar = new Array(mapS),
         Open = [myPs],
         Closed = [],
         r = [],
-        myNeighbours,
+        myneigh,
         myNode,
         myPath,
         length, max, min, i, j;
@@ -90,12 +92,12 @@ $.Ai = function() {
         AStar = Closed = Open = [];
         r.reverse();
       } else {
-        myNeighbours = this.Neighbours(myNode.x, myNode.y, mapW, mapH);
-        for(i = 0, j = myNeighbours.length; i < j; i++) {
-          myPath = this.Node(myNode, myNeighbours[i], mapW);
+        myneigh = _.neigh(myNode.x, myNode.y, mapW, mapH);
+        for(i = 0, j = myneigh.length; i < j; i++) {
+          myPath = _.Node(myNode, myneigh[i], mapW);
           if (!AStar[myPath.value]) {
-            myPath.g = myNode.g + this.getd(myNeighbours[i], myNode);
-            myPath.f = myPath.g + this.getd(myNeighbours[i], myPe);
+            myPath.g = myNode.g + _.getd(myneigh[i], myNode);
+            myPath.f = myPath.g + _.getd(myneigh[i], myPe);
             Open.push(myPath);
             AStar[myPath.value] = true;
           }
