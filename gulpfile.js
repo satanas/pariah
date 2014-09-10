@@ -3,7 +3,9 @@ var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var minifyCSS = require('gulp-minify-css');
 var minifyHTML = require('gulp-minify-html');
-var clean= require('gulp-clean');
+var clean = require('gulp-clean');
+var glob = require('glob');
+var exec = require('child_process').exec;
 
 gulp.task('default', function() {
   gulp.src('js/*.js')
@@ -33,4 +35,17 @@ gulp.task('uglify', function() {
   gulp.src('js/*.js')
   .pipe(uglify())
   .pipe(gulp.dest('min'));
+});
+
+gulp.task('closure', function() {
+  var files = glob.sync('js/*.js');
+
+  files.map(function(file) {
+    exec('java -jar compiler.jar --language_in ECMASCRIPT5 --js ' + file + ' --js_output_file min/' + file + '.min');
+  });
+
+  //gulp.src('js/*.js')
+  //.pipe(concat('all.min.js'))
+  //.pipe(uglify())
+  //.pipe(gulp.dest('min'));
 });
