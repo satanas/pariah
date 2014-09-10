@@ -11,7 +11,7 @@ $.Hud = function() {
     $.x.ft('HEALTH', 10, 15);
     $.x.ft('MANA', 10, 30);
     $.x.ft('LEVEL ' + $.lv, 560, 15);
-    $.x.ft('SCORE 9999', 560, 30);
+    $.x.ft('SCORE ' + $.sco, 560, 30);
 
     var co = [$.C.o, $.C.e, $.C.u, $.C.s],
         i;
