@@ -8,6 +8,7 @@ $.init = function() {
   $.x.s = $.x.save;
   $.x.r = $.x.restore;
   $.x.fr = $.x.fillRect;
+  $.x.ft = $.x.fillText;
   $.x.d = $.x.drawImage;
   $.x.sc = $.x.scale;
   $.ctx1 = $.cv1.getContext('2d');
@@ -16,11 +17,13 @@ $.init = function() {
   $.vh = $.cfg.height = $.cv1.height = $.cv2.height = 480;
   $.scene = new $.Scene();
   $.animId = 0;
+  $.pet = 'Press Enter to ';
   $.lv = 1;
   $.he = 0;
   $.ma = 0;
+  $.sco = 0; // Score
   $.ended = 0;
-  $.epow = []; // Earned powers
+  $.epow = [1,2,3,4]; // Earned powers
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
   // Array of items to be placed on each level
@@ -37,7 +40,7 @@ $.init = function() {
       s: 0
     }
   };
-  $.welcome();
+  $.finalRoom();
 };
 
 $.welcome = function() {
@@ -207,7 +210,7 @@ $.startGame = function() {
     $.hero.he = $.he;
     $.hero.ma = $.ma;
   }
-  $.hero.pows = $.epow;
+  for (var i in $.epow) $.hero.pows[i] = $.epow[i];
 
   // Load the walls
   for (var v=0; v<$.lvl.h; v++) {
@@ -375,8 +378,8 @@ $.loop = function() {
   $.cam.render($.switches);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  if ($.lv < 5)
-    $.fow.render();
+  //if ($.lv < 5)
+  //  $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
