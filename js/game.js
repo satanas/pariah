@@ -22,7 +22,7 @@ $.init = function() {
   $.ma = 0;
   $.sco = 0; // Score
   $.ended = 0;
-  $.epow = [1,2,3,4]; // Earned powers
+  $.epow = []; // Earned powers
   $.fadeIn = new $.FadeIn();
   $.fadeOut = new $.FadeOut();
   // Array of in-game messages
@@ -333,8 +333,8 @@ $.loop = function() {
   $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //if ($.lv < 5)
-  //  $.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
