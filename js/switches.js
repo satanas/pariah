@@ -34,10 +34,10 @@ $.Sw= function(x, y, t) {
 
   _.render = function(tx, ty) {
     $.x.s();
-    $.x.fillStyle = $.C.gld;
+    $.x.fillStyle = $.C.gd;
     $.x.fr(tx, ty, 32, 32);
     if (_.filled)
-      $.x.fillStyle = $.C.gry;
+      $.x.fillStyle = $.C.gy;
     else
       $.x.fillStyle = _.k;
     $.x.fr(tx + 8, ty + 8, 16, 16);
@@ -72,7 +72,7 @@ $.AirSw = function(x, y) {
 $.LifeSw = function(x, y) {
   var _ = this;
   $.Sw.call(_, x, y);
-  _.k = $.C.r;
+  _.k = $.C.rd;
   _.bounds = {
     b: _.y + 8,
     t: _.y,
