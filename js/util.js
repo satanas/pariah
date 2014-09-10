@@ -68,7 +68,8 @@ $.u.byId = function(i) {
   return document.getElementById(i);
 };
 
-$.u.instruction = function(t, d) {
+// Show instructions on screen
+$.u.i = function(t, d) {
   var dx = d || 3000;
   if ($.u.instID) {
     clearTimeout($.u.instID);

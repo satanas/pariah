@@ -135,7 +135,7 @@ $.start = function() {
   $.textPops = [];
   $.powers = [];
   $.ai = new $.Ai();
-  $.switches = [];
+  $.sws = [];
 
   // Load level
   var lf = 20,
@@ -146,7 +146,7 @@ $.start = function() {
     b = $.u.rand(15 + (6 * $.lv), 20 + (6 * $.lv));
     //lf = 10 + (7 * $.lv);
   if ($.lv === 1) {
-    $.u.instruction('Use the arrow keys to move and escape the dungeon', 4500);
+    $.u.i('Use the arrow keys to move and escape the dungeon', 4500);
   } else {
     en = $.lv * 3;
   }
@@ -192,7 +192,7 @@ $.finalRoom = function() {
   $.exit = [];
   $.textPops = [];
   $.powers = [];
-  $.switches = [];
+  $.sws = [];
 
   // Load custom level
   $.ww = 640;
@@ -237,13 +237,13 @@ $.finalRoom = function() {
       }
     }
   }
-  $.switches.push(new $.FireSwitch(112, 256));
-  $.switches.push(new $.EarthSwitch(240, 256));
-  $.switches.push(new $.WaterSwitch(368, 256));
-  $.switches.push(new $.AirSwitch(496, 256));
+  $.sws.push(new $.FireSwitch(112, 256));
+  $.sws.push(new $.EarthSwitch(240, 256));
+  $.sws.push(new $.WaterSwitch(368, 256));
+  $.sws.push(new $.AirSwitch(496, 256));
 
   $.fadeIn.start(1000);
-  $.u.instruction('Step on the altars and offer each element to start the ritual', 4500);
+  $.u.i('Step on the altars and offer each element to start the ritual', 4500);
   $.animId = raf($.loop);
 };
 
@@ -289,7 +289,7 @@ $.loop = function() {
     $.items.forEach(function(t, i) {
       t.update(i);
     });
-    $.switches.forEach(function(t, i) {
+    $.sws.forEach(function(t, i) {
       t.update(i);
     });
   }
@@ -310,7 +310,7 @@ $.loop = function() {
       }
       if (!$.msg[k].s) {
         $.msg[k].s = 1;
-        $.u.instruction($.msg[k].t);
+        $.u.i($.msg[k].t);
       }
     }
   }
@@ -330,7 +330,7 @@ $.loop = function() {
   $.cam.render($.exit);
   $.cam.render($.enemies);
   $.cam.render($.items);
-  $.cam.render($.switches);
+  $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
   //if ($.lv < 5)

@@ -88,11 +88,11 @@ $.Hero = function(_x, _y, o) {
       if (t.t.v === $.PW.F.v) $.fow.radius = 6;
       _.pows.push(t.t.v);
       $.epow.push(t.t.v);
-      $.u.instruction(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
+      $.u.i(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
       if (t.t === 'k') {
         _.key = true;
-        $.u.instruction('You got the key of this dungeon');
+        $.u.i('You got the key of this dungeon');
       } else if (t.t === 'h') {
         _.heal(10);
       } else if (t.t === 'm') {
@@ -217,7 +217,7 @@ $.Hero = function(_x, _y, o) {
           $.powers.push(new $.Air(_.x, _.y, _.o));
         }
       } else if (_.ma < cp.m) {
-        $.u.instruction('You do not have enough mana to cast the ' + cp.n + ' element');
+        $.u.i('You do not have enough mana to cast the ' + cp.n + ' element');
       }
     }
 

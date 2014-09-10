@@ -19,10 +19,10 @@ $.Switch= function(x, y, t) {
       if ($.collide.rect(_, $.hero)) {
         $.hero.lose(_.t);
         _.fill();
-        var s = $.switches;
+        var s = $.sws;
         if (s[0].filled && s[1].filled && s[2].filled && s[3].filled && s.length === 4) {
-          $.switches.push(new $.LifeSwitch(304,100));
-          $.u.instruction('You can only create life from life, now go and make the ultimate offer', 7000);
+          $.sws.push(new $.LifeSwitch(304,100));
+          $.u.i('You can only create life from life, now go and make the ultimate offer', 7000);
         }
       }
     }
