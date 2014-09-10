@@ -53,29 +53,18 @@ $.intro = function() {
 };
 
 $.gameover = function() {
-  //caf($.animId);
   $.lv = 1;
   $.epow = [];
-  //$.quitScenes();
-  $.u.v('g', true);
-  //$.input.u();
-
-  //$.animId = raf($.gameOverLoop);
+  $.u.v('g', 1);
 };
 
 $.end = function() {
-  caf($.animId);
   $.lv = 1;
   $.ended = 0;
   $.epow = [];
   $.fadeOut.quit = true;
-  $.quitScenes();
-  $.scene = new $.Scene();
   $.u.show('e0');
-  $.u.v('e', true);
-  $.input.u();
-
-  $.animId = raf($.endLoop);
+  $.u.v('e', 1);
 };
 
 $.welcomeLoop = function() {
@@ -88,10 +77,10 @@ $.welcomeLoop = function() {
     $.scene.e = 0;
     if ($.scene.s === 0) {
       $.scene.s = 1;
-      $.u.v('s1', false);
+      $.u.v('s1', 0);
     } else {
       $.scene.s = 0;
-      $.u.v('s1', true);
+      $.u.v('s1', 1);
     }
   }
   $.input.u();
@@ -130,7 +119,7 @@ $.gameOverLoop = function() {
 
 $.endLoop = function() {
   $.clearFg();
-  if ($.input.r(13) && $.scene.e > 5000) return $.welcome();
+  if ($.input.r(13) && $.scene.e > 5000) return $.scene.load($.welcome, $.welcomeLoop);
 
   $.scene.e = $.n() - $.scene.t;
   if ($.scene.e >= 2000 && !$.scene.f && $.scene.s < 2) {
@@ -144,7 +133,7 @@ $.endLoop = function() {
     });
   } else if ($.scene.e >= 5000 && !$.scene.f) {
     $.scene.f = 1;
-    $.u.show('ci');
+    $.u.show('ei');
   }
 
   $.input.u();
@@ -153,7 +142,7 @@ $.endLoop = function() {
 
 $.quitScenes = function() {
   ['s', 's1', 'i', 'g', 'e'].forEach(function(e) {
-      $.u.v(e, false);
+      $.u.v(e, 0);
   });
   $.u.hide('m1');
 };
@@ -349,7 +338,7 @@ $.loop = function() {
 
   // Check conditions to win the game
   if ($.ended && $.fadeOut.done) {
-    $.end();
+    $.scene.load($.end, $.endLoop);
     return;
   }
 
