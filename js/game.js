@@ -40,7 +40,6 @@ $.init = function() {
       s: 0
     }
   };
-  //$.welcome();
   $.scene.load($.welcome, $.welcomeLoop);
 };
 
@@ -49,25 +48,19 @@ $.welcome = function() {
 };
 
 $.intro = function() {
-  caf($.animId);
-  $.quitScenes();
-  $.scene = new $.Scene();
   $.u.v('i', true);
   $.u.show('i0');
-  $.input.u();
-
-  $.animId = raf($.introLoop);
 };
 
 $.gameover = function() {
-  caf($.animId);
+  //caf($.animId);
   $.lv = 1;
   $.epow = [];
-  $.quitScenes();
+  //$.quitScenes();
   $.u.v('g', true);
-  $.input.u();
+  //$.input.u();
 
-  $.animId = raf($.gameOverLoop);
+  //$.animId = raf($.gameOverLoop);
 };
 
 $.end = function() {
@@ -87,7 +80,7 @@ $.end = function() {
 
 $.welcomeLoop = function() {
   $.clearFg();
-  if ($.input.r(13)) return $.intro();
+  if ($.input.r(13)) return $.scene.load($.intro, $.introLoop);
 
   $.scene.e = $.n() - $.scene.t;
   if ($.scene.e > 400) {
@@ -121,7 +114,7 @@ $.introLoop = function() {
       $.u.show('i' + $.scene.s);
     });
   } else if ($.scene.e >= 5000 && $.scene.s === 5) {
-    return $.finalRoom();
+    return $.startGame();
   }
 
   $.input.u();
@@ -362,7 +355,7 @@ $.loop = function() {
 
   // Check if hero is dead
   if ($.hero.dead) {
-    $.gameover();
+    $.scene.load($.gameover, $.gameOverLoop);
     return;
   }
 
