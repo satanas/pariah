@@ -32,8 +32,9 @@ $.C = {
   u: 'hsl(196,90%,76%)', // Blue water
   e: 'hsl(28,66%,26%)', // Brown earth
   s: 'hsl(78,100%,92%)', // Blue sky
-  gry: 'rgb(154,154,154)', // Gray
-  r: 'rgb(200,0,0)', // Eed
-  gld: 'rgb(219,190,117)',
+  yw: 'rgb(255,255,0)', // Yellow
+  gy: 'rgb(154,154,154)', // Gray
+  rd: 'rgb(200,0,0)', // Red
+  gd: 'rgb(219,190,117)',
 
 };
