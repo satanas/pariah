@@ -41,6 +41,9 @@ $.init = function() {
 };
 
 $.welcome = function() {
+  $.lv = 1;
+  $.sco = 0;
+  $.epow = [];
   $.u.v('s', 1);
 };
 
@@ -51,6 +54,7 @@ $.intro = function() {
 
 $.gameover = function() {
   $.lv = 1;
+  $.sco = 0;
   $.epow = [];
   $.u.v('g', 1);
 };
@@ -89,11 +93,11 @@ $.introLoop = function() {
   if ($.s.e >= 1800 && !$.s.f && $.s.s < 5) {
     $.s.f = 1;
     $.u.fadeOut('i' + $.s.s, function() {
-      $.s.r();
-      $.s.s += 1;
+      $.s.n();
       $.u.show('i' + $.s.s);
     });
   } else if ($.s.e >= 5000 && $.s.s === 5) {
+    $.u.hide('i5');
     return $.start();
   }
 
@@ -113,8 +117,7 @@ $.endLoop = function() {
   if ($.s.e >= 2000 && !$.s.f && $.s.s < 2) {
     $.s.f = 1;
     $.u.fadeOut('e' + $.s.s, function() {
-      $.s.r();
-      $.s.s += 1;
+      $.s.n();
       $.u.show('e' + $.s.s);
     });
   } else if ($.s.e >= 5000 && !$.s.f) {
@@ -250,6 +253,7 @@ $.finalRoom = function() {
 $.nextLevel = function() {
   caf($.animId);
   $.lv += 1;
+  $.sco += 100;
   if ($.lv < 5) {
     $.he = $.hero.he;
     $.ma = $.hero.ma;

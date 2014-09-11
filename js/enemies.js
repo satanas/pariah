@@ -24,7 +24,7 @@ $.Zombie = function(x, y) {
   _.nextPt = [];
   _.lastPt = [];
   _.speed = 0.7;
-  _.attack = $.u.rand(28, 35);
+  _.attack = $.u.rand(40, 50);
 
   _.getb = function() {
     return {
@@ -79,6 +79,7 @@ $.Zombie = function(x, y) {
         $.items.push(new items[k](_.x + (_.w)/2, _.y + 4));
       }
     }
+    $.sco += _.attack * 10;
   };
 
   _.update = function(i) {

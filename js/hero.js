@@ -91,6 +91,7 @@ $.Hero = function(_x, _y, o) {
       $.u.i(['You now control the', t.t.n, 'element. Press', t.t.v, 'to use it'].join(' '));
     } else {
       if (t.t === 'k') {
+        $.sco += 50;
         _.key = true;
         $.u.i('You got the key of this dungeon');
       } else if (t.t === 'h') {

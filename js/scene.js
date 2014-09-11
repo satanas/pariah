@@ -30,6 +30,12 @@ $.Scene= function() {
     $.input.u();
   };
 
+  _.n = function() {
+    var s = _.s;
+    _.r();
+    _.s = s + 1;
+  };
+
   _.r(1);
 };
 
