@@ -41,9 +41,9 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 1;
+  $.lv = 2;
   $.sco = 0;
-  $.epow = [];
+  $.epow = [1];
   $.u.v('s', 1);
 };
 
@@ -56,6 +56,7 @@ $.gameover = function() {
   $.lv = 1;
   $.sco = 0;
   $.epow = [];
+  $.fadeOut.quit = true;
   $.u.v('g', 1);
 };
 
@@ -177,14 +178,15 @@ $.start = function() {
   for (var v=0; v<$.lvl.h; v++) {
     for (i=0; i<$.lvl.w; i++) {
       if ($.lvl.isWall(i, v)) {
-        var hf = ($.lvl.isWall(i, v + 1)) ? 0 : 1;
-        $.walls.push(new $.Wall(i*32, v*32, hf));
+        //var hf = ($.lvl.isWall(i, v + 1)) ? 0 : 1;
+        $.walls.push(new $.Wall(i*32, v*32, 0));
       }
     }
   }
 
   $.fadeIn.start(1000);
   $.animId = raf($.loop);
+  console.log('starting');
 };
 
 $.finalRoom = function() {
@@ -340,8 +342,8 @@ $.loop = function() {
   $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  if ($.lv < 5)
-    $.fow.render();
+  //if ($.lv < 5)
+  //  $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
