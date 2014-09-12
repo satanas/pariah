@@ -15,7 +15,8 @@ $.Hero = function(_x, _y, o) {
   _.ts = $.u.ts();
 
   _.s = 0.13; // Speed
-  _.dx = _.dy = 0;
+  _.dx = 0;
+  _.dy = 0;
   _.o = o || 'd'; // Orientation
   _.pows = []; // Available powers
   _.hurt = false;

@@ -9,7 +9,11 @@ $.Zombie = function(x, y) {
   _.miss = 0.05;
   _.ptime = 4000; // Planted time
   _.itime = 300; // Invincibility time
+  _.ts = $.u.ts();
 
+  _.dx = 0;
+  _.dy = 0;
+  _.o = 'd';
   _.hurt = false;
   _.planted = 0;
   _.blink = 0;
@@ -25,6 +29,26 @@ $.Zombie = function(x, y) {
   _.lastPt = [];
   _.speed = 0.7;
   _.attack = $.u.rand(40, 50);
+
+  /* Animations */
+  _.count = 0;
+  _.frameDuration = 10;
+  _.currFrame = 0;
+  _.totalFrames = 2;
+  _.anim = {
+    'run': {
+      'd': [{x:42, y:0},  {x:52, y:0} ],
+      'u': [{x:42, y:16}, {x:52, y:16}],
+      'r': [{x:42, y:32}, {x:52, y:32}],
+      'l': [{x:42, y:48}, {x:52, y:48}],
+    },
+    'idle': {
+      'd': {x:42, y:0},
+      'u': {x:42, y:16},
+      'r': {x:42, y:32},
+      'l': {x:42, y:48}
+    }
+  };
 
   _.getb = function() {
     return {
@@ -84,7 +108,8 @@ $.Zombie = function(x, y) {
 
   _.update = function(i) {
     _.bounds = _.getb();
-    console.log(_.bounds);
+    _.dx = 0;
+    _.dy = 0;
 
     // Planting
     if (_.planted) {
@@ -149,14 +174,20 @@ $.Zombie = function(x, y) {
           _.lastPt = [];
         }
       } else {
-        if ((round(_.x / 32) < _.nextPt[0]) && !_.planted)
-          _.x += _.speed;
-        else if((round(_.x / 32) > _.nextPt[0]) && !_.planted)
-          _.x -= _.speed;
-        if((round(_.y / 32) < _.nextPt[1]) && !_.planted)
-          _.y += _.speed;
-        else if((round(_.y / 32) > _.nextPt[1]) && !_.planted)
-          _.y -= _.speed;
+        if ((round(_.x / 32) < _.nextPt[0]) && !_.planted) {
+          _.dx = _.speed;
+          _.o = 'r';
+        } else if((round(_.x / 32) > _.nextPt[0]) && !_.planted) {
+          _.dx = -_.speed;
+          _.o = 'l';
+        }
+        if((round(_.y / 32) < _.nextPt[1]) && !_.planted) {
+          _.dy = _.speed;
+          _.o = 'd';
+        } else if((round(_.y / 32) > _.nextPt[1]) && !_.planted) {
+          _.dy = -_.speed;
+          _.o = 'u';
+        }
         if((round($.hero.x / 32) != _.lastPt[0]) || (round($.hero.y / 32) != _.lastPt[1])) {
           _.hasRoute = 0;
           _.route = [];
@@ -166,23 +197,33 @@ $.Zombie = function(x, y) {
       }
     }
 
+    _.x += _.dx;
+    _.y += _.dy;
+
+    /* Calculate animation frame */
+    _.count = (_.count + 1) % _.frameDuration;
+    if (_.count === (_.frameDuration - 1)) {
+      _.currFrame = (_.currFrame + 1) % _.totalFrames;
+    }
+
   };
 
   _.render = function(tx, ty) {
+    var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
+
     $.x.s();
-    if (!_.blink)
-      $.x.fillStyle = 'rgb(0,150,0)';
-    else
-      $.x.fillStyle = 'rgba(0,150,0,0.3)';
-    $.x.fr(tx, ty, 32, 32);
+    $.x.sc(2, 2);
+    if (_.blink)
+      $.x.globalAlpha = 0.3;
+    $.x.d(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
     $.x.r();
 
     // Render health bar
     $.x.s();
     $.x.fillStyle = 'rgb(0,0,0)';
-    $.x.fr(tx, ty - 10, 32, 5);
+    $.x.fr(tx - 8, ty - 10, 32, 5);
     $.x.fillStyle = 'rgb(255,0,0)';
-    $.x.fr(tx, ty - 10, (_.he * 32) / _.maxH, 5);
+    $.x.fr(tx - 8, ty - 10, (_.he * 32) / _.maxH, 5);
     $.x.r();
   };
 };
