@@ -140,6 +140,8 @@ $.Zombie = function(x, y) {
     if (_.he <= 0)
       _.die(i);
 
+
+
     if(!_.hasRoute) {
        console.log('Uno');
        var d = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
@@ -206,6 +208,21 @@ $.Zombie = function(x, y) {
     
     _.x += _.dx;
     _.y += _.dy;
+
+    // Check for collisions with walls
+    $.walls.forEach(function(w) {
+      if ($.collide.rect(_, w)) {
+        if ($.collide.isTop(_, w)){
+          _.y = w.bounds.t - _.h -1;
+        } else if ($.collide.isBottom(_, w)) {
+          _.y = w.bounds.b + 1;
+        } else if ($.collide.isLeft(_, w)) {
+          _.x = w.bounds.l - _.w - 1;
+        } else if ($.collide.isRight(_, w)) {
+          _.x = w.bounds.r + 1;
+        }
+      }
+    });
 
     /* Calculate animation frame */
     _.count = (_.count + 1) % _.frameDuration;
