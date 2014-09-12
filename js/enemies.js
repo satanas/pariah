@@ -143,19 +143,19 @@ $.Zombie = function(x, y) {
     if(!_.hasRoute) {
        var d = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
        if((d <= _.minD) && (round(d) > 0)) {
-          _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32)]);
+          _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [floor($.hero.x / 32), floor($.hero.y / 32)]);
           if(_.route.length > 0) {
             _.hasRoute = 1;
             _.lastPt = _.route[_.route.length - 1];
             _.nextPt = _.route.shift();
           } else {
-            _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32) - round($.hero.bounds.r / 32), round($.hero.y / 32)]);
+            _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [floor($.hero.x / 32), floor($.hero.y / 32)]);
             if(_.route.length > 0) {
               _.hasRoute = 1;
               _.lastPt = _.route[_.route.length - 1];
               _.nextPt = _.route.shift();
             } else {
-              _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32) - round($.hero.bounds.b / 32)]);
+              _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [floor($.hero.x / 32), floor($.hero.y / 32)]);
               if(_.route.length > 0) {
                 _.hasRoute = 1;
                 _.lastPt = _.route[_.route.length - 1];
@@ -189,7 +189,7 @@ $.Zombie = function(x, y) {
           _.dy = -_.speed;
           _.o = 'u';
         }
-        if((round($.hero.x / 32) != _.lastPt[0]) || (round($.hero.y / 32) != _.lastPt[1])) {
+        if((floor($.hero.x / 32) != _.lastPt[0]) || (floor($.hero.y / 32) != _.lastPt[1])) {
           _.hasRoute = 0;
           _.route = [];
           _.nextPt = [];
