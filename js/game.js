@@ -41,9 +41,9 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 2;
+  $.lv = 1;
   $.sco = 0;
-  $.epow = [1];
+  $.epow = [];
   $.u.v('s', 1);
 };
 
@@ -342,8 +342,8 @@ $.loop = function() {
   $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //if ($.lv < 5)
-  //  $.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 
