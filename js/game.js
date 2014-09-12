@@ -41,7 +41,7 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 1;
+  $.lv = 2;
   $.sco = 0;
   $.epow = [];
   $.u.v('s', 1);
@@ -178,7 +178,6 @@ $.start = function() {
   for (var v=0; v<$.lvl.h; v++) {
     for (i=0; i<$.lvl.w; i++) {
       if ($.lvl.isWall(i, v)) {
-        //var hf = ($.lvl.isWall(i, v + 1)) ? 0 : 1;
         $.walls.push(new $.Wall(i*32, v*32, 0));
       }
     }
@@ -342,8 +341,8 @@ $.loop = function() {
   $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  if ($.lv < 5)
-    $.fow.render();
+  //if ($.lv < 5)
+    //$.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 

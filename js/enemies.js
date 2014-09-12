@@ -140,32 +140,21 @@ $.Zombie = function(x, y) {
     if (_.he <= 0)
       _.die(i);
 
+
+
     if(!_.hasRoute) {
+       console.log('Uno');
        var d = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
-       if((d <= _.minD) && (round(d) > 0)) {
-          _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32)]);
+       if((d <= _.minD) && (round(d) > 40)) {
+          _.route = $.ai.cPath([floor(_.x / 32), floor(_.y / 32)], [floor($.hero.x / 32), floor($.hero.y / 32)]);
           if(_.route.length > 0) {
             _.hasRoute = 1;
             _.lastPt = _.route[_.route.length - 1];
             _.nextPt = _.route.shift();
-          } else {
-            _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32) - round($.hero.bounds.r / 32), round($.hero.y / 32)]);
-            if(_.route.length > 0) {
-              _.hasRoute = 1;
-              _.lastPt = _.route[_.route.length - 1];
-              _.nextPt = _.route.shift();
-            } else {
-              _.route = $.ai.cPath([round(_.x / 32), round(_.y / 32)], [round($.hero.x / 32), round($.hero.y / 32) - round($.hero.bounds.b / 32)]);
-              if(_.route.length > 0) {
-                _.hasRoute = 1;
-                _.lastPt = _.route[_.route.length - 1];
-                _.nextPt = _.route.shift();
-              }
-            }
           }
        }
     } else {
-      if((round(_.x / 32) == _.nextPt[0]) && (round(_.y / 32) == _.nextPt[1])) {
+      if((floor(_.x / 32) == _.nextPt[0]) && (floor(_.y / 32) == _.nextPt[1])) {
         if(_.route.length > 0) {
           _.nextPt = _.route.shift();
         } else {
@@ -175,21 +164,24 @@ $.Zombie = function(x, y) {
           _.lastPt = [];
         }
       } else {
-        if ((round(_.x / 32) < _.nextPt[0]) && !_.planted) {
+        if ((floor(_.x / 32) < _.nextPt[0]) && !_.planted) {
           _.dx = _.speed;
           _.o = 'r';
-        } else if((round(_.x / 32) > _.nextPt[0]) && !_.planted) {
+        } else if((floor(_.x / 32) > _.nextPt[0]) && !_.planted) {
           _.dx = -_.speed;
           _.o = 'l';
-        }
-        if((round(_.y / 32) < _.nextPt[1]) && !_.planted) {
+        } 
+
+        if((floor(_.y / 32) < _.nextPt[1]) && !_.planted) {
           _.dy = _.speed;
           _.o = 'd';
-        } else if((round(_.y / 32) > _.nextPt[1]) && !_.planted) {
+        } else if((floor(_.y / 32) > _.nextPt[1]) && !_.planted) {
           _.dy = -_.speed;
           _.o = 'u';
         }
-        if((round($.hero.x / 32) != _.lastPt[0]) || (round($.hero.y / 32) != _.lastPt[1])) {
+
+
+        if((floor($.hero.x / 32) != _.lastPt[0]) || (floor($.hero.y / 32) != _.lastPt[1])) {
           _.hasRoute = 0;
           _.route = [];
           _.nextPt = [];
@@ -197,9 +189,40 @@ $.Zombie = function(x, y) {
         }
       }
     }
-
+    if(_.route.length == 0 && d < 40 && !_.planted) {
+      if(_.x > $.hero.x) {
+        _.dx = -_.speed;
+        _.o = 'l';
+      } else if(_.x < $.hero.x) {
+        _.dx = _.speed;
+        _.o = 'r';
+      }
+      if(_.y > $.hero.y) {
+        _.dy = -_.speed;
+        _.o = 'd';
+      } else if(_.y < $.hero.y) {
+        _.dy = _.speed;
+        _.o = 'u';
+      } 
+    }
+    
     _.x += _.dx;
     _.y += _.dy;
+
+    // Check for collisions with walls
+    $.walls.forEach(function(w) {
+      if ($.collide.rect(_, w)) {
+        if ($.collide.isTop(_, w)){
+          _.y = w.bounds.t - _.h -1;
+        } else if ($.collide.isBottom(_, w)) {
+          _.y = w.bounds.b + 1;
+        } else if ($.collide.isLeft(_, w)) {
+          _.x = w.bounds.l - _.w - 1;
+        } else if ($.collide.isRight(_, w)) {
+          _.x = w.bounds.r + 1;
+        }
+      }
+    });
 
     /* Calculate animation frame */
     _.count = (_.count + 1) % _.frameDuration;
