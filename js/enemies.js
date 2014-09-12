@@ -2,7 +2,7 @@ $.Zombie = function(x, y) {
   var _ = this;
   _.x = x;
   _.y = y;
-  _.w = 32;
+  _.w = 16;
   _.h = 32;
   _.he = 35;
   _.maxH = 35;
@@ -64,28 +64,27 @@ $.Zombie = function(x, y) {
   _.damage = function(p) {
     if (_.hurt) return null;
 
-    if ($.u.canMiss(_.miss)) {
-      $.textPops.push(new $.TextPop('miss', _.x, _.y - 5, $.C.wh));
-      return 0;
-    }
-
-    var atk = p.attack;
-
     if (p.t === $.PW.E.v) {
       if (!_.planted) {
         _.planted = true;
         _.ctimeP = $.n();
         _.etimeP = 0;
-        $.textPops.push(new $.TextPop('bounded', _.x + 2, _.y - 5, $.C.wh));
+        $.textPops.push(new $.TextPop('bounded', _.x + 2, _.y - 5, $.C.w));
       }
       return;
     }
 
+    if ($.u.canMiss(_.miss)) {
+      $.textPops.push(new $.TextPop('miss', _.x, _.y - 5, $.C.w));
+      return 0;
+    }
+
+    var atk = p.attack;
     _.he -= atk;
     _.hurt = true;
     _.ctimeH = $.n();
     _.etimeH = 0;
-    $.textPops.push(new $.TextPop('-' + atk, _.x + 7, _.y - 5, $.C.rd));
+    $.textPops.push(new $.TextPop('-' + atk, _.x + 7, _.y - 5, $.C.yw));
     return atk;
   };
 
