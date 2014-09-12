@@ -41,10 +41,9 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 2;
+  $.lv = 1;
   $.sco = 0;
-  $.ma = 100;
-  $.epow = [1];
+  $.epow = [];
   $.u.v('s', 1);
 };
 
@@ -328,7 +327,7 @@ $.loop = function() {
   }
 
   // Check if hero is dead
-  if ($.hero.dead) {
+  if ($.hero.dead && $.fadeOut.done) {
     return $.s.l($.gameover, $.gameOverLoop);
   }
 

@@ -19,15 +19,15 @@ $.Hero = function(_x, _y, o) {
   _.dy = 0;
   _.o = o || 'd'; // Orientation
   _.pows = []; // Available powers
-  _.hurt = false;
+  _.hurt = 0;
   _.he = _.maxH; // Health
   _.ma = _.maxM; // Mana
-  _.shield = false;
+  _.shield = 0;
   _.ctime = $.n(); // Current time (for update)
   _.htime = $.n(); // Hurt time
   _.etimeH = 0; // Elapsed time for hurt
   _.itime = 1000; // Invincibility time (ms)
-  _.blink = false;
+  _.blink = 0;
   _.bcount = 0; // Blinking count (to know if apply alpha during invincibility)
   _.cd = 0; // Cooldown
   _.rs = 0.15; // Resistance to attacks
@@ -59,13 +59,15 @@ $.Hero = function(_x, _y, o) {
     if (_.hurt || _.dead) return;
     var attack = floor(e.attack - (e.attack * $.u.rand(_.rs * 100, 0) / 100));
     _.he -= attack;
-    _.hurt = true;
+    _.hurt = 1;
     _.htime = $.n();
     _.etimeH = 0;
     $.textPops.push(new $.TextPop('-' + attack, _.x + 7, _.y - 5, 'red'));
     if (_.he <= 0) {
       _.he = 0;
       _.dead = true;
+      $.deco.push(new $.Blood(_.x, _.y));
+      $.fadeOut.start(3000, '0,0,0');
     }
   };
 
@@ -96,9 +98,9 @@ $.Hero = function(_x, _y, o) {
         _.key = true;
         $.u.i('You got the key of this dungeon');
       } else if (t.t === 'h') {
-        _.heal(10);
+        _.heal(20);
       } else if (t.t === 'm') {
-        _.charge(10);
+        _.charge(20);
       }
     }
   };
@@ -109,6 +111,7 @@ $.Hero = function(_x, _y, o) {
   };
 
   this.update = function() {
+    if (_.dead) return;
     _.exit = false;
     var now = $.n(),
         elapsed = now - _.ctime;
@@ -124,9 +127,9 @@ $.Hero = function(_x, _y, o) {
       }
 
       if (_.etimeH >= _.itime) {
-        _.hurt = false;
+        _.hurt = 0;
         _.bcount = 0;
-        _.blink = false;
+        _.blink = 0;
       }
     }
 
@@ -214,7 +217,7 @@ $.Hero = function(_x, _y, o) {
           [0, 120, 240].forEach(function(a) {
             $.powers.push(new $.Water(_.x, _.y, a));
           });
-          _.shield = true;
+          _.shield = 1;
         } else if (cp.v === $.PW.A.v) {
           $.powers.push(new $.Air(_.x, _.y, _.o));
         }
@@ -260,10 +263,10 @@ $.Hero = function(_x, _y, o) {
   };
 
   this.render = function(tx, ty) {
-    var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
-
+    if (_.dead) return;
     $.x.s();
     $.x.sc(2, 2);
+    var anim = (_.dx === 0 && _.dy === 0) ? _.anim.idle[_.o] : _.anim.run[_.o][_.currFrame];
     if (_.blink)
       $.x.globalAlpha = 0.3;
     $.x.d(_.ts, anim.x, anim.y, 8, 16, tx/2, ty/2, 8, 16);
