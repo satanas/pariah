@@ -103,6 +103,8 @@ $.Zombie = function(x, y) {
         $.items.push(new items[k](_.x + (_.w)/2, _.y + 4));
       }
     }
+
+    $.deco.push(new $.Blood(_.x, _.y));
     $.sco += _.attack * 10;
   };
 

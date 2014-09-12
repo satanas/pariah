@@ -41,9 +41,10 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 1;
+  $.lv = 2;
   $.sco = 0;
-  $.epow = [];
+  $.ma = 100;
+  $.epow = [1];
   $.u.v('s', 1);
 };
 
@@ -136,6 +137,7 @@ $.start = function() {
   $.items = [];
   $.exit = [];
   $.textPops = [];
+  $.deco = [];
   $.powers = [];
   $.ai = new $.Ai();
   $.sws = [];
@@ -193,6 +195,7 @@ $.finalRoom = function() {
   $.enemies = [];
   $.items = [];
   $.exit = [];
+  $.deco = [];
   $.textPops = [];
   $.powers = [];
   $.sws = [];
@@ -332,6 +335,7 @@ $.loop = function() {
   /* Render */
   $.cam.render($.walls);
   $.cam.render($.exit);
+  $.cam.render($.deco);
   $.cam.render($.enemies);
   $.cam.render($.items);
   $.cam.render($.sws);
