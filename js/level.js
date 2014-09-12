@@ -166,9 +166,18 @@ $.Level = function(n, w, h, en, it, ls) {
   _.map[p.x][p.y] = '@';
 
   // Place items
+  t = 0;
   for (i=it.length; i--;) {
     var ir = ar[$.u.rand(0, ar.length)];
     p = _.rPoint(ir);
+    while (_.map[p.x][p.y] === 'i') {
+      t++;
+      if (t > 4) {
+        ir = ar[$.u.rand(0, ar.length)];
+        t = 0;
+      }
+      p = _.rPoint(ir);
+    }
     $.items.push(new it[i](p.x * 32 + 8, p.y * 32 + 8));
     _.map[p.x][p.y] = 'i';
   }
