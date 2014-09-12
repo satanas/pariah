@@ -5,6 +5,7 @@ $.Power = function(x, y, w, h, o, t) {
   _.w = w;
   _.h = h;
   _.t = t;
+  _.u = 0;
 
   /* Determine direction */
   if (o === 'l') {
@@ -35,7 +36,7 @@ $.Power = function(x, y, w, h, o, t) {
 
     // Check collision with enemies
     $.enemies.forEach(function(e) {
-      if ($.collide.rect(_, e)) {
+      if ($.collide.rect(_, e) && !_.u) {
         var g = e.damage(_);
         if (g !== null && g !== 0 && _.t == $.PW.W.v) $.hero.heal(g);
         if (_.t == $.PW.F.v) _.die(i);
@@ -55,6 +56,7 @@ $.Power = function(x, y, w, h, o, t) {
   };
 
   _.die = function(i) {
+    _.u = 1;
     $.powers.splice(i, 1);
     if (_.t == $.PW.W.v) $.hero.shield = false;
   };
