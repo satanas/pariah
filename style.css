@@ -4,9 +4,11 @@
   color: #fff;
   font-family: verdana;
 }
+body {
+  background-color: #000;
+}
 canvas {
   position: absolute;
-  background-color: #000;
   z-index: -1;
   width: 640px;
   height: 480px;
