@@ -41,7 +41,7 @@ $.init = function() {
 };
 
 $.welcome = function() {
-  $.lv = 2;
+  $.lv = 1;
   $.sco = 0;
   $.epow = [];
   $.u.v('s', 1);
@@ -185,7 +185,6 @@ $.start = function() {
 
   $.fadeIn.start(1000);
   $.animId = raf($.loop);
-  console.log('starting');
 };
 
 $.finalRoom = function() {
@@ -341,8 +340,8 @@ $.loop = function() {
   $.cam.render($.sws);
   $.cam.render([$.hero]);
   $.cam.render($.powers);
-  //if ($.lv < 5)
-    //$.fow.render();
+  if ($.lv < 5)
+    $.fow.render();
   $.cam.render($.textPops);
   $.hud.render();
 

@@ -64,7 +64,18 @@ $.Power = function(x, y, w, h, o, t) {
 
 $.Fire = function(x, y, o) {
   var _ = this;
-  $.Power.call(_, x, y, 24, 24, o, $.PW.F.v);
+  $.Power.call(_, x, y, 16, 16, o, $.PW.F.v);
+  if (o === 'u' || o === 'd') {
+    if ($.lvl.isWall(floor(x / 32) - 1, floor(y / 32))) {
+      _.x += 4;
+    } else if ($.lvl.isWall(floor(x / 32) + 1, floor(y / 32))) {
+      _.x -= 3;
+    } else {
+      _.x += 1;
+    }
+  } else if (o === 'r' || o === 'l') {
+    _.y += 4;
+  }
 
   _.a = 0.55; /* Acceleration */
   _.maxS = 6.00; /* Max speed */
@@ -93,15 +104,8 @@ $.Fire = function(x, y, o) {
     //$.x.translate(tx + (_.w/2), ty + (_.h/2));
     //$.x.rotate(_.angle / 180 * Math.PI);
     $.x.fillStyle = $.C.o;
-    ////$.x.fr(tx + 4, ty + 4, 16, 16);
-    ////$.x.sc(2, 2);
-    //////$.x.fillStyle = 'rgb(255,159,7)';
-    //////$.x.fr(tx/2 + 2, ty/2 + 1, 6, 6);
-    ////$.x.d(_.ts, 0, 28, 8, 8, tx/2, ty/2, 8, 8);
-    ////$.x.d(_.ts, _.anim.x, _.anim.y, 10, 9, tx/2, ty/2, 10, 9);
-    //////$.x.d(_.ts, _.anim.x, _.anim.y, _.w/2, _.h/2, -_.w/4, -_.h/4, _.w/2, _.h/2);
-
     //$.x.fr(tx, ty, 16, 16);
+
     $.x.beginPath();
     $.x.arc(tx + 8, ty + 8, 8, 0, (2 * Math.PI), false);
     $.x.fill();

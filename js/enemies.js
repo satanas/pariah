@@ -143,7 +143,6 @@ $.Zombie = function(x, y) {
 
 
     if(!_.hasRoute) {
-       console.log('Uno');
        var d = $.ai.getd({x:_.x, y:_.y}, {x:$.hero.x, y:$.hero.y});
        if((d <= _.minD) && (round(d) > 40)) {
           _.route = $.ai.cPath([floor(_.x / 32), floor(_.y / 32)], [floor($.hero.x / 32), floor($.hero.y / 32)]);
